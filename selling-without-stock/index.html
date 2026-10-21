@@ -1,0 +1,2032 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cpath d='M0 15 6 4l3 5 2-3 5 9z' fill='%232b2722'/%3E%3C/svg%3E">
+<style>
+:root{color-scheme:light;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+body{margin:0;font:14px/1.4 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif}
+img{max-width:100%}
+[hidden]{display:none!important}
+</style>
+<title>Selling Without Stock</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,400..900&family=JetBrains+Mono:wght@400;600&family=Big+Shoulders+Stencil+Display:wght@700;900&family=Permanent+Marker&display=swap" rel="stylesheet">
+<style>
+  /* Layout: a horizontal scroll painting. Every panel is a surface from a parcel (kraft board, label stock,
+     the asphalt it rides on); one delivery road runs under the whole deck with a van as the progress mark.
+     Single deliberate theme: the materials do not change at night, so no dark-mode tokens. */
+  :root{
+    --ground:#211D19; --ground-2:#2F2924;          /* asphalt, label-printer black */
+    --kraft:#D8BD93; --kraft-2:#C4A273; --kraft-3:#AE8B5C; /* corrugated board, its shaded faces */
+    --paper:#F4EFE4; --card:#FBF9F4;               /* label stock */
+    --ink:#1E1A16; --muted:#4A4036; --line:rgba(30,26,22,.16); --line-2:rgba(30,26,22,.32);
+    --tint-1:#C9D6E6; --tint-2:#F1DFA6; --tint-3:#EBC3B4; --tint-4:#DDD3C3;
+    --marker:#F5CB3C; --marker-ink:#9A6F06;        /* packing-tape yellow: "the point of this slide" */
+    --red:#B8301A; --red-deep:#932310;                               /* stamp red: the catch, the problem */
+    --blue:#1F4FA0;                                /* order data: anything that is information, not goods */
+    --tape:rgba(214,196,150,.62);
+    --font-display:'Archivo','Arial Narrow',sans-serif; --font-body:'Archivo',system-ui,sans-serif;
+    --font-label:'JetBrains Mono',ui-monospace,monospace; --font-stencil:'Big Shoulders Stencil Display','Archivo',sans-serif;
+    --font-hand:'Permanent Marker','Comic Sans MS',cursive;
+    --accent-1:var(--red); --accent-2:var(--blue);
+    --ease-out:cubic-bezier(.22,1,.36,1); --ease-draw:cubic-bezier(.45,.05,.35,1);
+    --wrap:1180px; --gutter:clamp(20px,4vw,56px);
+    color-scheme:light;
+  }
+  @media (prefers-color-scheme: dark){ :root{color-scheme:light} }
+
+  *{box-sizing:border-box}
+  html{-webkit-text-size-adjust:100%}
+  body{margin:0;background:var(--ground);color:var(--ink);font:400 17px/1.55 var(--font-body);font-variation-settings:'wdth' 100;-webkit-font-smoothing:antialiased;overflow-x:clip}
+  /* board fibre: static, never animated */
+  body::before{content:"";position:fixed;inset:0;pointer-events:none;z-index:50;opacity:.07;mix-blend-mode:multiply;
+    background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='240' height='240'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='.75' numOctaves='3' stitchTiles='stitch'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>")}
+  img,svg{max-width:100%}
+  h1,h2,h3{font-family:var(--font-display);font-weight:800;font-variation-settings:'wdth' 72;letter-spacing:-.01em;line-height:.98;margin:0;text-wrap:balance}
+  h1{font-size:clamp(64px,8.4vw,128px)}
+  h2{font-size:clamp(40px,4.4vw,66px)}
+  h3{font-size:clamp(22px,2vw,28px);line-height:1.1}
+  p{margin:0;text-wrap:pretty}
+  .lede{font-size:clamp(18px,1.45vw,21px);line-height:1.45;color:var(--muted);max-width:52ch}
+  .label{font:600 11.5px/1.3 var(--font-label);letter-spacing:.09em;text-transform:uppercase;color:var(--muted)}
+  .hand{font-family:var(--font-hand);color:var(--red-deep);font-weight:400}
+  .stencil{font-family:var(--font-stencil);font-weight:900;letter-spacing:.01em;line-height:.9}
+  .wrap{max-width:var(--wrap);margin:0 auto;padding-left:max(var(--gutter),env(safe-area-inset-left,0px));padding-right:max(var(--gutter),env(safe-area-inset-right,0px))}
+
+  /* Surfaces */
+  .band{position:relative;padding:clamp(72px,9vw,120px) 0;overflow-x:clip}
+  .band.kraft{background-color:var(--kraft);
+    background-image:repeating-linear-gradient(90deg,rgba(120,84,40,.07) 0 1px,transparent 1px 7px)}
+  .band.sheet{background:var(--paper)}
+  .band.dark{background:var(--ground);color:var(--paper)}
+  .band.dark .lede,.band.dark .label{color:rgba(244,239,228,.72)}
+  .band.kraft .lede{color:var(--muted)}
+
+  /* A label: thermal label stock, slightly crooked, taped down */
+  .lbl{position:relative;background:var(--card);color:var(--ink);border-radius:3px;
+    box-shadow:0 1px 0 rgba(0,0,0,.06),0 10px 24px -14px rgba(40,25,10,.45)}
+  .tape{position:absolute;width:110px;height:30px;background:var(--tape);mix-blend-mode:multiply;
+    box-shadow:inset 0 0 0 1px rgba(150,120,70,.18)}
+
+  /* Marker = the one point of the slide, swept on like tape */
+  mark{background:linear-gradient(var(--marker),var(--marker)) no-repeat 0 88%/0% 46%;color:inherit;padding:0 3px;
+    -webkit-box-decoration-break:clone;box-decoration-break:clone;transition:background-size .8s var(--ease-out) .35s}
+  .in mark, mark.in{background-size:100% 46%}
+  .band.dark mark{color:var(--ink);background-position:0 0;background-size:0% 100%;padding:1px 6px}
+  .band.dark .in mark,.band.dark mark.in{background-size:100% 100%}
+
+  /* Reveal: text plays once */
+  .js .rv{opacity:0;transform:translateY(12px);transition:opacity .8s var(--ease-out),transform .8s var(--ease-out);transition-delay:var(--d,0s)}
+  .js .rv.in{opacity:1;transform:none}
+
+  /* Line drawing */
+  .ln{fill:none;stroke:var(--ink);stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+  .ln.thin{stroke-width:1.1} .ln.fat{stroke-width:3}
+  .ln.guide{stroke-width:1.2;stroke-dasharray:3 6;opacity:.45}
+  .ln.order{stroke:var(--blue);stroke-width:2.2;stroke-dasharray:7 7}
+  .ln.red{stroke:var(--red)} .ln.paper{stroke:var(--paper)}
+  .f-kraft{fill:var(--kraft)} .f-kraft2{fill:var(--kraft-2)} .f-kraft3{fill:var(--kraft-3)} .f-card{fill:var(--card)} .f-paper{fill:var(--paper)} .f-ink{fill:var(--ink)}
+  .svg-label{font:600 12px var(--font-label);letter-spacing:.08em;fill:var(--ink);text-transform:uppercase}
+  .svg-hand{font:20px var(--font-hand);fill:var(--red-deep)}
+  .svg-blue{fill:var(--blue)}
+
+  html.still *,html.still *::before{transition:none !important}
+  :focus-visible{outline:2px solid var(--blue);outline-offset:3px}
+
+  /* Phone gate */
+  .gate{display:none}
+  @media (max-width:539px), (pointer:coarse) and (max-height:499px){ html:not(.no-gate) main{display:none} html:not(.no-gate) .gate{display:grid} }
+  html.phone main{display:none} html.phone .gate{display:grid}
+  .gate{min-height:100svh;place-items:center;text-align:center;padding:32px max(16px,env(safe-area-inset-right,0px)) 32px max(16px,env(safe-area-inset-left,0px));background:var(--ground);color:var(--paper)}
+  .gate p{font:800 34px/1.05 var(--font-display);font-variation-settings:'wdth' 72;max-width:12ch;margin:18px auto 10px}
+  .gate small{font:400 15px/1.5 var(--font-body);color:rgba(244,239,228,.7)}
+
+  @media (prefers-reduced-motion: reduce){ .js .rv{opacity:1;transform:none;transition:none} mark{transition:none;background-size:100% 46%} }
+</style>
+<script>
+  document.documentElement.classList.add('js');
+  try { if (navigator.maxTouchPoints > 0 && Math.min(screen.width, screen.height) < 540) document.documentElement.classList.add('phone'); } catch (e) {}
+  const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const FINAL = reduce || /[?&](final|still)=1/.test(location.search);  /* still=1: finished drawings on the live track, for screenshots */
+  if (/[?&]still=1/.test(location.search)) document.documentElement.classList.add('still');
+  const NS = 'http://www.w3.org/2000/svg';
+  const $ = (s, r = document) => r.querySelector(s), $$ = (s, r = document) => [...r.querySelectorAll(s)];
+  function onView(el, fn, threshold = .3) {
+    if (!el) return;
+    if (FINAL || !('IntersectionObserver' in window)) { fn(); return; }
+    const io = new IntersectionObserver(es => es.forEach(e => { if (e.isIntersecting) { io.disconnect(); fn(); } }), { threshold });
+    io.observe(el);
+  }
+  function prepDraw(paths) {
+    paths.forEach(p => { const L = p.getTotalLength ? p.getTotalLength() : 0; p.style.strokeDasharray = L + ' ' + L; p.style.strokeDashoffset = FINAL ? 0 : L; p.dataset.len = L; });
+  }
+  function penDraw(paths, { delay = 0, speed = 600, overlap = .82, parallel = false, min = .6, max = 2.2 } = {}) {
+    let t = delay, end = delay;
+    paths.forEach(p => {
+      const L = +p.dataset.len || p.getTotalLength();
+      const d = Math.min(max, Math.max(min, L / speed));
+      if (!p.dataset.len) { p.style.strokeDasharray = L + ' ' + L; p.style.strokeDashoffset = L; p.dataset.len = L; }
+      if (FINAL) { p.style.strokeDashoffset = 0; return; }
+      p.getBoundingClientRect();
+      p.style.transition = `stroke-dashoffset ${d}s var(--ease-draw) ${parallel ? delay : t}s`;
+      requestAnimationFrame(() => { p.style.strokeDashoffset = 0; });
+      if (parallel) end = Math.max(end, delay + d * overlap); else { t += d * overlap; end = t; }
+    });
+    return end;
+  }
+  /* Dashed order lines cannot use the dash trick, so they are revealed with a mask path drawn underneath. */
+  function maskDraw(maskPaths, opts) { prepDraw(maskPaths); return penDraw(maskPaths, opts); }
+  /* Move an SVG group along a path over dur seconds (the one mover on a screen). */
+  function travel(g, path, { delay = 0, dur = 1.8, done } = {}) {
+    const L = path.getTotalLength();
+    const put = f => { const p = path.getPointAtLength(L * f); g.setAttribute('transform', `translate(${p.x.toFixed(1)} ${p.y.toFixed(1)})`); };
+    if (FINAL) { put(1); done && done(); return; }
+    put(0);
+    setTimeout(() => {
+      const t0 = performance.now();
+      const ease = t => t < .5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;
+      const step = now => { const f = Math.min(1, (now - t0) / (dur * 1000)); put(ease(f)); if (f < 1) requestAnimationFrame(step); else done && done(); };
+      requestAnimationFrame(step);
+    }, delay * 1000);
+  }
+  /* A barcode drawn from a string, so every label has its own */
+  function barcode(svg, seed, w = 220, h = 46) {
+    let x = 0, s = 0; for (const c of seed) s = (s * 31 + c.charCodeAt(0)) >>> 0;
+    const rnd = () => (s = (s * 1664525 + 1013904223) >>> 0) / 4294967296;
+    let out = '';
+    while (x < w) { const bw = 1 + Math.floor(rnd() * 3.2); if (rnd() > .42) out += `<rect x="${x}" y="0" width="${bw}" height="${h}"/>`; x += bw + 1 + Math.floor(rnd() * 2); }
+    svg.setAttribute('viewBox', `0 0 ${w} ${h}`); svg.innerHTML = `<g fill="currentColor">${out}</g>`;
+  }
+  function initReveal() {
+    const els = $$('.rv');
+    if (FINAL || !('IntersectionObserver' in window)) { els.forEach(e => e.classList.add('in')); return; }
+    const io = new IntersectionObserver(es => es.forEach(e => { if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); } }), { rootMargin: '0px 0px -12% 0px' });
+    els.forEach(e => io.observe(e));
+  }
+  addEventListener('DOMContentLoaded', initReveal);
+</script>
+
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+    <marker id="arr" viewBox="0 0 10 10" refX="6" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 1.5L10 5L0 8.5Z" fill="#1E1A16"/></marker>
+    <marker id="arr-blue" viewBox="0 0 10 10" refX="6" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 1.5L10 5L0 8.5Z" fill="#1F4FA0"/></marker>
+    <filter id="ink" x="-5%" y="-5%" width="110%" height="110%">
+      <feTurbulence type="fractalNoise" baseFrequency="1.4" numOctaves="2" seed="7" result="t"/>
+      <feColorMatrix in="t" type="matrix" values="0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 -1.6 1.25" result="holes"/>
+      <feComposite in="SourceGraphic" in2="holes" operator="in"/>
+    </filter>
+    <!-- one parcel, reused wherever goods move -->
+    <g id="parcel">
+      <path d="M-14 -22 L0 -28 L14 -22 L0 -16 Z" fill="#E2C89D" stroke="#1E1A16" stroke-width="1.6" stroke-linejoin="round"/>
+      <path d="M-14 -22 L0 -16 L0 0 L-14 -6 Z" fill="#D8BD93" stroke="#1E1A16" stroke-width="1.6" stroke-linejoin="round"/>
+      <path d="M0 -16 L14 -22 L14 -6 L0 0 Z" fill="#C4A273" stroke="#1E1A16" stroke-width="1.6" stroke-linejoin="round"/>
+      <path d="M-7 -25 L7 -19" stroke="#F5CB3C" stroke-width="3.2"/>
+      <rect x="-11" y="-14" width="7" height="5" fill="#FBF9F4" transform="skewY(23)"/>
+    </g>
+  </defs>
+</svg>
+
+<div class="gate" role="dialog" aria-label="Open on a larger screen">
+  <div>
+    <svg viewBox="0 0 60 60" width="72" aria-hidden="true"><use href="#parcel" transform="translate(30 46) scale(1.5)"/></svg>
+    <p>Open this on your laptop or tablet</p>
+    <small>This presentation is built for a bigger screen.</small>
+  </div>
+</div>
+
+<main>
+<!-- =====================================================================
+  ARCHITECTURE SHELL: HORIZONTAL, "the scroll painting"
+  Copy to work/frag-00-arch.html so it loads before every section. Sections stay as they are.
+
+  - Top-level <section>s in <main> sit side by side on one long track, like a pattachitra or phad scroll that
+    unrolls. Scrolling down (wheel, trackpad, touch, keys) moves the track sideways, 1px for 1px, linear.
+    No snapping, no smooth-scroll library. A sideways trackpad swipe moves it too.
+  - Each section is a panel one screen wide; data-span="2" on a section makes it two screens wide
+    (lay its content out wide). A panel taller than the screen tries tighter type, a narrower column, then
+    head beside visual (data-cps-fit levels below); if nothing fits it scrolls inside itself.
+    Section-specific fit rules go in their own fragment (work/frag-00-fit.html, scoped html.hz-on #id);
+    --cps-split:no on a section rules out head beside visual.
+  - The rail (bottom): a marker per section (tap to go there), the current section's name and "02 / 06".
+    ArrowRight / ArrowLeft move one panel.
+  - The ground (optional): one SVG strip under the panels, the length of the whole track, for a road, a river
+    or a thread. It never sits behind text. Define it in any fragment before the page finishes loading:
+      window.CPS_GROUND = ({ W, H, x, y, panels }) => `<path class="hz-guide" d="..."/><path class="hz-draw" d="..."/>`;
+    x(u) maps panel units (each panel is 100 wide) to px, y(v) maps 0..100 to px; W and H are the strip in px.
+    Paths with class hz-draw pen-draw with progress (stroke-dashoffset); hz-guide is the faint construction
+    line; anything with data-x="<panel units>" lights once the drawn line reaches it.
+  - Events, dispatched on the section and bubbling: cps:enter / cps:leave {index, total, dir} as a panel
+    becomes the one under the middle of the screen. onView and .rv work: IntersectionObserver sees the
+    panels' real sideways positions, so a panel's drawings start when it slides in.
+  - window.CPS = {arch, go(n), index()}  (n is 0-based)
+  - FINAL (?final=1 or reduced motion), narrower than 820px, or the phone gate: an ordinary vertical page.
+  ===================================================================== -->
+<style>
+  html.arch-horizontal{--hz-floor:var(--ground);--hz-rail:40px;--hz-lane:0px}
+  html.hz-on.hz-has-ground{--hz-lane:clamp(44px,6.5vh,60px)}
+
+  /* ---- The track: main sticks to the screen and slides sideways; body gets the scroll length ---- */
+  html.hz-on body{background:var(--hz-floor)}
+  html.hz-on main{position:sticky;top:0;height:100vh;height:100svh;display:flex;flex-wrap:nowrap;align-items:flex-start;
+    width:max-content;background:var(--hz-floor);will-change:transform}
+  html.hz-on main > section{flex:0 0 auto;position:relative;
+    width:calc(var(--hz-w,100vw) * var(--hz-span,1)) !important;max-width:none !important;
+    height:calc(100% - var(--hz-lane) - var(--hz-rail)) !important;min-height:0 !important;max-height:none !important;margin:0 !important;
+    overflow-x:hidden !important;overflow-y:auto !important;scrollbar-width:thin;scrollbar-color:rgba(0,0,0,.28) transparent;
+    display:flex;flex-direction:column}
+  :where(html.hz-on main > section){background-color:var(--paper)}
+  html.hz-on main > section > *{flex-shrink:0}
+  html.hz-on main > section > .wrap{width:100%}
+  html.hz-on main > section::before,html.hz-on main > section::after{content:"";flex:1 0 0px}
+  html.hz-on main > section.band{padding-top:clamp(32px,6vh,60px) !important;padding-bottom:clamp(32px,6vh,60px) !important}
+  html.hz-on main > section .band-head{margin-bottom:clamp(22px,3.6vh,40px)}
+  /* the phone gate wins over the track */
+  @media (max-width:539px),(pointer:coarse) and (max-height:499px){html.arch-horizontal:not(.no-gate) main{display:none}}
+  html.arch-horizontal.phone main{display:none}
+
+  /* ---- Fit levels, set only on panels that overflow (first that fits wins) ----
+     1 tighter type and spacing · 2 plus a 1000px column · 3 head beside visual · 4 that, tighter
+     5 an 860px column · 6 a 760px column */
+  html.hz-on main > section[data-cps-fit].band{padding-top:clamp(22px,4vh,40px) !important;padding-bottom:clamp(22px,4vh,40px) !important}
+  html.hz-on main > section[data-cps-fit] h2{font-size:clamp(30px,3.3vw,46px)}
+  html.hz-on main > section[data-cps-fit] .lede{font-size:17px}
+  html.hz-on main > section[data-cps-fit] .band-head{gap:12px;margin-bottom:clamp(14px,2.6vh,28px)}
+  html.hz-on main > section[data-cps-fit="2"]{--wrap:1000px}
+  html.hz-on main > section[data-cps-fit="4"].band{padding-top:clamp(14px,2.4vh,24px) !important;padding-bottom:clamp(14px,2.4vh,24px) !important}
+  html.hz-on main > section[data-cps-fit="4"] h2{font-size:clamp(28px,2.8vw,40px)}
+  html.hz-on main > section[data-cps-fit="4"] h3{font-size:clamp(20px,1.8vw,24px)}
+  html.hz-on main > section[data-cps-fit="5"]{--wrap:860px}
+  html.hz-on main > section[data-cps-fit="6"]{--wrap:760px}
+  html.hz-on main > section .wrap.cps-split{display:grid;grid-template-columns:minmax(0,5fr) minmax(0,7fr);column-gap:clamp(28px,4vw,64px);align-items:center}
+  html.hz-on main > section .wrap.cps-split > *{margin-top:0 !important;margin-bottom:0 !important;min-width:0}
+
+  /* ---- The ground: a strip under the panels, on the track, so it never crosses text ---- */
+  .hz-ground{display:none}
+  html.hz-on.hz-has-ground .hz-ground{display:block;position:absolute;left:0;bottom:var(--hz-rail);width:100%;height:var(--hz-lane);pointer-events:none}
+  .hz-ground svg{display:block;max-width:none;overflow:visible}
+  .hz-ground .hz-guide{fill:none;stroke:var(--paper);stroke-width:1;stroke-dasharray:3 5;opacity:.3}
+  .hz-ground .hz-draw{fill:none;stroke:var(--paper);stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+  .hz-ground [data-x]{opacity:0;transition:opacity .6s var(--ease-out)}
+  .hz-ground [data-x].hz-lit{opacity:1}
+
+  /* ---- The rail ---- */
+  .hz-rail{display:none}
+  html.hz-on .hz-rail{position:fixed;left:0;right:0;bottom:0;z-index:40;height:var(--hz-rail);display:flex;align-items:center;
+    gap:clamp(18px,2.6vw,36px);padding:0 max(var(--gutter),22px);background:var(--hz-floor);color:var(--paper)}
+  .hz-now{margin:0;display:flex;align-items:baseline;gap:14px;min-width:0;flex:0 1 36%;
+    font:500 11.5px/1.2 var(--font-label);letter-spacing:.08em;text-transform:uppercase}
+  .hz-count{font-weight:500;font-variant-numeric:tabular-nums;white-space:nowrap}
+  .hz-name{white-space:nowrap;overflow:hidden;text-overflow:ellipsis;opacity:.68}
+  .hz-line{position:relative;flex:1 1 auto;height:2px;margin:0 14px;background:rgba(255,255,255,.2)}
+  .hz-fill{position:absolute;inset:0;background:var(--paper);transform-origin:0 50%;transform:scaleX(0)}
+  .hz-mark{position:absolute;top:50%;width:30px;height:30px;margin:-15px 0 0 -15px;padding:0;border:0;background:none;cursor:pointer;
+    display:grid;place-items:center;-webkit-tap-highlight-color:transparent}
+  .hz-mark i{width:9px;height:9px;border-radius:50%;background:var(--hz-floor);box-shadow:inset 0 0 0 1.5px rgba(255,255,255,.6);
+    transition:background-color .3s var(--ease-out),scale .3s var(--ease-out)}
+  .hz-mark.done i{background:var(--paper);box-shadow:none}
+  .hz-mark.now i{background:var(--paper);box-shadow:none;scale:1.45}
+  .hz-mark:focus-visible{outline:2px solid var(--paper);outline-offset:-4px;border-radius:50%}
+  @media (max-width:539px),(pointer:coarse) and (max-height:499px){html.hz-on .hz-rail{display:none}}
+</style>
+
+<div class="hz-ground" aria-hidden="true">
+  <svg class="hz-ground-svg" viewBox="0 0 100 100"><g class="hz-ground-art"></g></svg>
+</div>
+<div class="hz-rail">
+  <p class="hz-now" aria-live="polite"><b class="hz-count">01 / 01</b><span class="hz-name"></span></p>
+  <div class="hz-line"><i class="hz-fill"></i></div>
+</div>
+
+<script>
+(() => {
+  const root = document.documentElement;
+  const GATE = '(max-width:539px), (pointer:coarse) and (max-height:499px)';
+  const wide = () => !(reduce || /[?&]final=1/.test(location.search)) && innerWidth >= 820 && !matchMedia(GATE).matches && !root.classList.contains('phone');
+  root.classList.add('arch-horizontal');
+  root.classList.toggle('hz-on', wide());
+
+  /* Reveal: panels arrive from the right, so a block reveals once it is 8% of the screen in.
+     The starter's bottom margin is dropped to 6%, so blocks low on a panel still reveal. */
+  if (!FINAL && typeof initReveal === 'function') {
+    removeEventListener('DOMContentLoaded', initReveal);
+    addEventListener('DOMContentLoaded', () => {
+      const els = $$('.rv');
+      if (!('IntersectionObserver' in window)) { els.forEach(e => e.classList.add('in')); return; }
+      const io = new IntersectionObserver(es => es.forEach(e => { if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); } }), { rootMargin: '0px -8% -6% 0px' });
+      els.forEach(e => io.observe(e));
+    });
+  }
+
+  addEventListener('DOMContentLoaded', () => {
+    const main = $('main');
+    const panels = main ? $$(':scope > section', main) : [], N = panels.length;
+    const rail = $('.hz-rail'), ground = $('.hz-ground');
+    if (!N || !rail || !ground) return;
+    const art = $('.hz-ground-art', ground), gsvg = $('svg', ground);
+    const line = $('.hz-line', rail), fill = $('.hz-fill', rail), countEl = $('.hz-count', rail), nameEl = $('.hz-name', rail);
+    const spacer = document.createElement('div');
+    spacer.className = 'hz-spacer'; spacer.setAttribute('aria-hidden', 'true');
+    main.after(spacer);
+    document.body.appendChild(rail);   /* out of the moving track, so position:fixed holds */
+    const ev = (el, name, detail) => el.dispatchEvent(new CustomEvent(name, { bubbles: true, detail }));
+    const titleOf = s => (s.dataset.title || ($('h2', s) || $('h1', s) || {}).textContent || s.getAttribute('aria-label') || '').replace(/\s+/g, ' ').trim();
+    const pad = n => String(n).padStart(2, '0');
+    let on = false, VW = 0, W = 0, D = 0, start = 0, x = 0, cur = -1, spans = [], lefts = [], marks = [], gp = [], pins = [];
+
+    /* ---- Fit (same ladder as the paged shell) ---- */
+    const SPLIT = [3, 4];
+    const kids = w => w ? [...w.children].filter(k => !/^(STYLE|SCRIPT|TEMPLATE)$/.test(k.tagName) && getComputedStyle(k).position !== 'absolute') : [];
+    /* head beside visual is skipped when the visual places HTML text by % (it would wrap and collide),
+       or when a fit rule sets --cps-split: no on the section */
+    const splitOk = (s, vis) => getComputedStyle(s).getPropertyValue('--cps-split').trim() !== 'no' &&
+      ![...vis.querySelectorAll('*')].some(n => !(n instanceof SVGElement) && getComputedStyle(n).position === 'absolute' && n.textContent.trim().length > 12);
+    const unfit = s => { delete s.dataset.cpsFit; const w = s.querySelector(':scope > .wrap'); if (w) w.classList.remove('cps-split'); };
+    function fitAll() {
+      panels.forEach(unfit);
+      if (!on) return;
+      panels.forEach(s => {
+        const w = s.querySelector(':scope > .wrap'), k = kids(w), canSplit = s.clientWidth / s.clientHeight > 1.15 && k.length === 2 && splitOk(s, k[1]);
+        const set = lv => { if (lv) s.dataset.cpsFit = lv; else delete s.dataset.cpsFit; if (w) w.classList.toggle('cps-split', SPLIT.includes(lv)); };
+        const fits = () => s.scrollHeight - s.clientHeight <= 2;
+        if (fits()) return;
+        for (const lv of [1, 2, 3, 4, 5, 6]) { if (SPLIT.includes(lv) && !canSplit) continue; set(lv); if (fits()) return; }
+        set(0);
+      });
+    }
+
+    /* ---- The ground strip ---- */
+    function buildGround() {
+      gp = []; pins = []; art.innerHTML = '';
+      if (!on || typeof window.CPS_GROUND !== 'function') return;
+      const H = ground.clientHeight || 1, u = VW / 100, r = v => Math.round(v * 10) / 10;
+      gsvg.setAttribute('viewBox', `0 0 ${W} ${H}`); gsvg.setAttribute('width', W); gsvg.setAttribute('height', H);
+      try {
+        art.innerHTML = window.CPS_GROUND({ W, H, x: v => r(v * u), y: v => r(v * H / 100),
+          panels: panels.map((p, i) => ({ id: p.id, title: titleOf(p), left: lefts[i] / u, span: spans[i] })) }) || '';
+      } catch (err) { console.warn('CPS_GROUND:', err); art.innerHTML = ''; }
+      gp = $$('.hz-draw', art).map(p => {
+        const L = p.getTotalLength(), n = 200, xs = [];
+        for (let k = 0; k <= n; k++) xs.push(p.getPointAtLength(L * k / n).x);
+        p.style.strokeDasharray = `${L} ${L}`; p.style.strokeDashoffset = L;
+        return { p, L, xs, n };
+      });
+      pins = $$('[data-x]', art).map(el => ({ el, x: +el.getAttribute('data-x') * u, lit: false }));
+    }
+    /* draw every hz-draw path up to the head (the point the reader has reached, in px along the track) */
+    function drawGround(head) {
+      gp.forEach(g => {
+        let f = 0;
+        if (g.xs[0] <= head) {
+          let k = 0; while (k < g.n && g.xs[k + 1] <= head) k++;
+          f = k / g.n;
+          if (k < g.n) { const a = g.xs[k], b = g.xs[k + 1]; if (b > a) f += Math.min(1, (head - a) / (b - a)) / g.n; }
+        }
+        g.p.style.strokeDashoffset = (g.L * (1 - f)).toFixed(1);
+      });
+      pins.forEach(pn => { if (!pn.lit && pn.x <= head) { pn.lit = true; pn.el.classList.add('hz-lit'); } });
+      /* the delivery van rides the head of the road: the deck's progress mark */
+      const van = $('.hz-van', art); if (van) van.setAttribute('transform', `translate(${head.toFixed(1)} 0)`);
+    }
+
+    /* ---- The rail ---- */
+    function buildRail() {
+      marks.forEach(m => m.remove());
+      marks = panels.map((p, i) => {
+        const b = document.createElement('button');
+        b.type = 'button'; b.className = 'hz-mark'; b.innerHTML = '<i></i>'; b.title = titleOf(p);
+        b.style.left = (D ? Math.min(D, lefts[i]) / D * 100 : 0) + '%';
+        b.setAttribute('aria-label', `Go to ${i + 1} of ${N}: ${titleOf(p)}`);
+        b.addEventListener('click', () => go(i));
+        line.appendChild(b); return b;
+      });
+    }
+    function label(i) {
+      countEl.textContent = `${pad(i + 1)} / ${pad(N)}`; nameEl.textContent = titleOf(panels[i]);
+      marks.forEach((m, k) => { m.classList.toggle('done', k < i); m.classList.toggle('now', k === i); });
+    }
+
+    /* ---- Layout: measure once per resize, never per frame ---- */
+    function layout() {
+      const was = on, keep = cur;
+      on = wide();
+      root.classList.toggle('hz-on', on);
+      root.classList.toggle('hz-has-ground', on && typeof window.CPS_GROUND === 'function');
+      if (!on) {
+        main.style.transform = ''; main.style.width = ''; spacer.style.height = '0px';
+        fitAll(); buildGround();
+        if (was && keep >= 0) panels[keep].scrollIntoView({ block: 'start' });
+        update(); return;
+      }
+      VW = root.clientWidth;
+      root.style.setProperty('--hz-w', VW + 'px');
+      spans = panels.map(p => Math.max(1, Math.min(4, Math.round(+p.dataset.span || 1))));
+      panels.forEach((p, i) => p.style.setProperty('--hz-span', spans[i]));
+      lefts = []; let acc = 0; spans.forEach(s => { lefts.push(acc); acc += s * VW; });
+      W = acc; D = Math.max(0, W - VW);
+      main.style.width = W + 'px';
+      spacer.style.height = D + 'px';
+      start = spacer.getBoundingClientRect().top + scrollY - main.offsetHeight;
+      fitAll(); buildRail(); buildGround();
+      if (!was && keep >= 0) scrollTo(0, start + Math.min(D, lefts[keep]));
+      if (cur >= 0) label(cur);
+      update();
+    }
+
+    /* ---- Every scroll frame: one transform, the rail fill, the ground line ---- */
+    function update() {
+      /* the browser scrolled sideways itself (find in page, focus): carry that onto the track */
+      if (scrollX) scrollTo(0, on ? scrollY + scrollX : scrollY);
+      let i = 0;
+      if (on) {
+        x = Math.min(D, Math.max(0, scrollY - start));
+        main.style.transform = `translate3d(${-x}px,0,0)`;
+        const p = D ? x / D : 0;
+        fill.style.transform = `scaleX(${p})`;
+        const c = x + VW / 2; while (i < N - 1 && lefts[i + 1] <= c) i++;
+        drawGround(x + VW * (.62 + .38 * p));   /* the head leads at 62% of the screen and reaches the end with the track */
+        dispatchEvent(new CustomEvent('cps:move', { detail: { x, VW, lefts } }));
+      } else {
+        const mid = innerHeight / 2;
+        panels.forEach((p, k) => { if (p.getBoundingClientRect().top <= mid) i = k; });
+      }
+      if (i !== cur) {
+        const dir = i > cur ? 1 : -1;
+        if (cur >= 0) ev(panels[cur], 'cps:leave', { index: cur, total: N, dir });
+        cur = i; if (on) label(i);
+        ev(panels[i], 'cps:enter', { index: i, total: N, dir });
+      }
+    }
+    /* ---- The glide: every key press moves to the next stop on one eased curve, driven frame by frame
+       (browser smooth-scroll is uneven and cannot be retargeted). A press during a glide aims past the
+       current target, so tapping Space quickly never stalls. ---- */
+    let gl = null, glRaf = 0;
+    const ease = t => t < .5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;
+    function glideTo(px) {
+      px = Math.max(0, Math.min(D, px));
+      if (reduce) { scrollTo(0, start + px); return; }
+      const from = Math.min(D, Math.max(0, scrollY - start)), dist = Math.abs(px - from);
+      if (dist < 1) return;
+      gl = { from, to: px, t0: performance.now(), dur: Math.min(1700, Math.max(700, 560 + dist / VW * 460)) };
+      if (!glRaf) glRaf = requestAnimationFrame(tick);
+    }
+    function tick(now) {
+      glRaf = 0; if (!gl) return;
+      const f = Math.min(1, (now - gl.t0) / gl.dur);
+      scrollTo(0, start + gl.from + (gl.to - gl.from) * ease(f));
+      if (f < 1) glRaf = requestAnimationFrame(tick); else gl = null;
+    }
+    const cancelGlide = () => { gl = null; };
+    addEventListener('wheel', cancelGlide, { passive: true });
+    addEventListener('touchstart', cancelGlide, { passive: true });
+    function stopsList() {
+      const st = [];
+      panels.forEach((p, k) => (p.dataset.stops ? p.dataset.stops.split(',').map(Number) : [0]).forEach(v => st.push(Math.min(D, lefts[k] + v * VW))));
+      return [...new Set(st.map(v => Math.round(v)))].sort((a, b) => a - b);
+    }
+    function step(dir) {
+      const here = gl ? gl.to : x, st = stopsList();
+      const t = dir > 0 ? (st.find(v => v > here + 4) ?? D) : ([...st].reverse().find(v => v < here - 4) ?? 0);
+      glideTo(t);
+    }
+    function go(i) {
+      i = Math.max(0, Math.min(N - 1, i));
+      if (on) glideTo(lefts[i]);
+      else panels[i].scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+
+    let raf = 0, rt = 0;
+    addEventListener('scroll', () => { if (!raf) raf = requestAnimationFrame(() => { raf = 0; update(); }); }, { passive: true });
+    addEventListener('resize', () => { clearTimeout(rt); rt = setTimeout(layout, 150); });
+    /* Presenter keys: Space, Enter, arrows, PageUp/PageDown (clickers), Home/End, F for full screen.
+       A wide panel adds its own stops: data-stops="0,1,1.5,2" (in screens from its left edge). */
+    addEventListener('keydown', e => {
+      if (!on || e.defaultPrevented || e.altKey || e.ctrlKey || e.metaKey) return;
+      if (e.target.closest && e.target.closest('input, textarea, select, [contenteditable]:not([contenteditable="false"])')) return;
+      if (e.key === 'f' || e.key === 'F') { e.preventDefault(); (document.fullscreenElement ? document.exitFullscreen() : root.requestFullscreen()).catch(() => {}); return; }
+      if (e.key === 'Home' || e.key === 'End') { e.preventDefault(); glideTo(e.key === 'Home' ? 0 : D); return; }
+      const fwd = ['ArrowRight', 'ArrowDown', 'PageDown', ' ', 'Enter'].includes(e.key) && !e.shiftKey;
+      const back = ['ArrowLeft', 'ArrowUp', 'PageUp', 'Backspace'].includes(e.key) || (e.key === ' ' && e.shiftKey);
+      if (!fwd && !back) return;
+      e.preventDefault();
+      if (e.target.closest && e.target.closest('button') && (e.key === ' ' || e.key === 'Enter')) e.target.blur();
+      step(fwd ? 1 : -1);
+    });
+    /* a sideways trackpad swipe moves the track the same way */
+    addEventListener('wheel', e => {
+      if (!on || Math.abs(e.deltaX) <= Math.abs(e.deltaY) || Math.abs(e.deltaX) < 1) return;
+      e.preventDefault(); scrollBy(0, e.deltaX * (e.deltaMode === 1 ? 40 : 1));
+    }, { passive: false });
+    /* Tab into a panel that is off screen: bring the panel in */
+    document.addEventListener('focusin', e => {
+      if (!on) return;
+      const i = panels.findIndex(p => p.contains(e.target)); if (i < 0) return;
+      const l = lefts[i], r = l + spans[i] * VW;
+      if (r <= x + 1 || l >= x + VW - 1) scrollTo(0, start + Math.min(D, l));
+    });
+
+    layout();
+    if (document.fonts && document.fonts.ready) document.fonts.ready.then(() => { if (on) { fitAll(); update(); } });
+    addEventListener('load', () => { if (on) { fitAll(); update(); } });
+    window.CPS = { arch: 'horizontal', go, step, index: () => cur };
+  });
+})();
+</script>
+
+<section id="hero" class="band kraft" data-title="Selling without stock">
+  <div class="wrap hero-grid">
+    <div class="hero-lbl lbl">
+      <i class="tape" style="left:-28px;top:-10px;rotate:-38deg"></i>
+      <i class="tape" style="right:-30px;bottom:-6px;rotate:-34deg"></i>
+      <div class="hero-row hero-top">
+        <span class="hero-code">ITB-01</span>
+        <span class="label">Information Technology for Business</span>
+      </div>
+      <div class="hero-title">
+        <h1>Dropshipping</h1>
+        <p class="hero-sub">Selling without stock</p>
+      </div>
+      <div class="hero-row hero-def">
+        <span class="label">What it is</span>
+        <p class="rv" style="--d:.4s">A business model where the store <mark>never touches the physical product.</mark></p>
+      </div>
+      <div class="hero-row hero-foot">
+        <svg class="hero-bar" aria-hidden="true"></svg>
+        <span class="label">Unit 1<br>E-Commerce Architecture</span>
+      </div>
+    </div>
+
+    <svg class="hero-scene" viewBox="0 0 640 540" role="img" aria-label="A supplier's factory ships a parcel straight to a customer's house. The online store, a phone above the road, only passes the order on. The warehouse in between is crossed out.">
+      <!-- the online store, floating above the road -->
+      <g class="hero-phone">
+        <rect class="ln f-card" x="262" y="22" width="116" height="196" rx="16"/>
+        <rect class="ln thin" x="306" y="32" width="28" height="5" rx="2.5"/>
+        <rect class="ln thin hero-sign" x="276" y="50" width="88" height="26" rx="2" style="stroke-dasharray:4 4"/>
+        <rect class="ln thin" x="276" y="88" width="40" height="40" rx="2"/><rect class="ln thin" x="324" y="88" width="40" height="40" rx="2"/>
+        <rect class="ln thin" x="276" y="136" width="40" height="40" rx="2"/><rect class="ln thin" x="324" y="136" width="40" height="40" rx="2"/>
+        <rect x="276" y="186" width="88" height="18" rx="9" class="f-ink"/>
+        <text x="320" y="199" text-anchor="middle" style="font:600 9px var(--font-label);letter-spacing:.1em;fill:var(--card)">ORDER</text>
+        <text x="320" y="245" text-anchor="middle" class="svg-label">The online store</text>
+      </g>
+      <!-- order data: customer to store to supplier -->
+      <defs>
+        <mask id="hero-m1" maskUnits="userSpaceOnUse"><path class="hero-mk" d="M548 360 C548 250 470 170 386 150" stroke="#fff" stroke-width="10" fill="none"/></mask>
+        <mask id="hero-m2" maskUnits="userSpaceOnUse"><path class="hero-mk" d="M256 150 C170 170 104 240 104 330" stroke="#fff" stroke-width="10" fill="none"/></mask>
+      </defs>
+      <path class="ln order" mask="url(#hero-m1)" d="M548 360 C548 250 470 170 386 150" marker-end="url(#arr-blue)"/>
+      <path class="ln order" mask="url(#hero-m2)" d="M256 150 C170 170 104 240 104 330" marker-end="url(#arr-blue)"/>
+      <text class="hero-o rv" x="512" y="214" style="font:600 11px var(--font-label);letter-spacing:.08em" fill="var(--blue)">ORDER IN</text>
+      <text class="hero-o rv" x="78" y="214" style="font:600 11px var(--font-label);letter-spacing:.08em" fill="var(--blue)">ORDER PASSED ON</text>
+
+      <!-- the world: ground, supplier, ghost warehouse, customer -->
+      <path class="ln hero-d" d="M10 452 H630"/>
+      <path class="ln hero-d" d="M40 452 V368 L74 346 V368 L108 346 V368 L142 346 V368 L168 352 V452"/>
+      <path class="ln hero-d" d="M58 346 V300 h14 V356"/>
+      <path class="ln thin hero-d" d="M66 412 h26 v40 M112 404 h34 v20 h-34 z"/>
+      <text x="104" y="478" text-anchor="middle" class="svg-label">Supplier</text>
+
+      <path class="ln guide hero-d" d="M248 452 V388 L320 352 L392 388 V452 M268 452 V408 H372 V452"/>
+      <text x="320" y="478" text-anchor="middle" class="svg-label" style="opacity:.55">Warehouse</text>
+      <path class="ln red fat hero-x" d="M262 368 L380 446"/>
+      <path class="ln red fat hero-x" d="M380 368 L262 446"/>
+
+      <path class="ln hero-d" d="M500 452 V392 L548 356 L596 392 V452"/>
+      <path class="ln thin hero-d" d="M536 452 V418 h24 v34 M512 398 h16 v14 h-16 z"/>
+      <text x="548" y="478" text-anchor="middle" class="svg-label">Customer</text>
+
+      <!-- the goods: one parcel, straight from supplier to door -->
+      <path class="hero-route" d="M176 446 C260 446 380 446 486 446" fill="none"/>
+      <g class="hero-pk"><use href="#parcel" transform="scale(1.25)"/></g>
+      <text class="hero-hand svg-hand rv" x="300" y="520" text-anchor="middle">goods go direct</text>
+    </svg>
+  </div>
+</section>
+<style>
+  html.hz-on #hero{--cps-split:no}
+  .hero-grid{display:grid;grid-template-columns:minmax(0,5.2fr) minmax(0,6fr);gap:clamp(28px,4vw,72px);align-items:center;max-width:1280px}
+  .hero-lbl{rotate:-1.4deg;padding:0;display:grid}
+  .hero-row{display:flex;gap:16px;align-items:center;padding:14px 26px;border-top:2px solid var(--ink)}
+  .hero-top{border-top:0;justify-content:space-between}
+  .hero-code{font:900 13px/1 var(--font-label);letter-spacing:.12em;background:var(--ink);color:var(--card);padding:6px 8px;border-radius:2px}
+  .hero-title{padding:10px 26px 20px;border-top:2px solid var(--ink)}
+  .hero-title h1{font-variation-settings:'wdth' 62;font-weight:900;font-size:clamp(68px,8.2vw,124px);line-height:.86;letter-spacing:-.02em;margin-top:6px}
+  .hero-sub{font:800 clamp(24px,2.5vw,36px)/1 var(--font-display);font-variation-settings:'wdth' 85;margin-top:12px}
+  .hero-def{display:grid;grid-template-columns:auto;gap:6px;align-items:start}
+  .hero-def p{font-size:clamp(17px,1.4vw,20px);line-height:1.4;max-width:34ch}
+  .hero-foot{justify-content:space-between;padding-block:12px 16px}
+  .hero-foot .label{text-align:right;color:var(--ink)}
+  .hero-bar{width:190px;height:40px;color:var(--ink)}
+  .hero-scene{width:100%;height:auto;max-height:calc(100svh - 190px)}
+  .hero-pk{opacity:1}
+</style>
+<script>
+(() => {
+  const s = $('#hero');
+  barcode($('.hero-bar', s), 'ITB-01 dropshipping unit 1', 190, 40);
+  const draws = $$('.hero-d', s), phone = $$('.hero-phone .ln', s), masks = $$('.hero-mk', s), xs = $$('.hero-x', s);
+  prepDraw([...draws, ...phone, ...xs]); prepDraw(masks);
+  const pk = $('.hero-pk', s), route = $('.hero-route', s);
+  const st = route.getPointAtLength(0); pk.setAttribute('transform', `translate(${st.x} ${st.y})`);
+  if (!FINAL) pk.style.opacity = 0;
+  onView(s, () => {
+    let t = penDraw(draws, { speed: 900, overlap: .55 });
+    t = penDraw(phone, { delay: t - .2, parallel: true, speed: 500 });
+    t = penDraw(masks, { delay: t, speed: 380 });        /* the order travels: customer, store, supplier */
+    setTimeout(() => { pk.style.opacity = 1; travel(pk, route, { dur: 1.6, done: () => penDraw(xs, { speed: 700 }) }); }, FINAL ? 0 : (t + .5) * 1000);
+  }, .2);
+})();
+</script>
+
+<section id="hook" class="band dark" data-title="Two giants, one secret">
+  <div class="wrap hook-wrap">
+    <h2 class="rv">Two Indian giants. One shared secret.</h2>
+    <div class="hook-lbl lbl rv" style="--d:.15s">
+      <i class="tape" style="left:46%;top:-14px;rotate:3deg"></i>
+      <div class="hook-side">
+        <p class="label hook-k">Selling side</p>
+        <p class="hook-name">Meesho</p>
+        <p class="hook-who"><b>Vidit Aatrey &amp; Sanjeev Barnwal</b><br>IIT Delhi graduates. Started Meesho in 2015.</p>
+        <dl class="hook-nums">
+          <div><dt>234 million</dt><dd>people bought on Meesho in a year</dd></div>
+          <div><dt>15 million</dt><dd>resellers who never held stock</dd></div>
+          <div><dt>~₹8,600 crore</dt><dd>Vidit's stake after the IPO (~$1 billion)</dd></div>
+        </dl>
+      </div>
+      <div class="hook-side">
+        <p class="label hook-k">Supplier side</p>
+        <p class="hook-name">IndiaMART</p>
+        <p class="hook-who"><b>Dinesh Agarwal &amp; Brijesh Agrawal</b><br>Dinesh quit his job at HCL. Started IndiaMART in 1996 from a house in Delhi.</p>
+        <dl class="hook-nums">
+          <div><dt>8.8 million</dt><dd>supplier storefronts</dd></div>
+          <div><dt>~60%</dt><dd>share of India's online B2B market</dd></div>
+          <div><dt>36 times</dt><dd>oversubscribed at its 2019 IPO</dd></div>
+        </dl>
+      </div>
+      <div class="hook-foot">
+        <svg class="hook-bar" aria-hidden="true"></svg>
+        <p class="hook-stamp stencil" aria-label="What is their secret?">What is<br>their secret?</p>
+      </div>
+    </div>
+    <p class="hook-src">Sources: Meesho IPO filing; Storyboard18 (Dec 2025); IndiaMART Q1 FY27 results; dineshagarwal.com</p>
+  </div>
+</section>
+<style>
+  .hook-wrap{display:grid;gap:clamp(20px,3.4vh,36px);max-width:1180px}
+  #hook h2{max-width:20ch;color:var(--paper)}
+  .hook-lbl{display:grid;grid-template-columns:1fr 1fr;rotate:.6deg}
+  .hook-side{padding:clamp(18px,2.4vw,30px);display:grid;gap:10px;align-content:start}
+  .hook-side + .hook-side{border-left:2px solid var(--ink)}
+  #hook .hook-k{color:var(--ink);border:1.5px solid var(--ink);justify-self:start;padding:4px 7px;border-radius:2px}
+  .hook-name{font:900 clamp(44px,5vw,72px)/.9 var(--font-display);font-variation-settings:'wdth' 66;letter-spacing:-.02em}
+  .hook-who{font-size:15px;line-height:1.45;color:var(--muted);max-width:40ch}
+  .hook-who b{color:var(--ink);font-weight:700}
+  .hook-nums{margin:6px 0 0;display:grid;border-top:1.5px solid var(--ink)}
+  .hook-nums div{display:grid;grid-template-columns:minmax(150px,auto) 1fr;gap:14px;align-items:baseline;padding:7px 0;border-bottom:1px dashed var(--line-2)}
+  .hook-nums dt{font:800 clamp(22px,2vw,28px)/1.05 var(--font-display);font-variation-settings:'wdth' 75;font-variant-numeric:tabular-nums}
+  .hook-nums dd{margin:0;font-size:14.5px;line-height:1.35}
+  .hook-foot{grid-column:1/-1;display:flex;gap:22px;align-items:center;border-top:2px solid var(--ink);padding:12px clamp(18px,2.4vw,30px)}
+  .hook-src{font:400 11px/1.4 var(--font-label);color:rgba(244,239,228,.5);margin-top:-14px}
+  .hook-foot{position:relative;min-height:64px}
+  .hook-bar{width:200px;height:34px;flex:0 0 auto;color:var(--ink)}
+  /* the rubber stamp: lands whole, like ink, no glide */
+  .hook-stamp{position:absolute;right:clamp(14px,3vw,40px);bottom:10px;margin:0;color:var(--red);
+    font-size:clamp(24px,2.5vw,36px);text-transform:uppercase;text-align:center;padding:10px 16px;
+    border:4px double var(--red);border-radius:6px;rotate:-7deg;filter:url(#ink);mix-blend-mode:multiply;background:rgba(251,249,244,.0)}
+  .js .hook-stamp{opacity:0;scale:1.18}
+  .hook-stamp.on{opacity:.92;scale:1;transition:opacity .12s steps(2),scale .12s steps(2)}
+  html.hz-on #hook{--cps-split:no}
+  @media (prefers-reduced-motion: reduce){ .js .hook-stamp{opacity:.92;scale:1} }
+</style>
+<script>
+(() => {
+  const s = $('#hook');
+  barcode($('.hook-bar', s), 'meesho indiamart', 200, 34);
+  const st = $('.hook-stamp', s);
+  onView($('.hook-lbl', s), () => setTimeout(() => st.classList.add('on'), FINAL ? 0 : 1500), .5);
+})();
+</script>
+
+<section id="answer" class="band sheet" data-title="The secret: dropshipping">
+  <div class="wrap ans-wrap">
+    <div class="ans-head">
+      <h2 class="rv">The secret has a name: dropshipping</h2>
+      <p class="ans-line rv" style="--d:.1s">The store takes the order. The supplier ships the box. The store <mark>never touches the product.</mark></p>
+    </div>
+    <svg class="ans-svg" viewBox="0 0 1120 470" role="img" aria-label="Two routes. Normal store: supplier to warehouse to customer, and the shop owner carries the stock risk. Dropshipping: the customer's order goes to the online store and on to the supplier, and the supplier ships straight to the customer. The warehouse is crossed out.">
+      <!-- lane A: normal store -->
+      <text x="0" y="22" class="svg-label">Traditional retail</text>
+      <text x="0" y="44" style="font:800 22px var(--font-display);font-variation-settings:'wdth' 75">Normal store route</text>
+      <g class="ans-a">
+        <path class="ln" d="M40 190 V120 L66 104 V120 L92 104 V120 L118 104 V120 L136 110 V190"/>
+        <path class="ln" d="M470 190 V128 L540 96 L610 128 V190 M488 190 V146 H592 V190"/>
+        <path class="ln" d="M940 190 V138 L980 108 L1020 138 V190"/>
+        <path class="ln thin" d="M150 176 H456" marker-end="url(#arr)"/>
+        <path class="ln thin" d="M624 176 H926" marker-end="url(#arr)"/>
+        <path class="ln" d="M20 190 H1060"/>
+      </g>
+      <g class="ans-boxes">
+        <use href="#parcel" x="0" y="0" transform="translate(508 188)"/><use href="#parcel" transform="translate(538 188)"/><use href="#parcel" transform="translate(568 188)"/>
+        <use href="#parcel" transform="translate(523 166)"/><use href="#parcel" transform="translate(553 166)"/><use href="#parcel" transform="translate(538 144)"/>
+      </g>
+      <text x="88" y="214" text-anchor="middle" class="svg-label">Supplier</text>
+      <text x="540" y="214" text-anchor="middle" class="svg-label">Warehouse</text>
+      <text x="980" y="214" text-anchor="middle" class="svg-label">Customer</text>
+      <text x="304" y="164" text-anchor="middle" style="font:500 12px var(--font-label)" fill="var(--muted)">buys upfront</text>
+      <text x="776" y="164" text-anchor="middle" style="font:500 12px var(--font-label)" fill="var(--muted)">ships later</text>
+      <text class="svg-hand rv" x="640" y="92" style="--d:1.6s">risk sits with the shop owner</text>
+
+      <path d="M0 262 H1080" stroke="var(--line-2)" stroke-width="1" stroke-dasharray="2 6"/>
+
+      <!-- lane B: dropshipping -->
+      <text x="0" y="300" class="svg-label" fill="var(--blue)" style="fill:var(--blue)">Dropshipping model</text>
+      <text x="0" y="322" style="font:800 22px var(--font-display);font-variation-settings:'wdth' 75">Direct supplier dispatch</text>
+      <g class="ans-b">
+        <path class="ln" d="M40 452 V382 L66 366 V382 L92 366 V382 L118 366 V382 L136 372 V452"/>
+        <path class="ln" d="M940 452 V400 L980 370 L1020 400 V452"/>
+        <path class="ln" d="M20 452 H1060"/>
+        <rect class="ln f-card" x="506" y="300" width="68" height="112" rx="11"/>
+        <path class="ln thin" d="M518 318 h44 v12 h-44z M518 338 h20 v20 h-20z M542 338 h20 v20 h-20z M518 362 h20 v20 h-20z M542 362 h20 v20 h-20z"/>
+      </g>
+      <path class="ln guide" d="M470 452 V390 L540 358 L610 390 V452" style="opacity:.35"/>
+      <path class="ln red fat ans-x" d="M480 404 L600 448"/><path class="ln red fat ans-x" d="M600 404 L480 448"/>
+      <defs>
+        <mask id="ans-m1" maskUnits="userSpaceOnUse"><path class="ans-mk" d="M980 362 C960 320 700 330 584 344" stroke="#fff" stroke-width="10" fill="none"/></mask>
+        <mask id="ans-m2" maskUnits="userSpaceOnUse"><path class="ans-mk" d="M496 344 C380 330 120 320 96 356" stroke="#fff" stroke-width="10" fill="none"/></mask>
+      </defs>
+      <path class="ln order" mask="url(#ans-m1)" d="M980 362 C960 320 700 330 584 344" marker-end="url(#arr-blue)"/>
+      <path class="ln order" mask="url(#ans-m2)" d="M496 344 C380 330 120 320 96 356" marker-end="url(#arr-blue)"/>
+      <text x="780" y="318" text-anchor="middle" style="font:600 11px var(--font-label);letter-spacing:.08em;fill:var(--blue)">ORDER DATA</text>
+      <text x="300" y="318" text-anchor="middle" style="font:600 11px var(--font-label);letter-spacing:.08em;fill:var(--blue)">ORDER DATA</text>
+      <text x="540" y="290" text-anchor="middle" class="svg-label" style="fill:var(--blue)">Online store</text>
+      <path class="ans-route" d="M150 446 H926" fill="none"/>
+      <g class="ans-pk"><use href="#parcel" transform="scale(1.2)"/></g>
+      <text x="88" y="474" text-anchor="middle" class="svg-label">Supplier</text>
+      <text x="980" y="474" text-anchor="middle" class="svg-label">Customer</text>
+    </svg>
+  </div>
+</section>
+<style>
+  html.hz-on #answer{--cps-split:no}
+  .ans-wrap{display:grid;gap:clamp(14px,2.6vh,30px);max-width:1220px}
+  .ans-head{display:flex;justify-content:space-between;align-items:end;gap:24px 48px;flex-wrap:wrap}
+  .ans-line{font:700 clamp(19px,1.7vw,24px)/1.25 var(--font-display);font-variation-settings:'wdth' 85;max-width:30ch}
+  .ans-svg{width:100%;height:auto;max-height:calc(100svh - 300px);overflow:visible}
+  .js .ans-boxes use{opacity:0}
+  .ans-boxes use.on{opacity:1;transition:opacity .1s steps(1)}
+</style>
+<script>
+(() => {
+  const s = $('#answer');
+  const a = $$('.ans-a .ln', s), b = $$('.ans-b .ln', s), masks = $$('.ans-mk', s), xs = $$('.ans-x', s);
+  prepDraw([...a, ...b, ...xs]); prepDraw(masks);
+  const boxes = $$('.ans-boxes use', s), pk = $('.ans-pk', s), route = $('.ans-route', s);
+  const p0 = route.getPointAtLength(0); pk.setAttribute('transform', `translate(${p0.x} ${p0.y})`);
+  if (!FINAL) pk.style.opacity = 0; else boxes.forEach(u => u.classList.add('on'));
+  onView(s, () => {
+    let t = penDraw(a, { speed: 1100, overlap: .5 });
+    boxes.forEach((u, i) => setTimeout(() => u.classList.add('on'), FINAL ? 0 : (t * 1000 + i * 140)));   /* stock piles up, box by box */
+    t += .9;
+    t = penDraw(b, { delay: t, speed: 1100, overlap: .5 });
+    t = penDraw(masks, { delay: t, speed: 520 });
+    t = penDraw(xs, { delay: t, speed: 700 });
+    setTimeout(() => { pk.style.opacity = 1; travel(pk, route, { dur: 1.8 }); }, FINAL ? 0 : (t + .3) * 1000);
+  }, .35);
+})();
+</script>
+
+<section id="trend" class="band kraft" data-title="A trillion-dollar trend">
+  <div class="wrap tr-wrap">
+    <div class="tr-head">
+      <h2 class="rv">This is no side hustle. It's heading for $1 trillion.</h2>
+      <dl class="tr-nums">
+        <div class="rv" style="--d:.1s"><dt>~24%</dt><dd>growth every year (forecast)</dd></div>
+        <div class="rv" style="--d:.2s"><dt><mark>4x</mark></dt><dd>bigger by 2030 than in 2023</dd></div>
+        <div class="rv tr-quarter" style="--d:.3s"><dt>~1 in 4</dt><dd>online stores already use it as their main model
+          <svg class="tr-shops" viewBox="0 0 132 30" aria-hidden="true"></svg></dd></div>
+      </dl>
+    </div>
+    <figure class="tr-fig">
+      <svg class="tr-svg" viewBox="0 0 660 470" role="img" aria-label="Global dropshipping market in billions of dollars: 285 in 2023 and 352 in 2024 (estimates), then forecasts of 435 in 2025, 538 in 2026, 665 in 2027, 822 in 2028, 1,017 in 2029 and 1,257 in 2030. Each box stands for 100 billion dollars."></svg>
+      <figcaption class="tr-cap"><span class="label">Each box = $100 billion. Solid: estimate. Dashed: forecast.</span>
+        <span class="tr-src">Source: Precedence Research via Oberlo (market size); Analyzify via Printful (share of stores). Estimates from other firms differ.</span></figcaption>
+    </figure>
+  </div>
+</section>
+<style>
+  html.hz-on #trend{--cps-split:no}
+  .tr-wrap{display:grid;grid-template-columns:minmax(0,4.6fr) minmax(0,6.4fr);gap:clamp(28px,4vw,64px);align-items:center;max-width:1240px}
+  .tr-head{display:grid;gap:26px}
+  .tr-nums{margin:0;display:grid;border-top:2px solid var(--ink)}
+  .tr-nums div{display:grid;grid-template-columns:120px 1fr;gap:16px;align-items:baseline;padding:10px 0;border-bottom:1px dashed var(--line-2)}
+  .tr-nums dt{font:900 clamp(32px,3vw,44px)/1 var(--font-display);font-variation-settings:'wdth' 66}
+  .tr-nums dd{margin:0;font-size:16px;line-height:1.35}
+  .tr-shops{display:block;width:132px;height:30px;margin-top:6px}
+  .tr-fig{margin:0;display:grid;gap:8px}
+  .tr-svg{width:100%;height:auto;max-height:calc(100svh - 230px);overflow:visible}
+  .tr-cap{display:grid;gap:3px}
+  .tr-cap .label{color:var(--ink)}
+  .tr-src{font:400 10.5px/1.4 var(--font-label);color:var(--muted)}
+  .tr-box{transition:opacity .08s steps(1),translate .28s cubic-bezier(.3,1.4,.5,1)}
+  .js .tr-box.wait{opacity:0;translate:0 -40px}
+  .tr-val{transition:opacity .2s steps(2)}
+  .js .tr-val.wait{opacity:0}
+  html.still .tr-box{translate:none}
+</style>
+<script>
+(() => {
+  const s = $('#trend'), svg = $('.tr-svg', s);
+  const DATA = [[2023, 284.6, 0], [2024, 351.8, 0], [2025, 435, 1], [2026, 537.8, 1], [2027, 665, 1], [2028, 822.1, 1], [2029, 1016.5, 1], [2030, 1256.8, 1]];
+  const BASE = 420, K = 0.3, UNIT = 100, CW = 58, GAP = 22, X0 = 40;   /* K px per $1B, one box per $100B */
+  const fmt = v => v >= 1000 ? '$' + (v / 1000).toFixed(2).replace(/0$/, '') + 'T' : '$' + Math.round(v) + 'B';
+  let out = `<path d="M${X0 - 14} ${BASE} H${X0 + DATA.length * (CW + GAP)}" stroke="#1E1A16" stroke-width="2"/>`;
+  const ty = BASE - 1000 * K;
+  out += `<path d="M${X0 - 14} ${ty} H${X0 + DATA.length * (CW + GAP)}" stroke="var(--red-deep)" stroke-width="1.6" stroke-dasharray="6 5"/>
+    <text x="${X0 - 14}" y="${ty - 8}" class="svg-hand" style="font-size:19px">$1 trillion</text>`;
+  DATA.forEach(([yr, v, fc], i) => {
+    const x = X0 + i * (CW + GAP), h = v * K, n = Math.ceil(v / UNIT);
+    for (let b = 0; b < n; b++) {
+      const bh = Math.min(UNIT, v - b * UNIT) * K, y = BASE - b * UNIT * K - bh;
+      const full = bh >= UNIT * K - .1;
+      out += `<g class="tr-box wait" data-c="${i}" data-b="${b}">
+        <rect x="${x}" y="${y.toFixed(1)}" width="${CW}" height="${bh.toFixed(1)}" fill="${fc ? 'var(--card)' : 'var(--kraft-2)'}" stroke="#1E1A16" stroke-width="1.6" ${fc ? 'stroke-dasharray="4 3"' : ''}/>
+        ${full ? `<path d="M${x + CW / 2} ${y.toFixed(1)} v${(bh * .45).toFixed(1)}" stroke="var(--marker)" stroke-width="7" opacity="${fc ? .7 : .95}"/>` : ''}
+      </g>`;
+    }
+    out += `<text class="tr-val wait" data-c="${i}" x="${x + CW / 2}" y="${(BASE - h - 10).toFixed(1)}" text-anchor="middle" style="font:800 15px var(--font-display);font-variation-settings:'wdth' 75;fill:var(--ink)">${fmt(v)}</text>
+      <text x="${x + CW / 2}" y="${BASE + 22}" text-anchor="middle" class="svg-label" style="${fc ? 'fill:var(--muted)' : ''}">${yr}</text>`;
+  });
+  svg.innerHTML = out;
+
+  /* one in four: four storefronts, one marked */
+  let sh = '';
+  for (let i = 0; i < 4; i++) {
+    const x = i * 34;
+    sh += `<g transform="translate(${x} 2)"><path d="M2 26 V10 M28 26 V10 M0 10 H30 L27 3 H3 Z" fill="${i === 0 ? 'var(--marker)' : 'none'}" stroke="#1E1A16" stroke-width="1.5" stroke-linejoin="round"/><rect x="7" y="13" width="16" height="7" fill="${i === 0 ? '#1E1A16' : 'none'}" stroke="#1E1A16" stroke-width="1.2"/></g>`;
+  }
+  $('.tr-shops', s).innerHTML = sh;
+
+  const boxes = $$('.tr-box', svg), vals = $$('.tr-val', svg);
+  onView(s, () => {
+    if (FINAL) { boxes.forEach(b => b.classList.remove('wait')); vals.forEach(v => v.classList.remove('wait')); return; }
+    /* columns stack up box by box, year by year */
+    let t = 350;
+    DATA.forEach((_, i) => {
+      boxes.filter(b => +b.dataset.c === i).forEach(b => { setTimeout(() => b.classList.remove('wait'), t); t += 55; });
+      setTimeout(() => vals[i].classList.remove('wait'), t + 60);
+      t += 90;
+    });
+  }, .45);
+})();
+</script>
+
+<section id="part2" class="band dark dv" data-title="Part 2: Why do it?">
+  <div class="wrap dv-wrap">
+    <div class="dv-head">
+      <p class="dv-part stencil">Part 2</p>
+      <h2 class="rv">So why are so many people doing it?</h2>
+      <p class="lede rv" style="--d:.15s">First, follow one order from the tap to the doorstep.</p>
+    </div>
+    <div class="dv-card lbl rv" style="--d:.1s">
+      <i class="tape" style="left:38%;top:-14px;rotate:-4deg"></i>
+      <div class="dv-top"><span class="label">Tracking</span><b>ITB-01 / DROPSHIPPING</b></div>
+      <ol class="dv-list">
+        <li class="dv-done"><i></i><span class="dv-name">Part 1<br><b>What it is</b></span><span class="dv-st">Delivered</span></li>
+        <li class="dv-now"><i></i><span class="dv-name">Part 2<br><b>Why do it</b></span><span class="dv-st">Out for delivery</span></li>
+        <li><i></i><span class="dv-name">Part 3<br><b>Why not</b></span><span class="dv-st">Not yet</span></li>
+      </ol>
+      <i class="dv-line" aria-hidden="true"></i>
+    </div>
+  </div>
+</section>
+<style>
+  html.hz-on .dv{--cps-split:no}
+  .dv-wrap{display:grid;grid-template-columns:minmax(0,6fr) minmax(0,4.4fr);gap:clamp(32px,5vw,90px);align-items:center;max-width:1180px}
+  .dv-head{display:grid;gap:18px}
+  .dv-part{font-size:clamp(90px,11vw,170px);color:var(--marker);margin:0 0 -8px;line-height:.8}
+  .dv h2{color:var(--paper);font-size:clamp(44px,4.8vw,72px);max-width:14ch}
+  .dv-card{padding:0 0 10px;rotate:1.2deg;position:relative}
+  .dv-top{display:flex;justify-content:space-between;align-items:center;gap:12px;padding:14px 22px;border-bottom:2px solid var(--ink);font:600 13px var(--font-label);letter-spacing:.06em}
+  .dv-top .label{color:var(--ink)}
+  .dv-list{list-style:none;margin:0;padding:8px 22px 6px 22px;display:grid}
+  .dv-list li{display:grid;grid-template-columns:28px 1fr auto;gap:14px;align-items:center;padding:16px 0;border-bottom:1px dashed var(--line-2);position:relative;z-index:1}
+  .dv-list li:last-child{border-bottom:0}
+  .dv-list li > i{width:18px;height:18px;border-radius:50%;border:2px solid var(--ink);background:var(--card);justify-self:center}
+  .dv-name{font:500 12px/1.25 var(--font-label);letter-spacing:.06em;text-transform:uppercase;color:var(--muted)}
+  .dv-name b{font:800 24px/1.1 var(--font-display);font-variation-settings:'wdth' 75;letter-spacing:0;text-transform:none;color:var(--ink)}
+  .dv-st{font:900 15px var(--font-stencil);letter-spacing:.08em;text-transform:uppercase;padding:5px 9px;border:2.5px solid currentColor;border-radius:3px;color:var(--muted);opacity:.55}
+  .dv-done > i{background:var(--ink)}
+  .dv-done .dv-st{color:var(--ink);opacity:1}
+  .dv-now > i{background:var(--marker);border-color:var(--ink);box-shadow:0 0 0 5px rgba(245,203,60,.35)}
+  .dv-now .dv-st{color:var(--card);background:var(--ink);border-color:var(--ink);opacity:1}
+  .dv-now.dv-bad .dv-st{background:var(--red);border-color:var(--red)}
+  .dv-now.dv-bad > i{background:var(--red);box-shadow:0 0 0 5px rgba(184,48,26,.25)}
+  .dv-line{position:absolute;left:35px;top:84px;height:calc(100% - 140px);width:2.5px;background:var(--ink);z-index:0;transform-origin:50% 0;transition:scale 1.2s var(--ease-draw) .3s}
+  .js .dv-line{scale:1 0}
+  .dv-line.on{scale:1 1}
+  /* statuses land like stamps */
+  .js .dv .dv-st{scale:1.3;opacity:0}
+  .dv .dv-st.on{scale:1;transition:scale .12s steps(2),opacity .12s steps(2)}
+  .dv .dv-st.on{opacity:1}
+  .dv li:not(.dv-done):not(.dv-now) .dv-st.on{opacity:.55}
+  @media (prefers-reduced-motion: reduce){ .js .dv .dv-st{scale:1;opacity:1} }
+</style>
+<script>
+/* shared by both part dividers */
+function initDivider(s) {
+  const line = $('.dv-line', s), sts = $$('.dv-st', s);
+  onView(s, () => {
+    line.classList.add('on');
+    sts.forEach((el, i) => setTimeout(() => el.classList.add('on'), FINAL ? 0 : (500 + i * 420)));
+  }, .4);
+}
+initDivider($('#part2'));
+</script>
+
+<section id="order" class="band sheet" data-span="2" data-stops="0,0.3333,0.6667,1" data-title="One order, four steps">
+  <div class="or-in">
+    <div class="or-head wrap">
+      <h2 class="rv">One order. Four steps. The store packs nothing.</h2>
+    </div>
+    <svg class="or-path" aria-hidden="true"><defs><mask id="or-mask" maskUnits="userSpaceOnUse"><path class="or-mk" fill="none" stroke="#fff" stroke-width="14"/></mask></defs>
+      <path class="or-guide"/><g mask="url(#or-mask)"><path class="or-data"/><path class="or-goods"/></g></svg>
+    <div class="or-token" aria-hidden="true"><span class="or-chip">Order #1</span><svg class="or-box" viewBox="-20 -32 40 36"><use href="#parcel"/></svg></div>
+
+    <div class="or-st" style="--x:.25" data-k="data">
+      <svg viewBox="0 0 240 170" aria-hidden="true">
+        <rect class="ln f-card" x="78" y="8" width="84" height="154" rx="13"/>
+        <path class="ln thin" d="M108 17 h24"/>
+        <rect class="ln thin" x="88" y="28" width="64" height="54" rx="3"/>
+        <path class="ln" d="M96 66 c8 0 14 -10 22 -12 c6 4 12 6 22 6 c4 0 6 3 6 6 h-50 z" style="fill:var(--kraft)"/>
+        <path class="ln thin" d="M88 92 h44 M88 102 h28"/>
+        <text x="138" y="104" style="font:800 13px var(--font-display)">$80</text>
+        <rect x="88" y="118" width="64" height="20" rx="10" class="f-ink"/>
+        <text x="120" y="132" text-anchor="middle" style="font:600 9px var(--font-label);letter-spacing:.12em;fill:var(--card)">ORDER</text>
+        <path class="ln or-tap" d="M150 150 l-14 -18 l2 14 l-8 1 z" style="fill:var(--card)"/>
+        <circle class="or-ring" cx="134" cy="128" r="16" fill="none" stroke="var(--blue)" stroke-width="2"/>
+      </svg>
+      <p class="or-who">Customer</p>
+      <p class="or-n">1</p>
+      <p class="or-cap">You tap <b>Order</b> on the store's website.</p>
+    </div>
+
+    <div class="or-st" style="--x:.4167" data-k="data">
+      <svg viewBox="0 0 240 170" aria-hidden="true">
+        <path class="ln f-card" d="M48 24 h144 v96 h-144 z"/>
+        <path class="ln" d="M30 130 h180 l-12 -10 h-156 z" style="fill:var(--paper)"/>
+        <path class="ln thin" d="M60 38 h56 M60 52 h120 M60 64 h120 M60 76 h120 M60 88 h86"/>
+        <rect x="150" y="84" width="30" height="12" rx="2" style="fill:var(--blue)"/>
+        <g transform="translate(166 40)"><g class="or-gear"><circle r="9" fill="none" stroke="var(--blue)" stroke-width="2.4"/><path d="M0 -14 V-9 M0 9 V14 M-14 0 H-9 M9 0 H14 M-10 -10 l3.5 3.5 M6.5 6.5 l3.5 3.5 M-10 10 l3.5 -3.5 M6.5 -6.5 l3.5 -3.5" stroke="var(--blue)" stroke-width="2.4" stroke-linecap="round"/></g></g>
+        <path d="M76 150 h88" stroke="var(--blue)" stroke-width="2" stroke-dasharray="5 5"/>
+        <text x="120" y="166" text-anchor="middle" style="font:600 10px var(--font-label);letter-spacing:.08em;fill:var(--blue)">AUTO-FORWARD</text>
+      </svg>
+      <p class="or-who">Online store</p>
+      <p class="or-n">2</p>
+      <p class="or-cap">The store's system <b>sends the order to the supplier</b>, usually automatically.</p>
+    </div>
+
+    <div class="or-st" style="--x:.5833" data-k="goods">
+      <svg viewBox="0 0 240 170" aria-hidden="true">
+        <path class="ln" d="M24 150 V70 L60 50 V70 L96 50 V70 L132 50 V70 L156 58 V150" style="opacity:.35"/>
+        <path class="ln" d="M14 150 H226"/>
+        <g transform="translate(150 146) scale(2.6)"><use href="#parcel"/></g>
+        <g class="or-tape"><circle cx="196" cy="74" r="13" class="ln" style="fill:var(--marker)"/><circle cx="196" cy="74" r="5" class="ln thin" style="fill:var(--card)"/><path class="ln thin" d="M184 80 L160 96"/></g>
+      </svg>
+      <p class="or-who">Supplier</p>
+      <p class="or-n">3</p>
+      <p class="or-cap">The supplier <b>packs it and ships it.</b></p>
+    </div>
+
+    <div class="or-st" style="--x:.75" data-k="goods">
+      <svg viewBox="0 0 240 170" aria-hidden="true">
+        <path class="ln" d="M40 150 V74 L120 22 L200 74 V150"/>
+        <path class="ln" d="M100 150 V96 h40 v54"/>
+        <circle cx="132" cy="124" r="2.5" class="f-ink"/>
+        <path class="ln thin" d="M58 92 h28 v24 h-28 z M154 92 h28 v24 h-28 z"/>
+        <path class="ln" d="M20 150 H220"/>
+        <g transform="translate(166 150) scale(1.6)"><use href="#parcel"/></g>
+        <g class="or-check" transform="translate(70 30) rotate(-10)"><rect x="-34" y="-14" width="68" height="26" rx="3" fill="none" stroke="var(--red)" stroke-width="2.4"/><text x="0" y="5" text-anchor="middle" style="font:900 13px var(--font-stencil);letter-spacing:.08em;fill:var(--red)">ARRIVED</text></g>
+      </svg>
+      <p class="or-who">Customer</p>
+      <p class="or-n">4</p>
+      <p class="or-cap">The customer <b>gets the product.</b></p>
+    </div>
+
+    <div class="or-end">
+      <p class="or-endk label">Look again</p>
+      <p class="or-endt">Steps 1 and 2 are <span class="or-blue">only data.</span> Steps 3 and 4 move the box, and the supplier does both.</p>
+      <p class="or-endm rv" style="--d:.2s">The store owner <mark>never packs a single box.</mark></p>
+    </div>
+  </div>
+</section>
+<style>
+  html.hz-on #order{--cps-split:no}
+  .or-in{position:relative;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:28px 36px;max-width:1100px;margin:0 auto;padding-inline:max(var(--gutter),env(safe-area-inset-left,0px))}
+  .or-head{grid-column:1/-1;padding:0}
+  #order h2{max-width:22ch}
+  .or-path,.or-token,.or-end{display:none}
+  .or-st{display:grid;gap:4px;justify-items:center;text-align:center;align-content:start}
+  .or-st svg{width:100%;max-width:250px;height:auto;overflow:visible}
+  .or-who{font:600 11.5px var(--font-label);letter-spacing:.09em;text-transform:uppercase;color:var(--muted);margin-top:6px}
+  .or-n{font:900 52px/1 var(--font-stencil);color:var(--ink)}
+  .or-st[data-k="data"] .or-n{color:var(--blue)}
+  .or-cap{font-size:17px;line-height:1.4;max-width:24ch}
+  .or-st[data-k="data"] .or-cap b{color:var(--blue)}
+
+  /* on the track: four stations across two screens, one line joining them */
+  html.hz-on #order .or-in{display:block;max-width:none;margin:0;height:100%;flex:1 0 auto;padding:0}
+  html.hz-on #order .or-head{position:absolute;left:0;top:0;width:50%}
+  html.hz-on #order .or-st{position:absolute;left:calc(var(--x) * 100%);top:31%;width:300px;translate:-50% 0;opacity:.28;transition:opacity .35s steps(3)}
+  html.hz-on #order .or-st.on{opacity:1}
+  html.hz-on #order .or-path{display:block;position:absolute;inset:0;width:100%;height:100%;overflow:visible;pointer-events:none}
+  .or-guide{fill:none;stroke:var(--ink);stroke-width:1.2;stroke-dasharray:3 7;opacity:.35}
+  .or-data{fill:none;stroke:var(--blue);stroke-width:2.6;stroke-dasharray:9 8}
+  .or-goods{fill:none;stroke:var(--ink);stroke-width:3;stroke-linecap:round}
+  html.hz-on #order .or-token{display:block;position:absolute;left:0;top:0;pointer-events:none;z-index:3}
+  .or-chip{position:absolute;translate:-50% -50%;white-space:nowrap;font:600 11px var(--font-label);letter-spacing:.08em;text-transform:uppercase;background:var(--blue);color:var(--card);padding:6px 10px;border-radius:999px;box-shadow:0 6px 14px -6px rgba(31,79,160,.7)}
+  .or-box{position:absolute;width:56px;height:50px;translate:-50% -78%;display:none;overflow:visible}
+  .or-token.goods .or-chip{display:none}
+  .or-token.goods .or-box{display:block}
+  html.hz-on #order .or-end{display:grid;gap:14px;position:absolute;left:84.5%;top:30%;width:13.5%;min-width:280px}
+  .or-endk{color:var(--ink)}
+  .or-endt{font:800 clamp(24px,2.2vw,32px)/1.12 var(--font-display);font-variation-settings:'wdth' 78}
+  .or-blue{color:var(--blue)}
+  .or-endm{font-size:19px;line-height:1.4}
+  .or-ring{opacity:0}
+  .or-st.on .or-ring{animation:or-ping 1.2s var(--ease-out) .2s 2 both}
+  @keyframes or-ping{0%{opacity:.9;r:4}100%{opacity:0;r:22}}
+  .or-st.on .or-gear{animation:or-spin 1.6s var(--ease-draw) 1 both}
+  @keyframes or-spin{to{rotate:180deg}}
+  .or-gear{transform-box:fill-box;transform-origin:center}
+  .js .or-check{opacity:0}
+  .or-st.on .or-check{opacity:1;transition:opacity .1s steps(1) .6s}
+  @media (prefers-reduced-motion: reduce){ .or-st.on .or-ring,.or-st.on .or-gear{animation:none} }
+</style>
+<script>
+(() => {
+  const s = $('#order'), inn = $('.or-in', s), sts = $$('.or-st', s), svg = $('.or-path', s), tok = $('.or-token', s);
+  const guide = $('.or-guide', svg), data = $('.or-data', svg), goods = $('.or-goods', svg), mk = $('.or-mk', svg);
+  let pts = [], xs = [], L = 0, ready = false;
+  if (FINAL) sts.forEach(st => st.classList.add('on'));
+
+  /* build the line in pixels from where the stations actually sit */
+  function build() {
+    if (!document.documentElement.classList.contains('hz-on')) { ready = false; return; }
+    const r0 = inn.getBoundingClientRect();
+    pts = sts.map(st => { const b = $('svg', st).getBoundingClientRect(); return { x: b.left - r0.left + b.width / 2, y: b.top - r0.top + b.height * .55, w: b.width }; });
+    const seg = (a, b) => { const x1 = a.x + a.w * .5, x2 = b.x - b.w * .5, mx = (x1 + x2) / 2; return `M${x1} ${a.y} C${mx} ${a.y - 70} ${mx} ${b.y - 70} ${x2} ${b.y}`; };
+    const dD = seg(pts[0], pts[1]) + ' ' + seg(pts[1], pts[2]), gD = seg(pts[2], pts[3]);
+    data.setAttribute('d', dD); goods.setAttribute('d', gD); guide.setAttribute('d', dD + ' ' + gD);
+    /* the mask path runs the whole way, centre to centre, so one dashoffset reveals both */
+    const all = `M${pts[0].x} ${pts[0].y} L${pts[0].x + pts[0].w * .5} ${pts[0].y} ` + [0, 1, 2].map(i => seg(pts[i], pts[i + 1]).replace(/^M[^C]+/, `L${pts[i].x + pts[i].w * .5} ${pts[i].y} `) + ` L${pts[i + 1].x} ${pts[i + 1].y}`).join(' ');
+    mk.setAttribute('d', all);
+    L = mk.getTotalLength(); xs = [];
+    for (let k = 0; k <= 300; k++) xs.push(mk.getPointAtLength(L * k / 300));
+    mk.style.strokeDasharray = `${L} ${L}`;
+    ready = true;
+  }
+  function at(px) {   /* the point on the line at screen x = px */
+    let k = 0; while (k < 300 && xs[k + 1].x <= px) k++;
+    return xs[Math.min(300, k)];
+  }
+  function show(centre) {
+    if (!ready) return;
+    const c = Math.max(pts[0].x, Math.min(pts[3].x, centre));
+    let k = 0; while (k < 300 && xs[k + 1].x <= c) k++;
+    mk.style.strokeDashoffset = (L * (1 - k / 300)).toFixed(1);
+    const p = at(c);
+    tok.style.transform = `translate(${p.x.toFixed(1)}px, ${p.y.toFixed(1)}px)`;
+    tok.classList.toggle('goods', c >= pts[2].x - 2);
+    sts.forEach((st, i) => { if (centre >= pts[i].x - 30) st.classList.add('on'); });
+  }
+  addEventListener('cps:move', e => {
+    const { x, VW, lefts } = e.detail, i = $$('main > section').indexOf(s);
+    if (i < 0 || lefts[i] == null) return;
+    if (!ready) build();
+    show(x - lefts[i] + VW / 2);
+  });
+  addEventListener('resize', () => { ready = false; });
+  addEventListener('load', () => { build(); });
+})();
+</script>
+
+<section id="money" class="band kraft" data-title="How it makes money">
+  <div class="wrap mo-wrap">
+    <div class="mo-head">
+      <h2 class="rv">The store lives on the gap</h2>
+      <p class="lede rv" style="--d:.1s">A customer pays $80 for a pair of shoes. The supplier charges the store $50. The $30 in between is the store's to keep.</p>
+      <p class="mo-def rv" style="--d:.2s">That gap is called <mark>the markup.</mark></p>
+    </div>
+    <figure class="mo-fig">
+      <svg class="mo-svg" viewBox="0 0 640 450" role="img" aria-label="An $80 price tag tears into a $50 piece that goes to the supplier and a $30 piece the store keeps.">
+        <path class="ln thin mo-string" d="M110 196 C80 120 120 60 60 20"/>
+        <g class="mo-l">
+          <path d="M120 92 H398 V300 H120 L60 196 Z" class="f-card" stroke="#1E1A16" stroke-width="2.4" stroke-linejoin="round"/>
+          <circle cx="104" cy="196" r="12" fill="var(--kraft)" stroke="#1E1A16" stroke-width="2"/>
+          <g class="mo-after">
+            <text x="258" y="140" text-anchor="middle" class="svg-label" style="fill:var(--muted)">To the supplier</text>
+            <text x="258" y="238" text-anchor="middle" style="font:900 96px var(--font-display);font-variation-settings:'wdth' 64;fill:var(--muted)">$50</text>
+            <text x="258" y="272" text-anchor="middle" class="svg-label" style="fill:var(--muted)">Wholesale price</text>
+          </g>
+        </g>
+        <g class="mo-r">
+          <path class="mo-rbg" d="M398 92 H600 V300 H398 Z" fill="var(--card)" stroke="#1E1A16" stroke-width="2.4" stroke-linejoin="round"/>
+          <g class="mo-after">
+            <text x="499" y="140" text-anchor="middle" class="svg-label">Store keeps</text>
+            <text x="499" y="238" text-anchor="middle" style="font:900 96px var(--font-display);font-variation-settings:'wdth' 64;fill:var(--ink)">$30</text>
+            <text x="499" y="272" text-anchor="middle" class="svg-label">Gross profit</text>
+          </g>
+        </g>
+        <g class="mo-before">
+          <text x="330" y="140" text-anchor="middle" class="svg-label">Customer pays</text>
+          <text x="330" y="246" text-anchor="middle" style="font:900 132px var(--font-display);font-variation-settings:'wdth' 64;fill:var(--ink)">$80</text>
+        </g>
+        <path class="mo-perf" d="M398 84 V308" stroke="var(--red)" stroke-width="2.4" stroke-dasharray="6 6" fill="none"/>
+        <text class="mo-sc svg-hand" x="410" y="74">tear here</text>
+        <g class="mo-eq">
+          <text x="330" y="378" text-anchor="middle" style="font:600 15px var(--font-label);letter-spacing:.04em;fill:var(--ink)">PROFIT = SELLING PRICE − SUPPLIER PRICE</text>
+          <text x="330" y="414" text-anchor="middle" style="font:800 26px var(--font-display);font-variation-settings:'wdth' 80;fill:var(--ink)">$80 − $50 = $30, or 37% of the order</text>
+        </g>
+      </svg>
+    </figure>
+  </div>
+</section>
+<style>
+  html.hz-on #money{--cps-split:no}
+  .mo-wrap{display:grid;grid-template-columns:minmax(0,4.4fr) minmax(0,6fr);gap:clamp(28px,4vw,64px);align-items:center;max-width:1220px}
+  .mo-head{display:grid;gap:20px}
+  .mo-def{font:800 clamp(26px,2.4vw,34px)/1.15 var(--font-display);font-variation-settings:'wdth' 80}
+  .mo-fig{margin:0}
+  .mo-svg{width:100%;height:auto;max-height:calc(100svh - 200px);overflow:visible}
+  .mo-l,.mo-r{transform-box:fill-box;transform-origin:50% 50%;transition:transform 1s cubic-bezier(.3,1.25,.5,1)}
+  .mo-l.split{transform:translate(-26px,38px) rotate(-5deg)}
+  .mo-r.split{transform:translate(22px,-16px) rotate(3deg)}
+  .mo-r.split .mo-rbg{fill:var(--marker);transition:fill .1s steps(1) .5s}
+  .mo-after{opacity:0;transition:opacity .1s steps(1) .35s}
+  .split .mo-after{opacity:1}
+  .mo-before{transition:opacity .1s steps(1) .3s}
+  .mo-before.gone{opacity:0}
+  .mo-perf.gone,.mo-sc.gone{opacity:0;transition:opacity .1s steps(1) .3s}
+  .js .mo-eq{opacity:0}
+  .mo-eq.on{opacity:1;transition:opacity .5s var(--ease-out)}
+  html.still .mo-l,html.still .mo-r{transition:none}
+</style>
+<script>
+(() => {
+  const s = $('#money'), L = $('.mo-l', s), R = $('.mo-r', s), before = $('.mo-before', s), perf = $('.mo-perf', s), sc = $('.mo-sc', s), eq = $('.mo-eq', s);
+  prepDraw([perf]);
+  const split = () => { [L, R].forEach(g => g.classList.add('split')); before.classList.add('gone'); perf.classList.add('gone'); sc.classList.add('gone'); };
+  if (FINAL) { perf.style.strokeDasharray = '6 6'; split(); eq.classList.add('on'); return; }
+  sc.style.opacity = 0;
+  onView(s, () => {
+    /* the perforation draws, then the tag tears in two */
+    perf.style.transition = 'stroke-dashoffset .9s var(--ease-draw) .6s';
+    requestAnimationFrame(() => { perf.style.strokeDashoffset = 0; });
+    setTimeout(() => { perf.style.strokeDasharray = '6 6'; perf.style.strokeDashoffset = 0; sc.style.opacity = 1; }, 1500);
+    setTimeout(split, 2500);
+    setTimeout(() => eq.classList.add('on'), 3500);
+  }, .45);
+})();
+</script>
+
+<section id="compare" class="band sheet" data-title="Compared to Amazon">
+  <div class="wrap cm-wrap">
+    <h2 class="rv">Amazon owns the stock. A dropshipper owns none.</h2>
+    <div class="cm-grid" role="table" aria-label="Three e-commerce models compared">
+      <div class="cm-corner" role="columnheader"></div>
+      <div class="cm-col rv" role="columnheader" style="--d:.05s">
+        <svg viewBox="0 0 160 84" aria-hidden="true"><path class="ln" d="M8 80 V34 L80 6 L152 34 V80"/><path class="ln thin" d="M26 80 V46 H134 V80"/>
+          <g transform="translate(44 80)"><use href="#parcel"/></g><g transform="translate(70 80)"><use href="#parcel"/></g><g transform="translate(96 80)"><use href="#parcel"/></g><g transform="translate(122 80)"><use href="#parcel"/></g>
+          <g transform="translate(57 66)"><use href="#parcel"/></g><g transform="translate(83 66)"><use href="#parcel"/></g><g transform="translate(109 66)"><use href="#parcel"/></g></svg>
+        <p class="cm-name">Inventory model</p><p class="cm-eg">e.g. Amazon's own stock</p></div>
+      <div class="cm-col rv" role="columnheader" style="--d:.15s">
+        <svg viewBox="0 0 160 84" aria-hidden="true">
+          <g class="ln"><path d="M6 80 V44 M46 80 V44 M2 44 H50 L44 30 H8 Z"/><path d="M58 80 V44 M98 80 V44 M54 44 H102 L96 30 H60 Z"/><path d="M110 80 V44 M150 80 V44 M106 44 H154 L148 30 H112 Z"/></g>
+          <g transform="translate(26 80) scale(.8)"><use href="#parcel"/></g><g transform="translate(78 80) scale(.8)"><use href="#parcel"/></g><g transform="translate(130 80) scale(.8)"><use href="#parcel"/></g></svg>
+        <p class="cm-name">Marketplace</p><p class="cm-eg">e.g. Flipkart, Meesho today</p></div>
+      <div class="cm-col cm-ds rv" role="columnheader" style="--d:.25s">
+        <svg viewBox="0 0 160 84" aria-hidden="true"><rect class="ln f-card" x="58" y="4" width="44" height="78" rx="8"/><path class="ln thin" d="M68 18 h24 v14 h-24 z M68 38 h24 M68 46 h16"/><rect x="66" y="62" width="28" height="9" rx="4.5" class="f-ink"/>
+          <path d="M104 40 C124 40 132 52 150 52" stroke="var(--blue)" stroke-width="2" stroke-dasharray="4 4" fill="none"/></svg>
+        <p class="cm-name">Dropshipping</p><p class="cm-eg">e.g. Shopify stores, Meesho resellers</p></div>
+
+      <p class="cm-q" role="rowheader">Who buys stock first?</p><p class="cm-c">The company</p><p class="cm-c">Each seller</p><p class="cm-c cm-ds"><b>Nobody.</b> Bought after the sale</p>
+      <p class="cm-q" role="rowheader">Warehouses</p><p class="cm-c">~350 fulfilment centres worldwide</p><p class="cm-c">Sellers' own, or the platform's</p><p class="cm-c cm-ds"><b>None</b></p>
+      <p class="cm-q" role="rowheader">Money to start</p><p class="cm-c"><i class="cm-coins" data-n="3"></i>Very high</p><p class="cm-c"><i class="cm-coins" data-n="2"></i>Medium</p><p class="cm-c cm-ds"><i class="cm-coins" data-n="1"></i><b>Very low</b></p>
+      <p class="cm-q" role="rowheader">How it earns</p><p class="cm-c">Sells its own stock</p><p class="cm-c">Fees and ads from sellers</p><p class="cm-c cm-ds">Markup on each order</p>
+      <p class="cm-q" role="rowheader">Delivery speed</p><p class="cm-c">Fast: 1 to 2 days</p><p class="cm-c">Usually days</p><p class="cm-c cm-ds cm-slow">Slow: often weeks</p>
+      <svg class="cm-ring" aria-hidden="true"><path/></svg>
+    </div>
+    <p class="cm-note hand">The slowest column. So why would anyone pick it?</p>
+  </div>
+</section>
+<style>
+  html.hz-on #compare{--cps-split:no}
+  .cm-wrap{display:grid;gap:clamp(16px,2.6vh,28px);max-width:1180px}
+  #compare h2{max-width:24ch}
+  .cm-grid{position:relative;display:grid;grid-template-columns:minmax(150px,1fr) repeat(3,minmax(0,1.35fr));column-gap:clamp(14px,2vw,30px)}
+  .cm-col{display:grid;gap:2px;padding-bottom:10px;border-bottom:2px solid var(--ink)}
+  .cm-corner{border-bottom:2px solid var(--ink)}
+  .cm-col svg{width:150px;height:auto;overflow:visible;margin-bottom:4px}
+  .cm-name{font:800 23px/1.05 var(--font-display);font-variation-settings:'wdth' 75}
+  .cm-eg{font:500 12px var(--font-label);color:var(--muted)}
+  .cm-q{font:600 11.5px/1.3 var(--font-label);letter-spacing:.08em;text-transform:uppercase;color:var(--muted);padding:12px 0;border-bottom:1px dashed var(--line-2);align-self:stretch;display:flex;align-items:center}
+  .cm-c{font-size:16px;line-height:1.3;padding:12px 0;border-bottom:1px dashed var(--line-2);display:flex;align-items:center;gap:10px}
+  .cm-c b{font-weight:700}
+  .cm-ds.cm-c{color:var(--ink)}
+  .cm-slow{color:var(--red-deep) !important;font-weight:700}
+  .cm-coins{display:inline-flex;gap:0;flex:0 0 auto}
+  .cm-coins::before{content:"";width:calc(var(--n,1) * 13px + 5px);height:18px;
+    background:radial-gradient(circle at 9px 9px,var(--marker) 0 7px,var(--ink) 7px 8.4px,transparent 8.6px) 0 0/13px 18px repeat-x}
+  .cm-coins[data-n="2"]{--n:2} .cm-coins[data-n="3"]{--n:3}
+  .cm-ring{position:absolute;left:0;top:0;width:100%;height:100%;pointer-events:none;overflow:visible}
+  .cm-ring path{fill:none;stroke:var(--red);stroke-width:3;stroke-linecap:round}
+  .cm-note{font-size:clamp(20px,1.8vw,26px);justify-self:end;rotate:-1.5deg;margin-top:-6px}
+  .js .cm-note{opacity:0}
+  .cm-note.on{opacity:1;transition:opacity .1s steps(1)}
+</style>
+<script>
+(() => {
+  const s = $('#compare'), grid = $('.cm-grid', s), ring = $('.cm-ring path', s), note = $('.cm-note', s);
+  function drawRing() {
+    const g = grid.getBoundingClientRect(), cells = $$('.cm-ds', grid).map(c => c.getBoundingClientRect());
+    const l = Math.min(...cells.map(c => c.left)) - g.left - 14, r = Math.max(...cells.map(c => c.right)) - g.left + 10;
+    const t = Math.min(...cells.map(c => c.top)) - g.top - 10, b = Math.max(...cells.map(c => c.bottom)) - g.top + 8;
+    const cx = (l + r) / 2, cy = (t + b) / 2, rx = (r - l) / 2, ry = (b - t) / 2;
+    /* a hand-drawn loop: slightly more than one turn, wobbly */
+    let d = '';
+    for (let k = 0; k <= 64; k++) {
+      const a = -Math.PI * .62 + k / 64 * Math.PI * 2.12, w = 1 + .03 * Math.sin(k * .9);
+      d += (k ? 'L' : 'M') + (cx + Math.cos(a) * rx * w).toFixed(1) + ' ' + (cy + Math.sin(a) * ry * w).toFixed(1);
+    }
+    ring.setAttribute('d', d);
+    prepDraw([ring]);
+  }
+  onView(s, () => {
+    drawRing();
+    penDraw([ring], { delay: FINAL ? 0 : 1.4, min: 1.4, max: 1.4 });
+    setTimeout(() => note.classList.add('on'), FINAL ? 0 : 2800);
+  }, .45);
+  addEventListener('resize', () => { if (note.classList.contains('on')) { drawRing(); ring.style.strokeDashoffset = 0; } });
+})();
+</script>
+
+<section id="receipt" class="band dark" data-title="Three reasons">
+  <div class="wrap rc-wrap">
+    <div class="rc-head">
+      <h2 class="rv">Why pick the slow column? Read the bill.</h2>
+      <p class="lede rv" style="--d:.1s">Here is what it costs to open a dropshipping store, against keeping stock.</p>
+      <ol class="rc-why">
+        <li class="rv" style="--d:.2s"><b>1</b>Easy to start</li>
+        <li class="rv" style="--d:.3s"><b>2</b>Low risk</li>
+        <li class="rv" style="--d:.4s"><b>3</b>Free to grow</li>
+      </ol>
+    </div>
+    <div class="rc-printer">
+      <div class="rc-slot" aria-hidden="true"></div>
+      <div class="rc-feed">
+        <div class="rc-paper">
+          <p class="rc-title">Store setup<br>receipt</p>
+          <p class="rc-meta"><span>ITB-01</span><span>Dropshipping store</span></p>
+          <p class="rc-sec">1. Easy to start</p>
+          <p class="rc-ln"><span>Stock to buy first</span><b>None</b></p>
+          <p class="rc-ln"><span>Shop or warehouse rent</span><b>None</b></p>
+          <p class="rc-ln"><span>Store setup (Shopify, WooCommerce)</span><b>Hours</b></p>
+          <p class="rc-sec">2. Low risk</p>
+          <p class="rc-ln"><span>You pay the supplier</span><b>After the customer pays you</b></p>
+          <p class="rc-ln"><span>Unsold goods piling up</span><b>None</b></p>
+          <p class="rc-ln"><span>Add or remove products</span><b>Any time</b></p>
+          <p class="rc-sec">3. Free to grow</p>
+          <p class="rc-ln"><span>Storing, packing, shipping</span><b>Supplier</b></p>
+          <p class="rc-ln"><span>Marketing and customers</span><b>You</b></p>
+          <p class="rc-ln"><span>Where you work</span><b>Anywhere</b></p>
+          <p class="rc-total"><span>Money needed upfront</span><b><mark>Very little</mark></b></p>
+          <svg class="rc-bar" aria-hidden="true"></svg>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+<style>
+  html.hz-on #receipt{--cps-split:no}
+  .rc-wrap{display:grid;grid-template-columns:minmax(0,5fr) minmax(0,5.2fr);gap:clamp(28px,5vw,90px);align-items:center;max-width:1180px}
+  #receipt h2{color:var(--paper);max-width:14ch}
+  .rc-head{display:grid;gap:22px}
+  .rc-why{list-style:none;margin:6px 0 0;padding:0;display:grid;gap:10px}
+  .rc-why li{display:flex;align-items:center;gap:14px;font:800 clamp(24px,2.3vw,32px)/1 var(--font-display);font-variation-settings:'wdth' 78;color:var(--paper)}
+  .rc-why b{display:grid;place-items:center;width:42px;height:42px;border-radius:50%;background:var(--marker);color:var(--ink);font:900 24px var(--font-stencil)}
+  .rc-printer{position:relative;justify-self:center;width:min(430px,100%)}
+  .rc-slot{height:16px;border-radius:8px;background:#0E0C0A;box-shadow:inset 0 3px 6px rgba(0,0,0,.6),0 1px 0 rgba(255,255,255,.08);margin:0 -14px}
+  .rc-feed{overflow:hidden;margin-top:-8px;padding:0 6px 20px}
+  .rc-paper{background:var(--card);color:var(--ink);padding:24px 26px 30px;font:500 13.5px/1.35 var(--font-label);
+    --zz:linear-gradient(-45deg,transparent 7px,#000 7.5px) 0 100%/14px 14px repeat-x,linear-gradient(45deg,transparent 7px,#000 7.5px) 0 100%/14px 14px repeat-x,linear-gradient(#000,#000) 0 0/100% calc(100% - 13px) no-repeat;
+    -webkit-mask:var(--zz);mask:var(--zz);box-shadow:0 10px 30px rgba(0,0,0,.5)}
+  .rc-title{font:900 30px/.95 var(--font-stencil);text-transform:uppercase;text-align:center;letter-spacing:.04em}
+  .rc-meta{display:flex;justify-content:space-between;border-block:1.5px dashed var(--ink);padding:6px 0;margin:12px 0 4px;font-size:11.5px;text-transform:uppercase}
+  .rc-sec{font-weight:600;text-transform:uppercase;letter-spacing:.06em;margin-top:12px;padding-bottom:3px;border-bottom:1px solid var(--ink)}
+  .rc-ln{display:flex;gap:10px;justify-content:space-between;align-items:baseline;padding:3px 0}
+  .rc-ln span{flex:1 1 auto;overflow:hidden;white-space:nowrap}
+  .rc-ln span::after{content:" ................................................................";color:var(--muted)}
+  .rc-ln b{flex:0 0 auto;font-weight:600;text-transform:uppercase;max-width:52%;text-align:right}
+  .rc-total{display:flex;justify-content:space-between;gap:10px;align-items:baseline;border-top:2px solid var(--ink);margin-top:12px;padding-top:9px;font:900 21px var(--font-stencil);text-transform:uppercase}
+  .rc-total b{font-weight:900}
+  .rc-bar{display:block;width:100%;height:34px;margin-top:14px;color:var(--ink)}
+  /* printing: the paper feeds down out of the slot in jerky steps, like a thermal printer */
+  .js .rc-paper{translate:0 -100%}
+  .rc-paper.print{translate:0 0;transition:translate 2.6s steps(26)}
+  @media (prefers-reduced-motion: reduce){ .js .rc-paper{translate:none} }
+</style>
+<script>
+(() => {
+  const s = $('#receipt'), paper = $('.rc-paper', s);
+  barcode($('.rc-bar', s), 'store setup receipt', 360, 34);
+  onView(s, () => {
+    const mk = $('mark', s);
+    if (FINAL) { paper.style.translate = '0 0'; mk.classList.add('in'); return; }
+    setTimeout(() => paper.classList.add('print'), 450);
+    setTimeout(() => mk.classList.add('in'), 3100);
+  }, .45);
+})();
+</script>
+
+<section id="shirts" class="band kraft" data-title="Low risk, up close">
+  <div class="wrap sh-wrap">
+    <div class="sh-top">
+      <p class="label sh-k">Reason 2, up close</p>
+      <h2 class="rv">Buy 100 and hope, or buy 1 after they pay</h2>
+    </div>
+    <div class="sh-half">
+      <p class="sh-name">Normal store <span>buys 100 shirts upfront, before knowing who wants them</span></p>
+      <svg class="sh-grid" viewBox="0 0 410 300" role="img" aria-label="100 shirts bought upfront: 30 sold, 70 stuck in storage."></svg>
+      <div class="sh-count"><p><b class="sh-sold">30</b> sold to buyers</p><p><b class="sh-stuck">70</b> stuck in storage</p></div>
+      <p class="sh-cap">Dead stock ties up money and eats profit.</p>
+    </div>
+    <p class="sh-or stencil" aria-hidden="true">or</p>
+    <div class="sh-half sh-ds">
+      <p class="sh-name">Dropshipping store <span>waits for the customer, then buys exactly 1</span></p>
+      <ol class="sh-seq">
+        <li><svg viewBox="0 0 80 80" aria-hidden="true"><circle cx="40" cy="40" r="28" fill="var(--marker)" stroke="#1E1A16" stroke-width="2.4"/><circle cx="40" cy="40" r="20" fill="none" stroke="#1E1A16" stroke-width="1.2"/><text x="40" y="49" text-anchor="middle" style="font:900 26px var(--font-display)">$</text></svg><p>Customer pays first</p></li>
+        <li><svg viewBox="0 0 80 80" aria-hidden="true"><g transform="translate(14 18) scale(1.6)"><path d="M10 1 L4 4 L0 10 L5 12 L7 9 V25 H25 V9 L27 12 L32 10 L28 4 L22 1 C20 4 12 4 10 1 Z" fill="var(--card)" stroke="#1E1A16" stroke-width="1.5" stroke-linejoin="round"/></g></svg><p>Store buys 1 shirt</p></li>
+        <li><svg viewBox="0 0 80 80" aria-hidden="true"><g transform="translate(40 66) scale(1.5)"><use href="#parcel"/></g><path d="M50 22 l8 8 l16 -18" fill="none" stroke="var(--red)" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/></svg><p>1 shirt sold</p></li>
+      </ol>
+      <div class="sh-count"><p><b>1</b> bought, <b>1</b> sold</p><p><b>0</b> left over</p></div>
+      <p class="sh-cap">Add or remove products quickly, and grow or shrink with demand.</p>
+    </div>
+  </div>
+</section>
+<style>
+  html.hz-on #shirts{--cps-split:no}
+  .sh-wrap{display:grid;grid-template-columns:minmax(0,1fr) auto minmax(0,1fr);gap:18px clamp(20px,3vw,48px);align-items:start;max-width:1200px}
+  .sh-top{grid-column:1/-1;display:grid;gap:10px}
+  .sh-k{color:var(--ink)}
+  #shirts h2{max-width:26ch}
+  .sh-half{display:grid;gap:12px;align-content:start}
+  .sh-name{font:800 26px/1.1 var(--font-display);font-variation-settings:'wdth' 78;padding-bottom:8px;border-bottom:2px solid var(--ink)}
+  .sh-name span{display:block;font:400 15px/1.35 var(--font-body);font-variation-settings:'wdth' 100;color:var(--muted);margin-top:4px}
+  .sh-grid{width:100%;height:auto;max-height:calc(100svh - 470px);overflow:visible}
+  .sh-count{display:flex;gap:24px;flex-wrap:wrap;font-size:16px}
+  .sh-count b{font:900 34px/1 var(--font-display);font-variation-settings:'wdth' 66;margin-right:4px}
+  .sh-stuck{color:var(--red-deep)}
+  .sh-cap{font-size:15px;color:var(--muted);max-width:40ch}
+  .sh-or{align-self:center;font-size:clamp(40px,4vw,64px);color:var(--ink);text-transform:uppercase;writing-mode:vertical-rl;opacity:.75}
+  .sh-seq{list-style:none;margin:6px 0;padding:0;display:grid;grid-template-columns:repeat(3,1fr);gap:8px;position:relative}
+  .sh-seq li{display:grid;justify-items:center;text-align:center;gap:6px;position:relative}
+  .sh-seq li + li::before{content:"→";position:absolute;left:-14px;top:30px;font:800 26px var(--font-display);color:var(--ink)}
+  .sh-seq svg{width:min(110px,100%);height:auto}
+  .sh-seq p{font:600 12px/1.3 var(--font-label);letter-spacing:.06em;text-transform:uppercase}
+  .js .sh-seq li{opacity:.15}
+  .sh-seq li.on{opacity:1;transition:opacity .15s steps(2)}
+  .sh-shirt{transition:opacity .25s var(--ease-out),translate .5s var(--ease-out)}
+  .sh-shirt path{fill:var(--card);stroke:#1E1A16;stroke-width:1.3;stroke-linejoin:round;transition:fill .1s steps(1)}
+  .sh-shirt.sold{opacity:0;translate:0 -26px}
+  .sh-shirt.stuck path{fill:#B49A73;stroke:#6E5A3E}
+  .sh-stamp{opacity:0}
+  .sh-stamp.on{opacity:.93}
+  html.still .sh-shirt{transition:none}
+</style>
+<script>
+(() => {
+  const s = $('#shirts'), svg = $('.sh-grid', s);
+  const SHIRT = 'M10 1 L4 4 L0 10 L5 12 L7 9 V25 H25 V9 L27 12 L32 10 L28 4 L22 1 C20 4 12 4 10 1 Z';
+  let out = '';
+  for (let i = 0; i < 100; i++) {
+    const c = i % 10, r = Math.floor(i / 10);
+    out += `<g class="sh-shirt" data-i="${i}" transform="translate(${8 + c * 40} ${6 + r * 29})"><path d="${SHIRT}"/></g>`;
+  }
+  out += `<g class="sh-stamp" transform="translate(205 168) rotate(-8)"><rect x="-150" y="-34" width="300" height="64" rx="5" fill="rgba(251,249,244,.86)" stroke="var(--red)" stroke-width="4"/>
+    <text x="0" y="-4" text-anchor="middle" style="font:900 30px var(--font-stencil);letter-spacing:.06em;fill:var(--red)">70 STUCK</text>
+    <text x="0" y="20" text-anchor="middle" style="font:900 16px var(--font-stencil);letter-spacing:.14em;fill:var(--red)">IN STORAGE</text></g>`;
+  svg.innerHTML = out;
+  const shirts = $$('.sh-shirt', svg), stamp = $('.sh-stamp', svg), seq = $$('.sh-seq li', s);
+  /* which 30 sell: scattered, the same every time */
+  let seed = 7; const rnd = () => (seed = (seed * 16807) % 2147483647) / 2147483647;
+  const sold = shirts.map((_, i) => i).sort(() => rnd() - .5).slice(0, 30);
+  const finish = () => { shirts.forEach((sh, i) => sh.classList.add(sold.includes(i) ? 'sold' : 'stuck')); stamp.classList.add('on'); seq.forEach(li => li.classList.add('on')); };
+  if (FINAL) { finish(); return; }
+  onView(s, () => {
+    sold.forEach((i, k) => setTimeout(() => shirts[i].classList.add('sold'), 700 + k * 70));
+    const t = 700 + 30 * 70 + 300;
+    setTimeout(() => shirts.forEach((sh, i) => { if (!sold.includes(i)) sh.classList.add('stuck'); }), t);
+    setTimeout(() => stamp.classList.add('on'), t + 450);
+    seq.forEach((li, k) => setTimeout(() => li.classList.add('on'), t + 1100 + k * 650));
+  }, .45);
+})();
+</script>
+
+<section id="part3" class="band dark dv" data-title="Part 3: Why not?">
+  <div class="wrap dv-wrap">
+    <div class="dv-head">
+      <p class="dv-part stencil" style="color:var(--red)">Part 3</p>
+      <h2 class="rv">If it's this easy, why isn't everyone rich?</h2>
+      <p class="lede rv" style="--d:.15s">Every advantage you just saw has a price.</p>
+    </div>
+    <div class="dv-card lbl rv" style="--d:.1s">
+      <i class="tape" style="left:44%;top:-14px;rotate:5deg"></i>
+      <div class="dv-top"><span class="label">Tracking</span><b>ITB-01 / DROPSHIPPING</b></div>
+      <ol class="dv-list">
+        <li class="dv-done"><i></i><span class="dv-name">Part 1<br><b>What it is</b></span><span class="dv-st">Delivered</span></li>
+        <li class="dv-done"><i></i><span class="dv-name">Part 2<br><b>Why do it</b></span><span class="dv-st">Delivered</span></li>
+        <li class="dv-now dv-bad"><i></i><span class="dv-name">Part 3<br><b>Why not</b></span><span class="dv-st">Delayed</span></li>
+      </ol>
+      <i class="dv-line" aria-hidden="true"></i>
+    </div>
+  </div>
+</section>
+<script>initDivider($('#part3'));</script>
+
+<section id="road" class="band kraft" data-span="3" data-stops="0,1,1.5,2" data-title="Easy for you means easy for everyone">
+  <div class="rd-in">
+    <div class="rd-s1 wrap">
+      <div class="rd-head">
+        <p class="label">Part 3: the drawbacks</p>
+        <h2 class="rv">Easy for you means easy for everyone</h2>
+        <p class="lede rv" style="--d:.1s">Every reason to start comes with its own catch.</p>
+      </div>
+      <div class="rd-box">
+        <svg viewBox="0 0 560 470" aria-hidden="true">
+          <path d="M280 40 L530 120 L280 200 L30 120 Z" class="f-kraft" stroke="#1E1A16" stroke-width="2.4" stroke-linejoin="round"/>
+          <path d="M30 120 L280 200 L280 450 L30 370 Z" class="f-kraft2" stroke="#1E1A16" stroke-width="2.4" stroke-linejoin="round"/>
+          <path d="M280 200 L530 120 L530 370 L280 450 Z" class="f-kraft3" stroke="#1E1A16" stroke-width="2.4" stroke-linejoin="round"/>
+          <path d="M155 80 L405 160" stroke="#F5CB3C" stroke-width="26" opacity=".85"/>
+          <path d="M405 160 L405 230" stroke="#F5CB3C" stroke-width="26" opacity=".85"/>
+          <text x="420" y="330" transform="rotate(-18 420 330)" style="font:900 30px var(--font-stencil);letter-spacing:.06em" fill="#1E1A16" opacity=".55">THIS SIDE UP</text>
+        </svg>
+        <div class="rd-stk rv" style="--d:.2s;left:-4%;top:6%;rotate:-3deg">
+          <p class="label">Competition</p>
+          <p class="rd-cause">Easy to start <b>→ many competitors</b></p>
+          <p class="rd-big">~1 in 4</p>
+          <p class="rd-small">online stores already use this model</p>
+        </div>
+        <div class="rd-stk rv" style="--d:.35s;left:4%;top:52%;rotate:2deg">
+          <p class="label">Product quality</p>
+          <p class="rd-cause">Huge choice <b>→ quality changes by supplier</b></p>
+          <p class="rd-big">0</p>
+          <p class="rd-small">times you see the product before the customer does</p>
+        </div>
+        <div class="rd-stk rd-stk3 rv" style="--d:.5s;left:55%;top:34%;rotate:-1.5deg">
+          <p class="label">Shipping time</p>
+          <p class="rd-cause">No stock at home <b>→ longer shipping</b></p>
+          <p class="rd-big">15 to 45 days</p>
+          <p class="rd-small">typical standard shipping from AliExpress suppliers</p>
+          <p class="hand rd-follow">follow the parcel →</p>
+        </div>
+      </div>
+    </div>
+
+    <svg class="rd-svg" viewBox="0 0 2560 600" role="img" aria-label="Two roads drawn to the same scale of days. Amazon delivers by day 2. A dropshipping order from an AliExpress supplier typically takes 15 to 45 days.">
+      <rect x="773" y="96" width="1147" height="440" fill="var(--tint-3)" opacity=".5"/>
+      <text x="785" y="86" class="svg-label" style="fill:var(--red-deep)">15 to 45 days: typical standard shipping from AliExpress suppliers</text>
+      <g class="rd-ruler"></g>
+
+      <!-- lane A: Amazon -->
+      <text x="20" y="196" class="svg-label">Amazon</text>
+      <text x="20" y="226" style="font:900 30px var(--font-display);font-variation-settings:'wdth' 70">1 to 2 days</text>
+      <path class="ln" d="M60 300 V262 L92 246 V262 L124 246 V262 L156 246 V262 L180 252 V300"/>
+      <path class="ln" d="M180 300 H276"/>
+      <path class="ln" d="M282 300 V266 L312 244 L342 266 V300"/>
+      <path class="ln" d="M20 300 H360" stroke-width="1.2"/>
+      <g class="rd-stampA rd-stamp" transform="translate(362 236) rotate(-8)">
+        <rect x="0" y="0" width="150" height="46" rx="4" fill="none" stroke="var(--red)" stroke-width="3"/>
+        <text x="75" y="21" text-anchor="middle" style="font:900 17px var(--font-stencil);letter-spacing:.06em;fill:var(--red)">DELIVERED</text>
+        <text x="75" y="39" text-anchor="middle" style="font:900 14px var(--font-stencil);letter-spacing:.06em;fill:var(--red)">DAY 2</text>
+      </g>
+      <text x="20" y="346" style="font:500 15px var(--font-body);fill:var(--muted)">Amazon keeps stock in ~350 fulfilment centres worldwide.</text>
+
+      <!-- lane B: dropshipping -->
+      <text x="20" y="400" class="svg-label">Dropshipping store</text>
+      <text x="20" y="430" style="font:900 30px var(--font-display);font-variation-settings:'wdth' 70">15 to 45 days</text>
+      <path class="ln" d="M60 500 V462 L92 446 V462 L124 446 V462 L156 446 V462 L180 452 V500"/>
+      <path class="ln" d="M20 500 H2010" stroke-width="1.2"/>
+      <path class="ln guide" d="M180 486 H1912"/>
+      <path class="ln" d="M1920 500 V456 L1960 426 L2000 456 V500 M1950 500 V474 h20 v26"/>
+      <text x="1960" y="526" text-anchor="middle" class="svg-label">Customer</text>
+      <text x="120" y="526" text-anchor="middle" class="svg-label">Supplier</text>
+      <g class="rd-stampB rd-stamp" transform="translate(1860 360) rotate(-8)">
+        <rect x="0" y="0" width="160" height="46" rx="4" fill="none" stroke="var(--red)" stroke-width="3"/>
+        <text x="80" y="21" text-anchor="middle" style="font:900 17px var(--font-stencil);letter-spacing:.06em;fill:var(--red)">DELIVERED</text>
+        <text x="80" y="39" text-anchor="middle" style="font:900 14px var(--font-stencil);letter-spacing:.06em;fill:var(--red)">DAY 45</text>
+      </g>
+      <g class="rd-pk"><use href="#parcel" transform="scale(1.4)"/></g>
+      <text x="1160" y="560" text-anchor="middle" class="svg-hand rd-wait" text-anchor="start">still waiting</text>
+
+      <!-- the line after the road -->
+      <text x="2090" y="250" style="font:900 46px var(--font-display);font-variation-settings:'wdth' 66;fill:var(--ink)">
+        <tspan x="2090">Compare that to</tspan><tspan x="2090" dy="50">Amazon's one</tspan><tspan x="2090" dy="50">or two days.</tspan>
+      </text>
+    </svg>
+
+    <div class="rd-now" aria-hidden="true"><span class="rd-day stencil">Day 0</span><i></i></div>
+  </div>
+</section>
+<style>
+  html.hz-on #road{--cps-split:no}
+  .rd-in{position:relative}
+  .rd-s1{display:grid;grid-template-columns:minmax(0,4fr) minmax(0,6fr);gap:clamp(24px,3vw,56px);align-items:center;max-width:none}
+  .rd-head{display:grid;gap:14px}
+  .rd-head .label{color:var(--ink)}
+  .rd-box{position:relative;max-width:600px;width:100%;justify-self:center}
+  .rd-box svg{width:100%;height:auto;display:block}
+  .rd-stk{position:absolute;width:min(270px,48%);background:var(--card);padding:12px 14px 13px;border-radius:3px;display:grid;gap:3px;
+    box-shadow:0 8px 18px -12px rgba(40,25,10,.6)}
+  .rd-stk .label{color:var(--ink);border-bottom:1.5px solid var(--ink);padding-bottom:5px;margin-bottom:3px}
+  .rd-cause{font-size:14.5px;line-height:1.3}
+  .rd-cause b{color:var(--red);font-weight:700}
+  .rd-big{font:900 clamp(34px,3.2vw,46px)/1 var(--font-display);font-variation-settings:'wdth' 68;margin-top:4px}
+  .rd-small{font-size:13px;line-height:1.3;color:var(--muted)}
+  .rd-follow{font-size:20px;margin-top:6px}
+  @media (max-width:819px){ .rd-s1{grid-template-columns:1fr} }
+  .rd-svg{display:block;width:100%;height:auto;margin-top:32px}
+  .rd-now{display:none}
+  .rd-stamp{opacity:0}
+  .rd-stamp.on{opacity:.95}
+  .rd-wait{opacity:0}
+
+  /* on the track: screen 1 holds the box, screens 2 and 3 hold the road */
+  html.hz-on #road .rd-in{height:100%;flex:1 0 auto}
+  html.hz-on #road .rd-s1{position:absolute;left:0;top:0;width:33.333%;height:100%;padding-top:0;padding-bottom:0}
+  html.hz-on #road .rd-svg{position:absolute;left:33.333%;width:66.667%;top:50%;translate:0 -50%;margin:0;max-height:100%}
+  html.hz-on #road .rd-now{display:block;position:absolute;top:-8px;bottom:-8px;left:0;width:0;pointer-events:none;opacity:0;transition:opacity .3s var(--ease-out)}
+  html.hz-on #road .rd-now.on{opacity:1}
+  .rd-now i{position:absolute;top:56px;bottom:0;left:0;border-left:2px solid var(--ink)}
+  .rd-day{position:absolute;top:0;left:0;translate:-50% 0;white-space:nowrap;font-size:52px;background:var(--ink);color:var(--marker);padding:4px 14px 2px;border-radius:3px;font-variant-numeric:tabular-nums}
+  html.hz-on #road.band{padding-top:clamp(30px,5vh,52px) !important;padding-bottom:clamp(24px,4vh,40px) !important}
+</style>
+<script>
+(() => {
+  const s = $('#road'), svg = $('.rd-svg', s);
+  const D0 = 200, D45 = 1920, PX = (D45 - D0) / 45;   /* the same scale of days for both roads */
+  let r = '';
+  r += `<path class="ln" d="M${D0} 120 H${D45}" stroke-width="1.4"/>`;
+  for (let d = 0; d <= 45; d++) {
+    const x = (D0 + d * PX).toFixed(1), big = d % 5 === 0;
+    r += `<path d="M${x} 120 v${big ? 12 : 6}" stroke="#1E1A16" stroke-width="${big ? 1.6 : 1}"/>`;
+    if (big) r += `<text x="${x}" y="150" text-anchor="middle" style="font:600 12px var(--font-label);fill:var(--ink)">${d === 0 ? 'ORDER' : 'DAY ' + d}</text>`;
+  }
+  $('.rd-ruler', svg).innerHTML = r;
+  [15, 45].forEach(d => {
+    const x = (D0 + d * PX).toFixed(1);
+    $('.rd-ruler', svg).insertAdjacentHTML('beforeend', `<path d="M${x} 112 V536" stroke="var(--red)" stroke-width="1.6" stroke-dasharray="4 4"/>`);
+  });
+
+  const pk = $('.rd-pk', svg), now = $('.rd-now', s), dayEl = $('.rd-day', s), sA = $('.rd-stampA', svg), sB = $('.rd-stampB', svg), wait = $('.rd-wait', svg);
+  const LANE = 486;
+  const place = day => {
+    const x = D0 + Math.max(0, Math.min(45, day)) * PX;
+    pk.setAttribute('transform', `translate(${x.toFixed(1)} ${LANE})`);
+    sA.classList.toggle('on', day >= 2);   /* stamps snap on, like ink */
+    sB.classList.toggle('on', day >= 45);
+    wait.style.opacity = day >= 15 && day < 45 ? 1 : 0;
+    wait.setAttribute('x', Math.min(D45 - 150, x + 24).toFixed(0));
+    wait.setAttribute('y', '440');
+  };
+  if (FINAL || !document.documentElement.classList.contains('hz-on')) { place(45); }
+  else place(0);
+
+  /* the day counter rides the middle of the screen across the road */
+  addEventListener('cps:move', e => {
+    const { x, VW, lefts } = e.detail, i = $$('main > section').indexOf(s);
+    if (i < 0 || lefts[i] == null) return;
+    const centre = x - lefts[i] + VW / 2;                  /* the middle of the screen, in panel px */
+    const k = (2 * VW) / 2560;                             /* svg units to px: the road spans two screens */
+    const svgX = (centre - VW) / k;
+    const day = (svgX - D0) / PX;
+    const show = day > -1 && svgX < 2100;
+    now.classList.toggle('on', show);
+    if (show) { now.style.left = (VW + Math.min(D45, Math.max(D0, svgX)) * k).toFixed(1) + 'px'; dayEl.textContent = 'Day ' + Math.max(0, Math.min(45, Math.round(day))); }
+    place(day);
+  });
+})();
+</script>
+
+<section id="street" class="band dark" data-title="Most stores don't make it">
+  <div class="wrap st-wrap">
+    <div class="st-head">
+      <h2 class="rv">Out of 100 new stores, about 10 make it</h2>
+      <dl class="st-nums">
+        <div class="rv" style="--d:.1s"><dt><mark>~10%</mark></dt><dd>of sellers succeed in their first year</dd></div>
+        <div class="rv" style="--d:.2s"><dt>1.5%</dt><dd>of stores ever reach $50K in monthly sales</dd></div>
+        <div class="rv" style="--d:.3s"><dt>15 to 20%</dt><dd>typical profit margin. Our $30 on $80 example was <s>37%</s>.</dd></div>
+      </dl>
+      <p class="st-src">Industry estimates (StatsUp, DoDropshipping via Printful and Market.us). Treat as rough figures.</p>
+    </div>
+    <figure class="st-fig">
+      <svg class="st-svg" viewBox="0 0 640 430" role="img" aria-label="A street of 100 new stores. 90 go dark. 10 stay lit."></svg>
+      <figcaption class="label">Each shop = 1 new store, 100 in all</figcaption>
+    </figure>
+  </div>
+</section>
+<style>
+  html.hz-on #street{--cps-split:no}
+  .st-wrap{display:grid;grid-template-columns:minmax(0,5fr) minmax(0,6.4fr);gap:clamp(28px,4vw,64px);align-items:center;max-width:1240px}
+  #street h2{color:var(--paper)}
+  .st-head{display:grid;gap:22px}
+  .st-nums{margin:0;display:grid;border-top:1.5px solid rgba(244,239,228,.4)}
+  .st-nums div{display:grid;grid-template-columns:150px 1fr;gap:16px;align-items:baseline;padding:11px 0;border-bottom:1px solid rgba(244,239,228,.18)}
+  .st-nums dt{font:900 clamp(30px,2.8vw,40px)/1 var(--font-display);font-variation-settings:'wdth' 68;color:var(--paper)}
+  .st-nums dd{margin:0;font-size:16px;line-height:1.4;color:rgba(244,239,228,.82)}
+  .st-nums s{text-decoration-color:var(--marker);text-decoration-thickness:2px}
+  .st-src{font:400 11px/1.45 var(--font-label);color:rgba(244,239,228,.55)}
+  .st-fig{margin:0;display:grid;gap:10px}
+  .st-svg{width:100%;height:auto;max-height:calc(100svh - 230px)}
+  .st-fig .label{color:rgba(244,239,228,.6)}
+  .st-shop .win{fill:var(--marker)}
+  .st-shop.off .win{fill:#3A332C}
+  .st-shop .glow{fill:var(--marker);opacity:.16}
+  .st-shop.off .glow{opacity:0}
+  .st-shop .frame{fill:none;stroke:rgba(244,239,228,.8);stroke-width:1.2;stroke-linejoin:round}
+  .st-shop.off .frame{stroke:rgba(244,239,228,.3)}
+</style>
+<script>
+(() => {
+  const s = $('#street'), svg = $('.st-svg', s);
+  const COLS = 20, ROWS = 5, W = 30, GX = 32, GY = 84, X0 = 0, Y0 = 18;
+  let out = '';
+  for (let r = 0; r < ROWS; r++) {
+    const y = Y0 + r * GY;
+    out += `<path d="M0 ${y + 52} H640" stroke="rgba(244,239,228,.22)" stroke-width="1"/>`;
+    for (let c = 0; c < COLS; c++) {
+      const x = X0 + c * GX + 1;
+      out += `<g class="st-shop" data-i="${r * COLS + c}" transform="translate(${x} ${y})">
+        <rect class="glow" x="-3" y="20" width="${W + 6}" height="34" rx="4"/>
+        <path class="frame" d="M1 52 V18 M${W - 1} 52 V18 M-1 18 H${W + 1} L${W - 2} 8 H2 Z"/>
+        <path class="frame" d="M2 12 L6 18 M8 8 L12 18 M14 8 L16 18 M20 8 L20 18 M26 8 L24 18" style="stroke-width:.8"/>
+        <rect class="win" x="5" y="24" width="${W - 10}" height="14" rx="1"/>
+        <rect class="win" x="11" y="41" width="8" height="11"/>
+      </g>`;
+    }
+  }
+  /* the pen ring for the one store that reaches $50K a month */
+  out += `<g class="st-ring"><ellipse cx="0" cy="0" rx="30" ry="40" fill="none" stroke="var(--marker)" stroke-width="2.6" transform="rotate(-8)"/>
+    <text x="34" y="-36" class="svg-hand" style="fill:var(--marker);font-size:17px">1.5% reach $50K a month</text></g>`;
+  svg.innerHTML = out;
+  const shops = $$('.st-shop', svg);
+
+  /* 10 survivors, fixed so every showing looks the same */
+  const keep = [3, 17, 26, 38, 44, 59, 63, 71, 86, 92];
+  let seed = 11; const rnd = () => (seed = (seed * 16807) % 2147483647) / 2147483647;
+  const order = shops.map((_, i) => i).filter(i => !keep.includes(i)).sort(() => rnd() - .5);
+  const ring = $('.st-ring', svg), star = shops[44];
+  const m = star.getAttribute('transform').match(/translate\(([\d.]+) ([\d.]+)\)/);
+  ring.setAttribute('transform', `translate(${+m[1] + 15} ${+m[2] + 32})`);
+  const el = $('ellipse', ring); prepDraw([el]);
+  const lbl = $('text', ring); if (!FINAL) lbl.style.opacity = 0;
+
+  onView(s, () => {
+    if (FINAL) { order.forEach(i => shops[i].classList.add('off')); return; }
+    /* the lights go out one by one: each one snaps off, no fade */
+    order.forEach((i, k) => setTimeout(() => shops[i].classList.add('off'), 900 + k * 28));
+    const t = (900 + order.length * 28) / 1000 + .5;
+    penDraw([el], { delay: t, speed: 300 });
+    setTimeout(() => { lbl.style.opacity = 1; }, (t + .8) * 1000);
+  }, .4);
+})();
+</script>
+
+<section id="ads" class="band sheet" data-title="Getting found">
+  <div class="wrap ad-wrap">
+    <div class="ad-head">
+      <p class="label ad-k">What the 10 do differently</p>
+      <h2 class="rv">The winners get found</h2>
+      <p class="lede rv" style="--d:.1s">When thousands of stores sell the same product, customers have to find you. So the winners pay to be seen.</p>
+      <p class="ad-take rv" style="--d:.2s"><mark>Good marketing</mark> is the main thing that separates thriving stores from forgotten ones.</p>
+    </div>
+    <svg class="ad-svg" viewBox="0 0 640 560" role="img" aria-label="The ad loop: 1, your store pays for ads. 2, the ad network runs them on Instagram, TikTok and Google. 3, shoppers see the sponsored post in their feed. 4, they click, visit the store and buy, which pays for the next ads.">
+      <path class="ad-orbit" d="M320 80 A190 190 0 1 1 319.9 80" fill="none" stroke="#1E1A16" stroke-width="1.4" stroke-dasharray="3 7" opacity=".45"/>
+      <path class="ad-run" d="M320 80 A190 190 0 1 1 319.9 80" fill="none" stroke="var(--marker-ink)" stroke-width="3" stroke-linecap="round"/>
+      <text x="320" y="262" text-anchor="middle" style="font:900 34px var(--font-display);font-variation-settings:'wdth' 68;fill:var(--ink)">Customers</text>
+      <text x="320" y="298" text-anchor="middle" style="font:900 34px var(--font-display);font-variation-settings:'wdth' 68;fill:var(--ink)">must find you</text>
+
+      <!-- 1 store, top -->
+      <g class="ad-node" transform="translate(320 80)">
+        <circle r="46" class="f-card" stroke="#1E1A16" stroke-width="2.4"/>
+        <path d="M-24 22 V-2 M24 22 V-2 M-28 -2 H28 L22 -18 H-22 Z" fill="var(--marker)" stroke="#1E1A16" stroke-width="2" stroke-linejoin="round"/>
+        <path d="M-8 22 V8 H8 V22" fill="none" stroke="#1E1A16" stroke-width="2"/>
+        <text x="-64" y="-40" text-anchor="end" class="ad-n">01</text>
+        <text x="-64" y="-18" text-anchor="end" class="ad-t">Your store</text>
+        <text x="-64" y="2" text-anchor="end" class="ad-s">pays for ads so its</text>
+        <text x="-64" y="19" text-anchor="end" class="ad-s">products get seen</text>
+      </g>
+      <!-- 2 ad network, right -->
+      <g class="ad-node" transform="translate(510 270)">
+        <circle r="46" class="f-card" stroke="#1E1A16" stroke-width="2.4"/>
+        <path d="M-20 -10 l-10 0 l0 20 l10 0 l26 14 l0 -48 z" fill="var(--tint-1)" stroke="#1E1A16" stroke-width="2" stroke-linejoin="round"/>
+        <path d="M14 -10 q8 10 0 20 M20 -18 q14 18 0 36" fill="none" stroke="var(--blue)" stroke-width="2.4" stroke-linecap="round"/>
+        <text x="-6" y="80" text-anchor="middle" class="ad-n">02</text>
+        <text x="-6" y="102" text-anchor="middle" class="ad-t">Ad network</text>
+        <text x="-6" y="122" text-anchor="middle" class="ad-s">Instagram, TikTok, Google</text>
+      </g>
+      <!-- 3 feed, bottom -->
+      <g class="ad-node" transform="translate(320 460)">
+        <circle r="46" class="f-card" stroke="#1E1A16" stroke-width="2.4"/>
+        <rect x="-16" y="-30" width="32" height="58" rx="6" fill="var(--card)" stroke="#1E1A16" stroke-width="2"/>
+        <rect x="-11" y="-20" width="22" height="20" fill="var(--marker)" stroke="#1E1A16" stroke-width="1.4"/>
+        <path d="M-11 6 h16 M-11 13 h10" stroke="#1E1A16" stroke-width="1.4"/>
+        <text x="72" y="-18" class="ad-n">03</text>
+        <text x="72" y="4" class="ad-t">Social feed</text>
+        <text x="72" y="24" class="ad-s">shoppers spot the</text>
+        <text x="72" y="40" class="ad-s">sponsored post</text>
+      </g>
+      <!-- 4 customer, left -->
+      <g class="ad-node" transform="translate(130 270)">
+        <circle r="46" class="f-card" stroke="#1E1A16" stroke-width="2.4"/>
+        <path d="M-22 -14 h8 l8 26 h22 l6 -18 h-32" fill="none" stroke="#1E1A16" stroke-width="2.2" stroke-linejoin="round"/>
+        <circle cx="-2" cy="20" r="3.4" class="f-ink"/><circle cx="14" cy="20" r="3.4" class="f-ink"/>
+        <path d="M6 -26 l14 34 l4 -12 l12 -4 z" fill="var(--card)" stroke="#1E1A16" stroke-width="1.8" stroke-linejoin="round" transform="translate(4 -6) scale(.8)"/>
+        <text x="6" y="80" text-anchor="middle" class="ad-n">04</text>
+        <text x="6" y="102" text-anchor="middle" class="ad-t">Customer</text>
+        <text x="6" y="122" text-anchor="middle" class="ad-s">clicks, visits, buys</text>
+      </g>
+      <g class="ad-coin"><circle r="13" fill="var(--marker)" stroke="#1E1A16" stroke-width="2"/><text y="5" text-anchor="middle" style="font:900 14px var(--font-display)">$</text></g>
+    </svg>
+  </div>
+</section>
+<style>
+  html.hz-on #ads{--cps-split:no}
+  .ad-wrap{display:grid;grid-template-columns:minmax(0,4.4fr) minmax(0,6fr);gap:clamp(28px,4vw,64px);align-items:center;max-width:1220px}
+  .ad-head{display:grid;gap:18px}
+  .ad-k{color:var(--ink)}
+  .ad-take{font:800 clamp(22px,2vw,28px)/1.2 var(--font-display);font-variation-settings:'wdth' 82;border-left:4px solid var(--ink);padding-left:16px}
+  .ad-svg{width:100%;height:auto;max-height:calc(100svh - 180px);overflow:visible}
+  .ad-n,.ad-t,.ad-s{paint-order:stroke;stroke:var(--paper);stroke-width:7px;stroke-linejoin:round}
+  .ad-n{font:900 22px var(--font-stencil);fill:var(--muted)}
+  .ad-t{font:800 20px var(--font-display);font-variation-settings:'wdth' 78;fill:var(--ink)}
+  .ad-s{font:400 15px var(--font-body);fill:var(--muted)}
+  .ad-node{transition:opacity .2s steps(2)}
+  .js .ad-node{opacity:.3}
+  .ad-node.on{opacity:1}
+  .ad-node.on .ad-n{fill:var(--marker-ink)}
+</style>
+<script>
+(() => {
+  const s = $('#ads'), run = $('.ad-run', s), coin = $('.ad-coin', s), nodes = $$('.ad-node', s);
+  prepDraw([run]);
+  const L = run.getTotalLength();
+  const put = f => { const p = run.getPointAtLength(L * f); coin.setAttribute('transform', `translate(${p.x.toFixed(1)} ${p.y.toFixed(1)})`); };
+  const done = () => { run.style.strokeDashoffset = 0; nodes.forEach(n => n.classList.add('on')); put(0); };
+  if (FINAL) { done(); return; }
+  put(0);
+  onView(s, () => {
+    /* one lap, then hold: the coin pays for an ad and comes back as a sale */
+    nodes[0].classList.add('on');
+    const t0 = performance.now() + 900, dur = 5200;
+    const step = now => {
+      const f = Math.max(0, Math.min(1, (now - t0) / dur)), e = f < .5 ? 2 * f * f : 1 - Math.pow(-2 * f + 2, 2) / 2;
+      put(e); run.style.strokeDashoffset = (L * (1 - e)).toFixed(1);
+      nodes.forEach((n, i) => { if (e >= i / 4 - .01) n.classList.add('on'); });
+      if (f < 1) requestAnimationFrame(step);
+    };
+    requestAnimationFrame(step);
+  }, .45);
+})();
+</script>
+
+<section id="brand" class="band dark" data-title="Marketing builds a brand">
+  <div class="wrap br-wrap">
+    <h2 class="rv">A product is easy to copy. A trusted brand is not.</h2>
+    <figure class="br-copy">
+      <svg class="br-svg" viewBox="0 0 470 330" role="img" aria-label="The same shirt copied by twelve stores, all identical, next to one shirt carrying a brand people trust."></svg>
+      <figcaption class="label">Illustration: the same shirt, sold by every store</figcaption>
+    </figure>
+    <div class="br-case">
+      <div class="br-phone" aria-hidden="true">
+        <div class="br-bar"><span>Fashion Nova</span><i></i></div>
+        <div class="br-feed"></div>
+      </div>
+      <div class="br-text">
+        <p class="label br-k">Case: Fashion Nova</p>
+        <p class="br-big">Grew by putting its clothes in the feeds where young people already spend their time.</p>
+        <p class="br-note">Fashion Nova keeps its own stock, so it is not a dropshipper. It shows what marketing can do.</p>
+      </div>
+    </div>
+  </div>
+</section>
+<style>
+  html.hz-on #brand{--cps-split:no}
+  .br-wrap{display:grid;grid-template-columns:minmax(0,5fr) minmax(0,5.4fr);gap:22px clamp(28px,4vw,64px);align-items:center;max-width:1220px}
+  #brand h2{grid-column:1/-1;color:var(--paper);max-width:24ch}
+  .br-copy{margin:0;display:grid;gap:8px}
+  .br-svg{width:100%;height:auto;max-height:calc(100svh - 320px);overflow:visible}
+  .br-copy .label{color:rgba(244,239,228,.55)}
+  .br-case{display:grid;grid-template-columns:auto minmax(0,1fr);gap:26px;align-items:center}
+  .br-phone{width:200px;height:370px;border-radius:30px;background:#0E0C0A;padding:12px;box-shadow:0 0 0 2px rgba(244,239,228,.5),0 24px 50px -20px rgba(245,203,60,.35);display:grid;grid-template-rows:auto 1fr;overflow:hidden}
+  .br-bar{display:flex;justify-content:space-between;align-items:center;background:var(--card);border-radius:18px 18px 0 0;padding:12px 12px 8px;font:800 14px var(--font-display);font-variation-settings:'wdth' 75;color:var(--ink)}
+  .br-bar i{width:16px;height:2px;background:var(--ink);box-shadow:0 5px 0 var(--ink),0 -5px 0 var(--ink)}
+  .br-feed{background:var(--card);overflow:hidden;border-radius:0 0 18px 18px;position:relative}
+  .br-roll{display:grid;gap:8px;padding:6px 8px;transition:translate 4.5s cubic-bezier(.45,.05,.35,1)}
+  .br-post{display:grid;gap:4px}
+  .br-post svg{width:100%;height:auto;display:block}
+  .br-meta{display:flex;justify-content:space-between;align-items:center;font:600 9px var(--font-label);letter-spacing:.06em;text-transform:uppercase;color:var(--muted)}
+  .br-meta b{color:var(--red)}
+  .br-text{display:grid;gap:12px}
+  .br-k{color:var(--marker) !important}
+  .br-big{font:800 clamp(22px,2vw,28px)/1.18 var(--font-display);font-variation-settings:'wdth' 80;color:var(--paper)}
+  .br-note{font-size:14px;line-height:1.45;color:rgba(244,239,228,.66);max-width:38ch;border-top:1px solid rgba(244,239,228,.2);padding-top:10px}
+  .br-cp{transition:opacity .05s steps(1)}
+  .js .br-cp.wait{opacity:0}
+  .br-hero{transition:opacity .2s steps(2)}
+  .js .br-hero.wait{opacity:0}
+</style>
+<script>
+(() => {
+  const s = $('#brand'), svg = $('.br-svg', s);
+  const SHIRT = 'M10 1 L4 4 L0 10 L5 12 L7 9 V25 H25 V9 L27 12 L32 10 L28 4 L22 1 C20 4 12 4 10 1 Z';
+  let out = '';
+  const names = 'ABCDEFGHIJKL';
+  for (let i = 0; i < 12; i++) {
+    const c = i % 4, r = Math.floor(i / 4), x = 6 + c * 66, y = 8 + r * 104;
+    out += `<g class="br-cp wait" transform="translate(${x} ${y})">
+      <rect x="0" y="0" width="58" height="92" rx="3" fill="#2F2924" stroke="rgba(244,239,228,.35)" stroke-width="1"/>
+      <g transform="translate(7 14) scale(1.38)"><path d="${SHIRT}" fill="#D9D2C5" stroke="#1E1A16" stroke-width="1.1" stroke-linejoin="round"/></g>
+      <text x="29" y="82" text-anchor="middle" style="font:600 9px var(--font-label);letter-spacing:.08em;fill:rgba(244,239,228,.7)">STORE ${names[i]}</text></g>`;
+  }
+  out += `<g class="br-hero wait" transform="translate(300 40)">
+      <rect x="0" y="0" width="160" height="250" rx="4" fill="var(--card)" stroke="var(--marker)" stroke-width="4"/>
+      <g transform="translate(22 46) scale(3.6)"><path d="${SHIRT}" fill="#1E1A16" stroke="#1E1A16" stroke-width=".5" stroke-linejoin="round"/></g>
+      <path d="M62 82 h36" stroke="var(--marker)" stroke-width="5"/>
+      <g transform="translate(118 30) rotate(14)"><path d="M0 0 h30 v40 l-15 10 l-15 -10 z" fill="var(--marker)" stroke="#1E1A16" stroke-width="2"/><circle cx="15" cy="8" r="3" fill="#1E1A16"/></g>
+      <text x="80" y="200" text-anchor="middle" style="font:900 22px var(--font-stencil);letter-spacing:.08em;fill:var(--ink)">YOUR BRAND</text>
+      <text x="80" y="226" text-anchor="middle" style="font:600 10px var(--font-label);letter-spacing:.1em;fill:var(--muted)">TRUSTED, REMEMBERED</text>
+    </g>
+    <text class="br-hero wait" x="276" y="172" text-anchor="middle" style="font:900 30px var(--font-display);fill:var(--marker)">≠</text>`;
+  svg.innerHTML = out;
+
+  /* the feed: drawn posts, one sponsored */
+  const looks = [
+    '<path d="M30 20 L20 26 L14 40 L22 44 L26 36 V80 H54 V36 L58 44 L66 40 L60 26 L50 20 C46 26 34 26 30 20Z"/>',
+    '<path d="M32 18 C36 26 44 26 48 18 L56 22 L50 40 L62 84 H18 L30 40 L24 22 Z"/>',
+    '<path d="M26 20 H54 L58 50 H46 L44 84 H36 L34 50 H22 Z"/>',
+    '<path d="M28 22 L18 30 L14 52 L22 54 L24 40 V82 H56 V40 L58 54 L66 52 L62 30 L52 22 Z"/>'
+  ];
+  const tints = ['#EBC3B4', '#C9D6E6', '#F1DFA6', '#DDD3C3'];
+  let feed = '<div class="br-roll">';
+  for (let i = 0; i < 8; i++) {
+    feed += `<div class="br-post"><svg viewBox="0 0 80 96"><rect width="80" height="96" fill="${tints[i % 4]}"/><g fill="#1E1A16" opacity=".85" transform="translate(0 4)">${looks[i % 4]}</g></svg>
+      <div class="br-meta"><span>♥ Like</span>${i === 2 || i === 6 ? '<b>Sponsored</b>' : '<span>shop</span>'}</div></div>`;
+  }
+  feed += '</div>';
+  $('.br-feed', s).innerHTML = feed;
+  const roll = $('.br-roll', s), cps = $$('.br-cp', svg), hero = $$('.br-hero', svg);
+
+  if (FINAL) { cps.forEach(c => c.classList.remove('wait')); hero.forEach(h => h.classList.remove('wait')); return; }
+  onView(s, () => {
+    /* the copier: shirt after shirt, all the same */
+    cps.forEach((c, i) => setTimeout(() => c.classList.remove('wait'), 500 + i * 120));
+    setTimeout(() => hero.forEach(h => h.classList.remove('wait')), 500 + 12 * 120 + 500);
+    setTimeout(() => { roll.style.translate = `0 -${roll.scrollHeight - roll.parentElement.clientHeight}px`; }, 900);
+  }, .4);
+})();
+</script>
+
+<section id="close" class="band kraft" data-title="Three things to take home">
+  <div class="wrap cl-grid">
+    <div class="cl-lbl lbl">
+      <i class="tape" style="left:-26px;top:-8px;rotate:-38deg"></i>
+      <i class="tape" style="right:-28px;bottom:-4px;rotate:-34deg"></i>
+      <div class="cl-row cl-top"><span class="hero-code">ITB-01</span><span class="label">Wrap-up</span></div>
+      <h2 class="cl-h">Three things to take home</h2>
+      <ol class="cl-list">
+        <li class="rv" style="--d:.1s"><b>1</b><div><p class="label">What it is</p><p>Selling products you never hold. A fast-growing, multi-billion-dollar trend.</p></div></li>
+        <li class="rv" style="--d:.2s"><b>2</b><div><p class="label">Why people do it</p><p>Cheaper, lower risk and quicker to start than keeping stock like Amazon.</p></div></li>
+        <li class="rv" style="--d:.3s"><b>3</b><div><p class="label">Why it is hard</p><p>The same ease brings crowds, slow shipping and thin margins. <mark>The winners build a brand people trust.</mark></p></div></li>
+      </ol>
+      <div class="cl-row cl-foot"><svg class="cl-bar" aria-hidden="true"></svg><p class="cl-thanks stencil">Thank you</p></div>
+    </div>
+
+    <svg class="cl-scene" viewBox="0 0 640 540" role="img" aria-label="The opening scene again: the warehouse is still crossed out, but the online store now has a lit brand sign, and orders arrive from three houses while the supplier ships to each.">
+      <defs>
+        <radialGradient id="cl-glow"><stop offset="0" stop-color="#F5CB3C" stop-opacity=".75"/><stop offset="1" stop-color="#F5CB3C" stop-opacity="0"/></radialGradient>
+        <mask id="cl-m" maskUnits="userSpaceOnUse"><g class="cl-mks" fill="none" stroke="#fff" stroke-width="10">
+          <path d="M440 372 C430 260 400 190 386 150"/><path d="M520 372 C510 250 430 160 386 140"/><path d="M600 372 C590 230 470 130 386 128"/><path d="M256 150 C170 170 104 240 104 330"/></g></mask>
+      </defs>
+      <ellipse class="cl-glow" cx="320" cy="62" rx="120" ry="70" fill="url(#cl-glow)"/>
+      <g class="cl-phone">
+        <rect class="ln f-card" x="262" y="22" width="116" height="196" rx="16"/>
+        <rect class="ln thin" x="306" y="32" width="28" height="5" rx="2.5"/>
+        <rect class="ln thin" x="276" y="88" width="40" height="40" rx="2"/><rect class="ln thin" x="324" y="88" width="40" height="40" rx="2"/>
+        <rect class="ln thin" x="276" y="136" width="40" height="40" rx="2"/><rect class="ln thin" x="324" y="136" width="40" height="40" rx="2"/>
+        <rect x="276" y="186" width="88" height="18" rx="9" class="f-ink"/>
+      </g>
+      <g class="cl-sign"><rect x="270" y="46" width="100" height="32" rx="3" fill="var(--marker)" stroke="#1E1A16" stroke-width="2"/>
+        <text x="320" y="68" text-anchor="middle" style="font:900 17px var(--font-stencil);letter-spacing:.08em;fill:#1E1A16">YOUR BRAND</text></g>
+      <rect class="ln thin cl-blank" x="276" y="50" width="88" height="26" rx="2" style="stroke-dasharray:4 4"/>
+      <g mask="url(#cl-m)" class="ln order">
+        <path d="M440 372 C430 260 400 190 386 150"/><path d="M520 372 C510 250 430 160 386 140"/><path d="M600 372 C590 230 470 130 386 128"/>
+        <path d="M256 150 C170 170 104 240 104 330" marker-end="url(#arr-blue)"/>
+      </g>
+      <path class="ln cl-d" d="M10 452 H630"/>
+      <path class="ln cl-d" d="M40 452 V368 L74 346 V368 L108 346 V368 L142 346 V368 L168 352 V452"/>
+      <path class="ln cl-d" d="M58 346 V300 h14 V356"/>
+      <text x="104" y="478" text-anchor="middle" class="svg-label">Supplier</text>
+      <path class="ln guide" d="M200 452 V400 L260 370 L320 400 V452"/>
+      <path class="ln red fat cl-x" d="M210 388 L310 446"/><path class="ln red fat cl-x" d="M310 388 L210 446"/>
+      <g class="cl-d-houses">
+        <path class="ln cl-d" d="M410 452 V400 L440 376 L470 400 V452"/>
+        <path class="ln cl-d" d="M490 452 V400 L520 376 L550 400 V452"/>
+        <path class="ln cl-d" d="M570 452 V400 L600 376 L630 400 V452"/>
+      </g>
+      <text x="520" y="478" text-anchor="middle" class="svg-label">Customers who found you</text>
+      <path class="cl-route" d="M176 446 C250 446 330 446 440 446" fill="none"/>
+      <path class="cl-route" d="M176 446 C280 446 400 446 520 446" fill="none"/>
+      <path class="cl-route" d="M176 446 C300 446 460 446 600 446" fill="none"/>
+      <g class="cl-pk"><use href="#parcel" transform="scale(1.1)"/></g><g class="cl-pk"><use href="#parcel" transform="scale(1.1)"/></g><g class="cl-pk"><use href="#parcel" transform="scale(1.1)"/></g>
+    </svg>
+  </div>
+</section>
+<style>
+  html.hz-on #close{--cps-split:no}
+  .cl-grid{display:grid;grid-template-columns:minmax(0,5.4fr) minmax(0,6fr);gap:clamp(28px,4vw,72px);align-items:center;max-width:1280px}
+  .cl-lbl{rotate:-1.2deg;display:grid}
+  .cl-row{display:flex;gap:16px;align-items:center;justify-content:space-between;padding:12px 24px}
+  .cl-top{border-bottom:2px solid var(--ink)}
+  .cl-h{padding:14px 24px 8px;font-size:clamp(36px,3.6vw,52px);font-variation-settings:'wdth' 66;font-weight:900}
+  .cl-list{list-style:none;margin:0;padding:0 24px 8px;display:grid}
+  .cl-list li{display:grid;grid-template-columns:40px 1fr;gap:14px;padding:11px 0;border-top:1px dashed var(--line-2)}
+  .cl-list li > b{display:grid;place-items:center;width:36px;height:36px;border-radius:50%;background:var(--ink);color:var(--card);font:900 20px var(--font-stencil)}
+  .cl-list .label{color:var(--ink);margin-bottom:3px}
+  .cl-list p:not(.label){font-size:16px;line-height:1.38}
+  .cl-foot{border-top:2px solid var(--ink)}
+  .cl-bar{width:170px;height:34px;color:var(--ink)}
+  .cl-thanks{font-size:30px;color:var(--red);text-transform:uppercase;border:3.5px double var(--red);padding:6px 12px 4px;border-radius:5px;rotate:-6deg;filter:url(#ink)}
+  .js .cl-thanks{opacity:0;scale:1.25}
+  .cl-thanks.on{opacity:1;scale:1;transition:opacity .12s steps(2),scale .12s steps(2)}
+  .cl-scene{width:100%;height:auto;max-height:calc(100svh - 170px)}
+  .js .cl-sign,.js .cl-glow{opacity:0}
+  .cl-sign.on,.cl-glow.on{animation:cl-neon 1.1s steps(1) both}
+  @keyframes cl-neon{0%{opacity:0}12%{opacity:1}22%{opacity:.15}34%{opacity:1}44%{opacity:.3}60%,100%{opacity:1}}
+  .cl-blank.off{opacity:0}
+  @media (prefers-reduced-motion: reduce){ .js .cl-sign,.js .cl-glow,.js .cl-thanks{opacity:1;scale:1} }
+</style>
+<script>
+(() => {
+  const s = $('#close');
+  barcode($('.cl-bar', s), 'thank you itb-01', 170, 34);
+  const draws = $$('.cl-d', s), phone = $$('.cl-phone .ln', s), mks = $$('.cl-mks path', s), xs = $$('.cl-x', s);
+  const sign = $('.cl-sign', s), glow = $('.cl-glow', s), blank = $('.cl-blank', s), thanks = $('.cl-thanks', s);
+  const routes = $$('.cl-route', s), pks = $$('.cl-pk', s);
+  prepDraw([...draws, ...phone, ...xs]); prepDraw(mks);
+  pks.forEach((pk, i) => { const p = routes[i].getPointAtLength(0); pk.setAttribute('transform', `translate(${p.x} ${p.y})`); if (!FINAL) pk.style.opacity = 0; });
+  onView(s, () => {
+    let t = penDraw([...draws, ...xs], { speed: 1000, overlap: .45 });
+    penDraw(phone, { parallel: true, speed: 500 });
+    /* the blank sign from the first slide finally lights up */
+    setTimeout(() => { blank.classList.add('off'); sign.classList.add('on'); glow.classList.add('on'); }, FINAL ? 0 : 1300);
+    t = penDraw(mks, { delay: Math.max(t, 2.2), speed: 420 });
+    pks.forEach((pk, i) => setTimeout(() => { pk.style.opacity = 1; travel(pk, routes[i], { dur: 1.4 + i * .25 }); }, FINAL ? 0 : (t + .2 + i * .45) * 1000));
+    setTimeout(() => thanks.classList.add('on'), FINAL ? 0 : (t + 2.4) * 1000);
+  }, .35);
+})();
+</script>
+
+<!-- The road under the deck: faint dashes show the road ahead, the kerb draws as the van drives,
+     a kilometre stone marks the start of each panel. The van is the progress mark. -->
+<style>
+  .hz-ground .gr-stone text{font:600 10.5px var(--font-label);letter-spacing:.1em;fill:var(--paper)}
+  .hz-ground .gr-stone rect{fill:none;stroke:var(--paper);stroke-width:1.2}
+  .hz-ground .gr-stone.hz-lit rect{fill:var(--marker);stroke:var(--marker)}
+  .hz-ground .gr-stone.hz-lit text{fill:var(--ink)}
+  .hz-ground .hz-guide{stroke-dasharray:14 12;opacity:.32;stroke-width:2}
+</style>
+<script>
+window.CPS_GROUND = ({ W, H, x, y, panels }) => {
+  const mid = y(52), kerb = y(92);
+  const stones = panels.map((p, i) => {
+    const sx = x(p.left + 1.6), n = String(i + 1).padStart(2, '0');
+    return `<g class="gr-stone" data-x="${(p.left + 1.6).toFixed(2)}" transform="translate(${sx} ${y(16)})">
+      <rect x="0" y="0" width="30" height="${(y(66) - y(16)).toFixed(1)}" rx="2"/><text x="15" y="${((y(66) - y(16)) / 2 + 4).toFixed(1)}" text-anchor="middle">${n}</text></g>`;
+  }).join('');
+  const vy = y(80);
+  const van = `<g class="hz-van"><g transform="translate(0 ${vy})">
+      <path d="M-62 -26 h40 v26 h-40 z" fill="#FBF9F4" stroke="#1E1A16" stroke-width="1.6"/>
+      <path d="M-22 -20 h12 l8 9 v11 h-20 z" fill="#FBF9F4" stroke="#1E1A16" stroke-width="1.6" stroke-linejoin="round"/>
+      <path d="M-19 -17 h8 l5 6 h-13 z" fill="#C9D6E6"/>
+      <path d="M-60 -11 h36" stroke="#F5CB3C" stroke-width="4"/>
+      <circle cx="-50" cy="0" r="5" fill="#1E1A16" stroke="#FBF9F4" stroke-width="1.5"/>
+      <circle cx="-12" cy="0" r="5" fill="#1E1A16" stroke="#FBF9F4" stroke-width="1.5"/>
+    </g></g>`;
+  return `<path class="hz-guide" d="M0 ${mid} H${W}"/><path class="hz-draw" d="M0 ${kerb} H${W}"/>${stones}${van}`;
+};
+</script>
+
+</main>
+
