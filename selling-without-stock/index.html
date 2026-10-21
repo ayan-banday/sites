@@ -109,6 +109,9 @@ img{max-width:100%}
 </style>
 <script>
   document.documentElement.classList.add('js');
+  /* a presentation always opens on its title slide */
+  try { history.scrollRestoration = 'manual'; } catch (e) {}
+  addEventListener('load', () => { if (!location.hash) scrollTo(0, 0); });
   try { if (navigator.maxTouchPoints > 0 && Math.min(screen.width, screen.height) < 540) document.documentElement.classList.add('phone'); } catch (e) {}
   const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
   const FINAL = reduce || /[?&](final|still)=1/.test(location.search);  /* still=1: finished drawings on the live track, for screenshots */
