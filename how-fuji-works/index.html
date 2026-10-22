@@ -1,0 +1,459 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>How Fuji Works</title>
+<meta name="description" content="A short page for Ash on how Fuji, his life system, turns what he says into maps, tickets and night runs, and why each rule exists.">
+<link rel="icon" href="data:,">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo+Narrow:wght@600;700&family=Architects+Daughter&family=IBM+Plex+Mono:wght@500&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap">
+<style>
+/* Page concept: Ash reads how his own system runs, on his phone, before Friday's 10 am thinking slot. Drawings: outline tree, switchboard, swimlane, rhythm dial, translator ledger, do and don't pairs, the real ticket. */
+/* PALETTE START */
+/* palette seed 1623, split-complementary, brand hue 212.0, accent hue 62.0 (scripts/palette.py) */
+:root { --bg: #f0f7f8; --surface: #fbfeff; --ink: #172629; --muted: #56676b; --line: #c9d8dc; --soft: #def2f6; --brand: #006271; --brand-ink: #ffffff; --accent: #b16500; --accent-soft: #fae4d1; --alert: #954750; --ok: #43694e; --marker: #ffcda2; --tint-1: #c5e8ef; --tint-2: #fee2cb; --tint-3: #f1dded; color-scheme: light; }
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { --bg: #0a1315; --surface: #161e20; --ink: #e4eaeb; --muted: #a5bdc2; --line: #313a3c; --soft: #1c272a; --brand: #77c3d3; --brand-ink: #0a1315; --accent: #fcb77b; --accent-soft: #37291c; --alert: #e78b93; --ok: #8dbf9a; --marker: #6f4212; --tint-1: #1b3338; --tint-2: #3e2713; --tint-3: #3d293a; color-scheme: dark; } }
+:root[data-theme="dark"] { --bg: #0a1315; --surface: #161e20; --ink: #e4eaeb; --muted: #a5bdc2; --line: #313a3c; --soft: #1c272a; --brand: #77c3d3; --brand-ink: #0a1315; --accent: #fcb77b; --accent-soft: #37291c; --alert: #e78b93; --ok: #8dbf9a; --marker: #6f4212; --tint-1: #1b3338; --tint-2: #3e2713; --tint-3: #3d293a; color-scheme: dark; }
+/* PALETTE END */
+:root {
+  --f-display: "Archivo Narrow", "Arial Narrow", "Segoe UI", system-ui, sans-serif;
+  --f-body: "IBM Plex Sans", "Segoe UI", system-ui, sans-serif;
+  --f-hand: "Architects Daughter", "Segoe Print", "Comic Sans MS", cursive;
+  --f-mono: "IBM Plex Mono", Consolas, "Courier New", monospace;
+}
+* { box-sizing: border-box; }
+html { -webkit-text-size-adjust: 100%; }
+body { margin: 0; background: var(--bg); color: var(--ink); font: 400 17px/1.58 var(--f-body);
+  padding-inline: max(16px, env(safe-area-inset-left, 0px)); overflow-x: clip; }
+.wrap { max-width: 1080px; margin-inline: auto; }
+h1, h2, h3 { font-family: var(--f-display); font-weight: 700; line-height: 1.05; margin: 0; text-wrap: balance; }
+h1 { font-size: clamp(2.5rem, 6.2vw, 4.6rem); max-width: 19ch; }
+h2 { font-size: clamp(1.75rem, 4vw, 2.6rem); max-width: 28ch; }
+h3 { font-size: 1.35rem; }
+p { margin: 0; max-width: 66ch; text-wrap: pretty; }
+b, strong { font-weight: 700; }
+code { font-family: var(--f-mono); font-size: 0.86em; background: var(--soft); padding: 1px 5px; border-radius: 3px; }
+a { color: var(--brand); }
+a:focus-visible { outline: 2px solid var(--ink); outline-offset: 3px; }
+/* marker: what the reader gets or decides, at most one per screen */
+mark { background: linear-gradient(var(--marker), var(--marker)) no-repeat 0 88% / 100% 46%; color: inherit; padding: 0 2px;
+  -webkit-box-decoration-break: clone; box-decoration-break: clone; }
+.hand { font-family: var(--f-hand); font-size: 1.12rem; line-height: 1.3; }
+.eyebrow { font: 500 0.74rem/1.3 var(--f-mono); letter-spacing: 0.12em; text-transform: uppercase; color: var(--muted); }
+.answer { font-size: 1.16rem; line-height: 1.5; max-width: 62ch; }
+.means { color: var(--muted); font-size: 0.95rem; max-width: 70ch; }
+.open { font-size: 0.95rem; max-width: 70ch; }
+.open::before { content: "Still open"; font: 500 0.7rem/1 var(--f-mono); letter-spacing: 0.1em; text-transform: uppercase; color: var(--alert);
+  border: 1px solid var(--alert); border-radius: 3px; padding: 3px 6px; margin-right: 10px; vertical-align: 2px; }
+.pill { font: 500 0.66rem/1 var(--f-mono); letter-spacing: 0.08em; text-transform: uppercase; padding: 4px 7px; border-radius: 3px; border: 1px solid var(--line); color: var(--muted); white-space: nowrap; }
+svg text { font-family: var(--f-body); }
+
+/* drawn line kit: one hand draws everything */
+.ln { fill: none; stroke: var(--ink); stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
+.ln.thin { stroke-width: 0.9; }
+.ln.guide { stroke-width: 1; stroke-dasharray: 3 5; opacity: 0.35; }
+.ln.hid { stroke-dasharray: 6 4; }
+.ln.acc { stroke: var(--accent); }
+.ln.alert { stroke: var(--alert); }
+.fill-surface { fill: var(--surface); } .fill-soft { fill: var(--soft); } .fill-tint { fill: var(--tint-1); } .fill-marker { fill: var(--marker); }
+
+/* bands */
+section.band { padding-block: 64px; border-top: 1px solid var(--line); }
+section.band > .wrap { display: grid; gap: 26px; }
+.band.soft { background: var(--soft); margin-inline: calc(-1 * max(16px, env(safe-area-inset-left, 0px))); padding-inline: max(16px, env(safe-area-inset-left, 0px)); }
+.head { display: grid; gap: 12px; }
+
+/* top screen */
+.top { padding-block: clamp(56px, 10vw, 112px) clamp(48px, 7vw, 80px); border-top: 0 !important; }
+.top .wrap { display: grid; gap: 26px; }
+.top .lede { font-size: 1.2rem; max-width: 56ch; }
+.decide { background: var(--accent-soft); border-radius: 4px; padding: 20px 22px; display: grid; gap: 10px; max-width: 720px; }
+.decide ol { margin: 0; padding-left: 1.3em; display: grid; gap: 6px; }
+.short p { font-size: 1.22rem; line-height: 1.55; max-width: 64ch; }
+
+/* numbered key beside a drawing */
+.key { list-style: none; margin: 0; padding: 0; display: grid; gap: 16px; counter-reset: k; }
+.key li { display: grid; grid-template-columns: 32px minmax(0, 1fr); gap: 12px; align-items: start; counter-increment: k; }
+.key li::before { content: counter(k); width: 28px; height: 28px; border-radius: 50%; background: var(--ink); color: var(--bg);
+  display: grid; place-items: center; font-weight: 700; font-size: 0.9rem; margin-top: 1px; }
+.split { display: grid; grid-template-columns: minmax(0, 1.3fr) minmax(0, 1fr); gap: 34px; align-items: start; }
+
+/* sheet: mockups for "how will it look?" */
+.sheet { background: var(--surface); border: 1.5px solid var(--ink); border-radius: 4px; overflow: hidden; box-shadow: 6px 6px 0 var(--tint-1); }
+.sheet-bar { display: flex; justify-content: space-between; gap: 10px; padding: 8px 14px; border-bottom: 1.5px solid var(--ink); font: 500 0.7rem/1.2 var(--f-mono);
+  letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); }
+.sheet-body { padding: 16px; display: grid; gap: 10px; }
+
+/* still open */
+.open-list { list-style: none; margin: 0; padding: 0; display: grid; gap: 12px; max-width: 760px; }
+.open-list li { padding-left: 26px; position: relative; }
+.open-list li::before { content: ""; position: absolute; left: 0; top: 0.45em; width: 12px; height: 12px; border: 2px dashed var(--alert); border-radius: 50%; }
+
+/* decision slips with the pen circle */
+.slips { display: grid; gap: 22px; }
+.slip { background: var(--surface); border: 1.5px solid var(--ink); border-radius: 3px; padding: 22px 24px; display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.25fr); gap: 18px 34px; }
+.slip h3 { font-size: 1.45rem; }
+.slip .n { font: 500 0.72rem/1 var(--f-mono); letter-spacing: 0.1em; text-transform: uppercase; color: var(--muted); display: block; margin-bottom: 8px; }
+.opts { list-style: none; margin: 0; padding: 0; display: grid; gap: 14px; }
+.opts li { position: relative; padding-left: 28px; max-width: 100%; }
+.opts li::before { content: ""; position: absolute; left: 0; top: 0.35em; width: 14px; height: 14px; border: 1.5px solid var(--ink); border-radius: 2px; }
+.opts li.pick { font-weight: 700; }
+.opts li.pick::before { background: var(--ink); box-shadow: inset 0 0 0 3px var(--surface); }
+.ringed { position: relative; display: inline-block; }
+.pen-ring { position: absolute; left: -24px; top: -10px; width: calc(100% + 46px); height: calc(100% + 20px); overflow: visible; pointer-events: none; }
+.pen-ring path { fill: none; stroke: var(--accent); stroke-width: 2.4; stroke-linecap: round; vector-effect: non-scaling-stroke; }
+.why { display: block; font-family: var(--f-hand); font-weight: 400; font-size: 1.04rem; line-height: 1.3; color: var(--brand); margin-top: 14px; }
+
+/* phone twin for drawings with small labels */
+.twin { display: none; }
+
+footer { padding-block: 40px 64px; border-top: 1px solid var(--line); color: var(--muted); font-size: 0.9rem; }
+
+@media (max-width: 900px) { .split, .slip { grid-template-columns: minmax(0, 1fr); } }
+@media (max-width: 700px) { .has-twin { display: none; } .twin { display: block; } }
+@media (max-width: 560px) { section.band { padding-block: 46px; } }
+
+/* page additions */
+.draw { width: 100%; max-width: 460px; height: auto; overflow: visible; }
+svg text { fill: var(--ink); font-size: 12.5px; }
+svg .lab { font-family: var(--f-mono); font-size: 11px; letter-spacing: 0.06em; text-transform: uppercase; fill: var(--muted); }
+svg .big { font-family: var(--f-mono); font-weight: 500; font-size: 13px; letter-spacing: 0.04em; }
+svg .hnd { font-family: var(--f-hand); font-size: 13.5px; }
+.box { fill: var(--surface); stroke: var(--ink); stroke-width: 1.5; }
+.box.ash { fill: var(--accent-soft); }
+.box.mark { fill: var(--marker); }
+
+/* outline tree */
+.tree, .tree ul { list-style: none; margin: 0; padding: 0; }
+.tree ul { margin-left: 14px; padding-left: 18px; border-left: 1.8px solid var(--ink); }
+.tree li { position: relative; padding: 5px 0 5px 4px; }
+.tree ul > li::before { content: ""; position: absolute; left: -18px; top: 1.05em; width: 14px; border-top: 1.8px solid var(--ink); }
+.tree .t { font-family: var(--f-mono); font-size: 0.86rem; font-weight: 500; }
+.tree .d { color: var(--muted); font-size: 0.92rem; }
+.tree .ring { outline: 2px solid var(--accent); outline-offset: 1px; border-radius: 12px; padding: 1px 8px; margin: 0 6px 0 -4px; }
+.note3 { font-family: var(--f-hand); font-size: 1.12rem; color: var(--brand); max-width: 34ch; border-left: 2px dashed var(--brand); padding-left: 14px; }
+
+/* quote above the switchboard */
+.said { font-family: var(--f-hand); font-size: 1.2rem; background: var(--surface); border: 1.5px solid var(--ink); border-radius: 14px 14px 14px 2px; padding: 12px 16px; max-width: 30ch; }
+
+/* ledger */
+.ledger { width: 100%; border-collapse: collapse; font-size: 0.96rem; }
+.ledger th { font: 500 0.7rem/1.2 var(--f-mono); letter-spacing: 0.1em; text-transform: uppercase; color: var(--muted); text-align: left; padding: 0 12px 10px 0; border-bottom: 1.5px solid var(--ink); }
+.ledger td { vertical-align: top; padding: 12px 12px 12px 0; border-bottom: 1px solid var(--line); }
+.ledger td:first-child { font-family: var(--f-mono); font-size: 0.84rem; white-space: nowrap; }
+@media (max-width: 620px) {
+  .ledger thead { display: none; }
+  .ledger, .ledger tbody, .ledger tr, .ledger td { display: block; }
+  .ledger tr { padding: 12px 0; border-bottom: 1px solid var(--line); }
+  .ledger td { border: 0; padding: 3px 0; }
+  .ledger td:nth-child(3) { color: var(--muted); }
+}
+
+/* do and don't */
+.pairs { display: grid; gap: 14px; }
+.pair { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 0; border: 1.5px solid var(--ink); border-radius: 3px; background: var(--surface); }
+.pair > div { padding: 14px 16px; min-width: 0; }
+.pair .dont { border-left: 1px dashed var(--line); color: var(--muted); }
+.pair .tag { display: block; font: 500 0.68rem/1 var(--f-mono); letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 7px; }
+.pair .do .tag { color: var(--ok); }
+.pair .dont .tag { color: var(--alert); }
+@media (max-width: 560px) { .pair { grid-template-columns: minmax(0, 1fr); } .pair .dont { border-left: 0; border-top: 1px dashed var(--line); } }
+
+/* the real ticket */
+.tk { font-family: var(--f-mono); font-size: 0.84rem; line-height: 1.5; overflow-wrap: anywhere; }
+.tk .h1 { font-weight: 500; font-size: 0.95rem; }
+.was { color: var(--muted); text-decoration: line-through; text-decoration-color: var(--alert); text-decoration-thickness: 2px; }
+.stops { list-style: none; margin: 0 0 0 10px; padding: 0 0 0 22px; border-left: 1.8px dotted var(--ink); display: grid; gap: 16px; }
+.stops li { position: relative; }
+.stops li::before { content: ""; position: absolute; left: -30px; top: 0.3em; width: 12px; height: 12px; border-radius: 50%; background: var(--bg); border: 1.8px solid var(--ink); }
+.stops li.now::before { background: var(--accent); border-color: var(--accent); }
+.stops li.next::before { border-style: dashed; }
+.stops .when { font: 500 0.74rem/1.2 var(--f-mono); letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); display: block; margin-bottom: 3px; }
+.slip { grid-template-columns: minmax(0, 1fr); }
+@media (min-width: 900px) { .slip { grid-template-columns: minmax(0, 1fr) minmax(0, 1.25fr); } }
+.theory { border-left: 3px solid var(--brand); padding: 6px 0 6px 18px; display: grid; gap: 8px; }
+.theory code { overflow-wrap: anywhere; }
+</style>
+</head>
+<body>
+
+<section class="band top" id="top">
+  <div class="wrap">
+    <p class="eyebrow">For Ash · read before Friday's 10 am thinking slot · about 6 minutes</p>
+    <h1>How does Fuji turn what you say into work that moves your maps?</h1>
+    <p class="lede">By the end you'll know <b>where every piece lives</b>, what happens to a reflection, how a ticket moves and who moves it, what runs while you sleep, and why each rule exists.</p>
+    <div class="decide">
+      <p class="eyebrow">You'll decide on Friday</p>
+      <ol><li>Whether routed reflections land before you approve them.</li><li>Which Build Fuji ticket goes next.</li></ol>
+      <p><a href="#decide">Jump to the decisions</a></p>
+    </div>
+  </div>
+</section>
+
+<section class="band soft short" id="short">
+  <div class="wrap">
+    <h2>The short answer</h2>
+    <p>Everything you say is <b>saved raw first</b>, then cut into pieces that land as log lines, ticket ideas or fog. Work happens only in tickets, and <b>you hold two gates</b>: you mark a question <code>ready</code>, and you resolve the answer. Between those gates an agent works alone, mostly at night, so <mark>your day goes to deciding and the AI's night goes to doing</mark>.</p>
+  </div>
+</section>
+
+<section class="band" id="where">
+  <div class="wrap">
+    <div class="head">
+      <p class="eyebrow">1 of 7</p>
+      <h2>Where does each part of your life sit in Fuji, from the summit down to a ticket?</h2>
+      <p class="answer"><b>Three levels: the summit, a map, a ticket.</b> Every map climbs toward the summit, and every ticket moves one map.</p>
+      <p class="means">The tree is the real folder layout. The ringed branch is where daily work happens.</p>
+    </div>
+    <div class="split">
+      <div data-pattern="outline-tree">
+        <ul class="tree" aria-label="Fuji's layout as a tree">
+          <li><span class="t">summit.md</span> <span class="d">Mount Olympus, the $1B company. Links every map.</span>
+            <ul>
+              <li><span class="t">ranges/</span> <span class="d">Udyaan, Business, Self. Maps with a destination.</span>
+                <ul><li><span class="t ring">a map/</span> <span class="d">map.md, log.md, fog.md, tickets/</span></li></ul>
+              </li>
+              <li><span class="t">plateau/</span> <span class="d">Body and Network. A standard to hold.</span></li>
+              <li><span class="t">dormant/</span> <span class="d">Maps quiet for 3 weeks.</span></li>
+              <li><span class="t">fog.md</span> <span class="d">Ideas with no map yet.</span></li>
+              <li><span class="t">inbox/</span> <span class="d">Your words, as said.</span></li>
+              <li><span class="t">gear/</span> <span class="d">Plain Python scripts.</span></li>
+            </ul>
+          </li>
+        </ul>
+      </div>
+      <div style="display:grid;gap:18px;min-width:0">
+        <p><b>A range</b> holds maps that finish: each has a destination and is done when it gets there. <b>The plateau</b> holds what never finishes, sleep, food, health and people, so it carries a standard instead, and a slipping standard opens a ticket.</p>
+        <p><b>Dormant</b> is where a map goes when nothing has touched it for 3 weeks. A script moves it on Mondays, never the AI, so a pause is a fact you can see and the summit only lists live work.</p>
+        <p class="note3">The three rule: no folder holds more than three maps. A fourth nests under one of them or waits in dormant.</p>
+        <p>The three rule exists because a fourth live map splits attention more than it adds progress. It forces the choice early.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="band" id="reflection">
+  <div class="wrap">
+    <div class="head">
+      <p class="eyebrow">2 of 7</p>
+      <h2>What happens to a reflection after you say it to Claude?</h2>
+      <p class="answer"><b>It's saved word for word in <code>inbox/</code>, then split into pieces,</b> and each piece goes to the one place it belongs.</p>
+      <p class="means">The sheet at the top is the raw file. Each cord is one piece; its socket is where that piece lands.</p>
+    </div>
+    <div class="split">
+      <div style="display:grid;gap:14px;min-width:0" data-pattern="switchboard">
+        <p class="said">"Woke at 3, used the phone, had an idea about onboarding."</p>
+        <svg class="draw" viewBox="0 0 360 300" role="img" aria-label="The raw reflection in inbox splits into three pieces: a sleep log line, a ticket idea, and a line in the product map's fog.">
+          <rect class="box" x="110" y="6" width="140" height="54" rx="3"/>
+          <text class="lab" x="180" y="28" text-anchor="middle">inbox/date.md</text>
+          <text class="hnd" x="180" y="48" text-anchor="middle">never edited</text>
+          <path class="ln" d="M180 60 C 180 90, 62 86, 62 118"/>
+          <path class="ln" d="M180 60 C 180 90, 180 92, 180 118"/>
+          <path class="ln" d="M180 60 C 180 90, 298 86, 298 118"/>
+          <rect class="box" x="8" y="118" width="108" height="30" rx="15"/><text x="62" y="138" text-anchor="middle">woke at 3</text>
+          <rect class="box" x="126" y="118" width="108" height="30" rx="15"/><text x="180" y="138" text-anchor="middle">used the phone</text>
+          <rect class="box" x="244" y="118" width="108" height="30" rx="15"/><text x="298" y="138" text-anchor="middle">onboarding idea</text>
+          <path class="ln" d="M62 148 V 196"/><path class="ln" d="M180 148 V 196"/><path class="ln" d="M298 148 V 196"/>
+          <rect class="box mark" x="8" y="196" width="108" height="56" rx="3"/>
+          <text class="lab" x="62" y="216" text-anchor="middle">log line</text><text x="62" y="238" text-anchor="middle">sleep log.md</text>
+          <rect class="box" x="126" y="196" width="108" height="56" rx="3"/>
+          <text class="lab" x="180" y="216" text-anchor="middle">ticket idea</text><text x="180" y="238" text-anchor="middle">no 3 am phone</text>
+          <rect class="box" x="244" y="196" width="108" height="56" rx="3"/>
+          <text class="lab" x="298" y="216" text-anchor="middle">fog</text><text x="298" y="238" text-anchor="middle">product fog.md</text>
+          <path class="ln thin" d="M62 252 V 268 H 298 V 252"/>
+          <text class="hnd" x="180" y="290" text-anchor="middle">each piece cites the inbox file</text>
+        </svg>
+      </div>
+      <div style="display:grid;gap:16px;min-width:0">
+        <p><b>Raw first</b>, because routing is a guess and your words are the evidence. If a piece lands wrong, the original is still there to route again, and every routed line points back to it.</p>
+        <p><b>Facts become log lines.</b> Sleep, food, health and people go to a plateau log as dated lines, with the date the thing happened, not the day you said it.</p>
+        <p><b>Thoughts about a map go into a ticket's Ideas</b> or the map's <code>fog.md</code>. An idea with no map goes to the root <code>fog.md</code> with a line of context, so it still makes sense in a month.</p>
+        <p><b>Duplicates are the main risk.</b> The Oct 22 run showed it: some days were already routed once, so each log is checked before a line goes in.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="band" id="ticket">
+  <div class="wrap">
+    <div class="head">
+      <p class="eyebrow">3 of 7</p>
+      <h2>How does a Fuji ticket move from a question to a decision, and who moves it?</h2>
+      <p class="answer"><b>Five statuses, and you own the two that need judgment:</b> <code>ready</code> and <code>resolved</code>.</p>
+      <p class="means">Each box is a status. Its lane says who sets it. The line is one ticket's path.</p>
+    </div>
+    <div class="split">
+      <svg class="draw" data-pattern="swimlane" viewBox="0 0 360 350" role="img" aria-label="A ticket goes open, then ready set by Ash, then claimed and review set by an agent, then resolved set by Ash.">
+        <rect x="0" y="0" width="172" height="350" rx="3" style="fill:var(--accent-soft)"/>
+        <text class="lab" x="86" y="22" text-anchor="middle">you</text>
+        <text class="lab" x="270" y="22" text-anchor="middle">an agent</text>
+        <path class="ln guide" d="M180 6 V 344"/>
+        <path class="ln" d="M180 66 L 86 126 L 270 186 L 270 246 L 86 306"/>
+        <rect class="box" x="120" y="46" width="120" height="40" rx="3"/><text class="big" x="180" y="71" text-anchor="middle">open</text>
+        <rect class="box" x="26" y="106" width="120" height="40" rx="3"/><text class="big" x="86" y="131" text-anchor="middle">ready</text>
+        <rect class="box" x="210" y="166" width="120" height="40" rx="3"/><text class="big" x="270" y="191" text-anchor="middle">claimed</text>
+        <rect class="box" x="210" y="226" width="120" height="40" rx="3"/><text class="big" x="270" y="251" text-anchor="middle">review</text>
+        <rect class="box mark" x="26" y="286" width="120" height="40" rx="3"/><text class="big" x="86" y="311" text-anchor="middle">resolved</text>
+      </svg>
+      <ol class="key">
+        <li><p><b>open:</b> a question exists. You or a session with you writes it, from your words.</p></li>
+        <li><p><b>ready:</b> you say the Question and Ideas are complete enough for an agent to work alone.</p></li>
+        <li><p><b>claimed:</b> one session, or the night run, takes the ticket so nobody else does.</p></li>
+        <li><p><b>review:</b> the agent has drafted the Answer and stops. You read it.</p></li>
+        <li><p><b>resolved:</b> you, or a session working with you, writes the decision into the map.</p></li>
+      </ol>
+    </div>
+    <p>The gates sit where taste lives. An agent can't tell whether a question is the right one, and it can't decide what an answer means for your map, so <b>it never sets ready or resolved</b>. Resolving writes one line to the map's Decisions so far, moves the ticket in the map's list and updates "Left off here", so a paused map restarts from that line alone.</p>
+  </div>
+</section>
+
+<section class="band" id="night">
+  <div class="wrap">
+    <div class="head">
+      <p class="eyebrow">4 of 7</p>
+      <h2>What runs in Fuji while you sleep, and what does it touch?</h2>
+      <p class="answer"><b>Every night at 12:47 am the night run works each ready research or task ticket</b> whose blockers are resolved, and commits to <code>main</code>.</p>
+      <p class="means">Each dot is a night with a night run. The ring on Monday is the weekly dormant check at 8 am.</p>
+    </div>
+    <div class="split">
+      <svg class="draw" data-pattern="rhythm-dial" viewBox="0 0 360 300" role="img" aria-label="A week drawn as a ring: a night run every night at 12:47 am, and the dormant check every Monday at 8 am.">
+        <circle class="ln guide" cx="180" cy="150" r="104"/>
+        <path class="ln" d="M180 46 A 104 104 0 1 1 179 46"/>
+        <g><circle cx="180.0" cy="46.0" r="7" style="fill:var(--ink)"/><circle cx="180.0" cy="46.0" r="15" class="ln acc" style="stroke-width:2.4"/><text class="lab" x="180.0" y="24.0" text-anchor="middle">Mon</text><circle cx="261.3" cy="85.2" r="7" style="fill:var(--ink)"/><text class="lab" x="281.6" y="72.9" text-anchor="middle">Tue</text><circle cx="281.4" cy="173.1" r="7" style="fill:var(--ink)"/><text class="lab" x="306.7" y="182.9" text-anchor="middle">Wed</text><circle cx="225.1" cy="243.7" r="7" style="fill:var(--ink)"/><text class="lab" x="236.4" y="271.1" text-anchor="middle">Thu</text><circle cx="134.9" cy="243.7" r="7" style="fill:var(--ink)"/><text class="lab" x="123.6" y="271.1" text-anchor="middle">Fri</text><circle cx="78.6" cy="173.1" r="7" style="fill:var(--ink)"/><text class="lab" x="53.3" y="182.9" text-anchor="middle">Sat</text><circle cx="98.7" cy="85.2" r="7" style="fill:var(--ink)"/><text class="lab" x="78.4" y="72.9" text-anchor="middle">Sun</text><text class="hnd" x="206" y="26" style="fill:var(--brand);font-size:15px">dormant check, 8 am</text></g>
+        <text class="big" x="180" y="142" text-anchor="middle">every night</text>
+        <text class="hnd" x="180" y="172" text-anchor="middle" style="font-size:20px">12:47 am</text>
+      </svg>
+      <div style="display:grid;gap:16px;min-width:0">
+        <p><b>It skips prototype and grilling tickets</b>, even when they're ready, because those need you in the room.</p>
+        <p><b>Builds stay inside Fuji.</b> A deck or a page goes in the map's <code>output/</code>; anything that changes the world, a message, a sign-up, a payment, comes back to you as a checklist in the Answer.</p>
+        <p><b>The last commit message is your morning note</b>: one line per ticket, what you must decide, and what stayed ready and why.</p>
+        <p>It runs at night because watching an agent work pulls you into it. You plan in the day; it works while you're asleep.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="band" id="gear">
+  <div class="wrap">
+    <div class="head">
+      <p class="eyebrow">5 of 7</p>
+      <h2>Why does every write to a map leave a log line, and what do the gear scripts check?</h2>
+      <p class="answer"><b>Time is how you measure growth</b>, so every write appends one timed line to the map's <code>log.md</code>, and plain scripts do the repeatable work for free.</p>
+      <p class="means">Each row is one script in <code>gear/</code>: what it does, then what it gives you.</p>
+    </div>
+    <div data-pattern="translator-ledger" class="scroll">
+      <table class="ledger">
+        <thead><tr><th>Script</th><th>What it does</th><th>What it gives you</th></tr></thead>
+        <tbody>
+          <tr><td>log.py</td><td>Adds one line with the real time to a map's <code>log.md</code>, newest at the bottom.</td><td>A record of when each decision happened, and the signal the dormant check reads.</td></tr>
+          <tr><td>check-maps.py</td><td>Checks every ticket header, blocker, list, log, link and the three rule, then prints each map's frontier.</td><td>A PASS before every push, so a broken map never reaches <code>main</code>.</td></tr>
+          <tr><td>dormant.py</td><td>On Mondays at 8 am, moves maps with no log line for 21 days into <code>dormant/</code>.</td><td>A summit that lists only live work, with no AI judging what's quiet.</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p>Scripts cost no tokens and give the same result every time. <b>The AI only does what needs judgment</b>: splitting a reflection, drafting an answer. Anything with a rule goes to a script.</p>
+  </div>
+</section>
+
+<section class="band" id="guard">
+  <div class="wrap">
+    <div class="head">
+      <p class="eyebrow">6 of 7</p>
+      <h2>What stops an agent in Fuji from spending tokens on the wrong things?</h2>
+      <p class="answer"><b>Four rules keep tokens on what moves your maps.</b> The first was written after unasked research on Oct 22.</p>
+      <p class="means">Each card shows the rule, then the slip it prevents.</p>
+    </div>
+    <div class="pairs" data-pattern="do-dont">
+      <div class="pair"><div class="do"><span class="tag">Do</span><b>Research only on your say-so</b>, or on a ticket you marked ready. Other ideas get listed in one line each for your yes.</div><div class="dont"><span class="tag">Prevents</span>Unasked research on side topics, like the food and meds drafts on Oct 22.</div></div>
+      <div class="pair"><div class="do"><span class="tag">Do</span><b>One ticket, one session.</b> Each approved ticket runs in its own cloud session, touching only its own files.</div><div class="dont"><span class="tag">Prevents</span>One chat that runs several tickets and mixes their files and logs.</div></div>
+      <div class="pair"><div class="do"><span class="tag">Do</span><b>Read Charlotte, never edit it.</b> Fuji copies what it needs and cites the path.</div><div class="dont"><span class="tag">Prevents</span>Two systems drifting, with nobody sure which copy is true.</div></div>
+      <div class="pair"><div class="do"><span class="tag">Do</span><b>Send learning to Shasta.</b> Fuji links to what you studied there.</div><div class="dont"><span class="tag">Prevents</span>Study notes piling up in maps that exist to finish things.</div></div>
+    </div>
+  </div>
+</section>
+
+<section class="band" id="look">
+  <div class="wrap">
+    <div class="head">
+      <p class="eyebrow">7 of 7</p>
+      <h2>How does tonight's TEDx slides ticket look as it moves through Fuji?</h2>
+      <p class="answer"><b>Your words became a ready ticket at 7:12 pm; the night run picks it up at 12:47 am</b>, and the deck waits for you by 8 am Friday.</p>
+    </div>
+    <div class="split" data-pattern="real-thing-built">
+      <div class="sheet"><div class="sheet-bar"><span>plateau/network/tickets/16-tedx-slides.md</span><span>Its header line</span></div>
+        <div class="sheet-body tk">
+          <p class="h1"># 16 TEDx slides: a first deck, the Arnold fact-check and the TEDx check</p>
+          <p>Type: task · Status: <span class="was">ready</span> <span class="was">claimed</span> <mark>review</mark> · Blocked by: none</p>
+          <p style="color:var(--muted)">## Question · ## Ideas · ## Research used · ## Links · ## Answer</p>
+        </div></div>
+      <ol class="stops">
+        <li><span class="when">Thu 7:12 pm · you</span>Your slide brief in chat becomes ticket 16, opened straight as <b>ready</b> because you gave the Question and Ideas in full.</li>
+        <li><span class="when">Thu 7:27 and 8:16 pm · you</span>Your decisions go into the ticket: free images only, straight to main, built for a projector. Each write adds a log line.</li>
+        <li class="now"><span class="when">Fri 12:47 am · night run</span>It sets <b>claimed</b>, builds the deck in <code>output/</code>, writes the short note in <code>research/</code>, drafts the Answer and sets <b>review</b>.</li>
+        <li class="next"><span class="when">Fri morning · you</span>You read the morning note on <code>main</code>, open the deck, and <b>resolve</b> the ticket or send it back with a new idea.</li>
+      </ol>
+    </div>
+  </div>
+</section>
+
+<section class="band" id="theory">
+  <div class="wrap">
+    <div class="head">
+      <p class="eyebrow">The thinking behind it</p>
+      <h2>Where does the theory behind Fuji's design come from?</h2>
+      <p class="answer"><b>Shasta's study page 02</b> sets out the big ways to think about building with AI, and which Fuji problem each one solves.</p>
+    </div>
+    <div class="theory">
+      <p>This page shows how Fuji runs. Page 02 shows why those ways of building fit, so read it when you want the reasons behind a rule.</p>
+      <p><a href="https://github.com/ayan-banday/shasta/blob/HEAD/02%20Command%20Agents%20(Prompting)/clusters/02%20What%20Are%20the%20Big%20Ways%20to%20Think%20About%20Building%20With%20AI%2C%20and%20Which%20Fuji%20Problem%20Does%20Each%20One%20Solve.html">Open page 02 in the Shasta repo</a></p>
+      <p><code>ayan-banday/shasta</code> · <code>02 Command Agents (Prompting)/clusters/02 What Are the Big Ways to Think About Building With AI, and Which Fuji Problem Does Each One Solve.html</code></p>
+    </div>
+  </div>
+</section>
+
+<section class="band soft" id="open">
+  <div class="wrap">
+    <h2>Still open</h2>
+    <ul class="open-list">
+      <li><b>The reflection flow.</b> Build Fuji 08 settles who approves a routed reflection and whether a daily timeline survives. It waits on 01, Charlotte's role.</li>
+      <li><b>The routing scripts.</b> Splitting a reflection is still done by a Claude session following the rules above; <code>route.py</code> and <code>apply.py</code> wait until 08 settles.</li>
+      <li><b>Which ticket comes next.</b> Build Fuji 12 tests a way to rank the frontier, the open tickets with no blockers.</li>
+      <li><b>Reading cost.</b> Build Fuji 15 asks how to keep Fuji and Shasta cheap for an agent to read as they grow.</li>
+    </ul>
+  </div>
+</section>
+
+<section class="band" id="decide">
+  <div class="wrap">
+    <div class="head">
+      <p class="eyebrow">For Friday's 10 am slot</p>
+      <h2>What do you need to decide about Fuji in Friday's thinking slot?</h2>
+      <p class="answer"><b>Two choices, each with a suggested pick circled.</b> Your answers go into ticket 08 and the Build Fuji map the same day.</p>
+    </div>
+    <div class="slips" data-pattern="decision-slips">
+      <div class="slip">
+        <div><span class="n">Decision 1 · Build Fuji 08</span><h3>Should routed reflections land in Fuji before you approve them?</h3></div>
+        <ul class="opts">
+          <li class="pick"><span class="ringed">One commit you can revert<svg class="pen-ring" viewBox="0 0 200 60" preserveAspectRatio="none" aria-hidden="true"><path d="M24 50 C 6 40, 8 16, 46 9 C 92 1, 160 3, 188 18 C 204 30, 186 52, 128 56 C 84 59, 40 57, 20 44"/></svg></span><span class="why">Suggested: it worked on Oct 22 and keeps you creative.</span></li>
+          <li>Wait for your yes on every piece</li>
+          <li>Log lines land at once; new tickets wait for your yes</li>
+        </ul>
+      </div>
+      <div class="slip">
+        <div><span class="n">Decision 2 · Build Fuji map</span><h3>Which Build Fuji ticket should go next?</h3></div>
+        <ul class="opts">
+          <li class="pick"><span class="ringed">01 Charlotte's role in Fuji<svg class="pen-ring" viewBox="0 0 200 60" preserveAspectRatio="none" aria-hidden="true"><path d="M24 50 C 6 40, 8 16, 46 9 C 92 1, 160 3, 188 18 C 204 30, 186 52, 128 56 C 84 59, 40 57, 20 44"/></svg></span><span class="why">Suggested: it unblocks 08, the reflection flow.</span></li>
+          <li>12 Rank the frontier</li>
+          <li>17 Plan tomorrow from Fuji alone</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer><div class="wrap">The reflection quote is the worked example from Build Fuji 08. Times are Bangalore time. Made for Ash, Oct 22.</div></footer>
+
+</body>
+</html>
