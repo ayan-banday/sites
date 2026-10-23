@@ -1,0 +1,161 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Fest Boss art preview</title>
+<style>
+  :root { --ink: #1B1530; --night: #2B2350; --cream: #FFF6E5; --gold: #FFC93C; }
+  html, body { margin: 0; background: var(--night); color: var(--cream); font: 12px/1.3 ui-monospace, Menlo, Consolas, monospace; }
+  body { padding: 10px 14px 60px; }
+  h2 { margin: 22px 0 6px; font-size: 14px; color: var(--gold); letter-spacing: .5px; }
+  h2 small { color: #b9b4c7; font-weight: normal; }
+  .row { display: flex; flex-wrap: wrap; gap: 14px 18px; align-items: flex-end; }
+  .item { display: flex; flex-direction: column; gap: 3px; }
+  .frames { display: flex; gap: 6px; }
+  .cell { display: flex; flex-direction: column; align-items: center; gap: 2px; }
+  .chk { background-color: #B9B4C7; background-image: conic-gradient(#A29CB5 25%, transparent 0 50%, #A29CB5 0 75%, transparent 0); background-size: 12px 12px; line-height: 0; }
+  img { image-rendering: pixelated; display: block; }
+  .lab { color: #d9d3ee; font-size: 11px; }
+  .lab b { color: var(--cream); }
+  .fl { color: #8e86b3; font-size: 9px; }
+  .scroll { overflow-x: auto; max-width: 100%; padding-bottom: 6px; }
+  .strip { position: relative; line-height: 0; display: inline-block; }
+  .strip .ground { position: absolute; left: 0; right: 0; bottom: 0; height: 2px; background: #FF4D6D; opacity: .8; }
+  .strip .seam { position: absolute; top: 0; bottom: 0; width: 1px; background: #FF4D6D; opacity: .5; }
+  .strip .tiles { display: flex; }
+  .bgsky { background: #8FD3FF; } .bgnight { background: #2B2350; } .bgink { background: #1B1530; }
+  .bar { position: sticky; top: 0; z-index: 5; background: #1B1530; margin: 0 -14px; padding: 6px 14px; display: flex; gap: 8px; align-items: center; border-bottom: 2px solid #4C2E9E; }
+  button { font: inherit; background: var(--cream); color: var(--ink); border: 2px solid var(--ink); border-radius: 6px; padding: 3px 8px; cursor: pointer; box-shadow: 0 2px 0 #000; }
+  button:hover { transform: translateY(-1px); } button:active { transform: translateY(1px); box-shadow: none; } button:focus-visible { outline: 3px solid var(--gold); }
+  #status { margin-left: auto; color: #b9b4c7; }
+  .ui48 { display: flex; gap: 12px; align-items: center; }
+</style>
+</head>
+<body>
+<div class="bar">
+  <b>Fest Boss art</b>
+  <span>layer backdrop:</span>
+  <button data-bg="bgsky">sky</button><button data-bg="bgnight">night</button><button data-bg="bgink">ink</button>
+  <span id="status">loading...</span>
+</div>
+<div id="out"></div>
+<script type="module">
+import kaplay from '../lib/kaplay.mjs';
+import { PAL, registerArt, spriteURL, SPRITE_DEFS } from '../src/art.js';
+
+const S = 3;   // display scale for sprites
+const out = document.getElementById('out');
+const by = (re) => SPRITE_DEFS.filter((d) => re.test(d.name));
+const FRAME_NAMES = ['idle0', 'idle1', 'run2', 'run3', 'jump', 'happy', 'sad'];
+const CREATURES = /^(riya|zib|gorp|boss|blorb|bunty)$/;
+const LAYERS = /^(fest|quad|woods|backstage|canteen|night)_(far|near)$/;
+
+function section(title, note) {
+  const h = document.createElement('h2'); h.innerHTML = title + (note ? ' <small>' + note + '</small>' : '');
+  const row = document.createElement('div'); row.className = 'row';
+  out.append(h, row); return row;
+}
+function frameImg(name, f, scale) {
+  const im = new Image(); im.src = spriteURL(name, f);
+  im.onload = () => { im.style.width = im.naturalWidth * scale + 'px'; im.style.height = im.naturalHeight * scale + 'px'; };
+  return im;
+}
+function item(d, scale = S, labels = null) {
+  const it = document.createElement('div'); it.className = 'item';
+  const fr = document.createElement('div'); fr.className = 'frames';
+  for (let f = 0; f < d.frames; f++) {
+    const c = document.createElement('div'); c.className = 'cell';
+    const bx = document.createElement('div'); bx.className = 'chk'; bx.append(frameImg(d.name, f, scale));
+    c.append(bx);
+    if (d.frames > 1) { const l = document.createElement('span'); l.className = 'fl'; l.textContent = labels ? labels[f] : 'f' + f; c.append(l); }
+    fr.append(c);
+  }
+  const lab = document.createElement('div'); lab.className = 'lab'; lab.innerHTML = '<b>' + d.name + '</b> ' + d.w + 'x' + d.h + (d.frames > 1 ? ' x' + d.frames : '');
+  it.append(fr, lab); return it;
+}
+
+function build() {
+  let row = section('Creatures', 'idle 0-1, run 2-3, jump 4, happy 5, sad 6; plus 1x native');
+  by(CREATURES).forEach((d) => {
+    const it = item(d, S, FRAME_NAMES);
+    const nat = document.createElement('div'); nat.className = 'frames';
+    for (let f = 0; f < d.frames; f++) { const bx = document.createElement('div'); bx.className = 'chk'; bx.append(frameImg(d.name, f, 1)); nat.append(bx); }
+    it.append(nat); row.append(it);
+  });
+  row = section('Obstacles', 'botleft anchor; ob_speaker must read as taller than ob_crate');
+  by(/^ob_/).forEach((d) => row.append(item(d)));
+  row = section('Ground tiles 16x30', 'each shown 4 wide to check the repeat; top rows are the walking surface');
+  by(/^(ground|gr_.*)$/).forEach((d) => {
+    const it = document.createElement('div'); it.className = 'item';
+    const fr = document.createElement('div'); fr.className = 'chk'; fr.style.display = 'flex';
+    for (let i = 0; i < 4; i++) fr.append(frameImg(d.name, 0, S));
+    const lab = document.createElement('div'); lab.className = 'lab'; lab.innerHTML = '<b>' + d.name + '</b> ' + d.w + 'x' + d.h;
+    it.append(fr, lab); row.append(it);
+  });
+  row = section('Big set pieces', 'scaffold (standing / tilting / collapsing) and door (closed / open)');
+  by(/^(scaffold|door)$/).forEach((d) => row.append(item(d, 2, d.name === 'door' ? ['closed', 'open'] : ['standing', 'tilting', 'collapsing'])));
+  row = section('Style signs 24x24', 'shown at 2x (= 48 CSS px, as in the DOM) and 3x');
+  by(/^sign_/).forEach((d) => {
+    const it = document.createElement('div'); it.className = 'item';
+    const fr = document.createElement('div'); fr.className = 'ui48';
+    [2, 3].forEach((sc) => { const bx = document.createElement('div'); bx.className = 'chk'; bx.append(frameImg(d.name, 0, sc)); fr.append(bx); });
+    const dk = document.createElement('div'); dk.className = 'chk'; dk.style.background = '#FFF6E5'; dk.append(frameImg(d.name, 0, 2)); fr.append(dk);
+    const lab = document.createElement('div'); lab.className = 'lab'; lab.innerHTML = '<b>' + d.name + '</b>';
+    it.append(fr, lab); row.append(it);
+  });
+  row = section('Small icons 12x12', 'shown at 4x and at 2x');
+  by(/^(icon_|buff_|debuff_)/).forEach((d) => {
+    const it = document.createElement('div'); it.className = 'item';
+    const fr = document.createElement('div'); fr.className = 'ui48';
+    [4, 2].forEach((sc) => { const bx = document.createElement('div'); bx.className = 'chk'; bx.append(frameImg(d.name, 0, sc)); fr.append(bx); });
+    const lab = document.createElement('div'); lab.className = 'lab'; lab.innerHTML = '<b>' + d.name + '</b>';
+    it.append(fr, lab); row.append(it);
+  });
+  row = section('FX', 'firework 4 burst frames, confetti 4 colours (shown 6x)');
+  by(/^(firework|confetti)$/).forEach((d) => row.append(item(d, 6)));
+  row = section('HUD / FX (existing)');
+  by(/^(heart|sparkle|smoke|shield|stormcloud)$/).forEach((d) => row.append(item(d)));
+  row = section('Props 48x48 / badges / tasks (existing)');
+  by(/^(prop_|badge_|task_)/).forEach((d) => row.append(item(d, 2)));
+
+  // parallax layers, tiled twice with a seam marker + ground line
+  out.insertAdjacentHTML('beforeend', '<h2>Parallax layers <small>400 px wide, each tiled twice (red line = seam at x=400, bottom red line = ground). Drawn at 2x.</small></h2>');
+  const lay = document.createElement('div'); out.append(lay);
+  by(LAYERS).forEach((d) => {
+    const wrap = document.createElement('div'); wrap.style.margin = '8px 0 12px';
+    const lab = document.createElement('div'); lab.className = 'lab'; lab.innerHTML = '<b>' + d.name + '</b> ' + d.w + 'x' + d.h;
+    const sc = document.createElement('div'); sc.className = 'scroll';
+    const st = document.createElement('div'); st.className = 'strip bglayer bgsky';
+    const tl = document.createElement('div'); tl.className = 'tiles';
+    tl.append(frameImg(d.name, 0, 2), frameImg(d.name, 0, 2));
+    const seam = document.createElement('div'); seam.className = 'seam'; seam.style.left = d.w * 2 + 'px';
+    const gr = document.createElement('div'); gr.className = 'ground';
+    st.append(tl, seam, gr); sc.append(st); wrap.append(lab, sc); lay.append(wrap);
+  });
+  out.insertAdjacentHTML('beforeend', '<h2>Hall <small>400x180, drawn at 3x. Whiteboard centre-right should stay empty for the task cards.</small></h2>');
+  const hallRow = document.createElement('div'); hallRow.className = 'scroll'; out.append(hallRow);
+  by(/^hall$/).forEach((d) => { const bx = document.createElement('div'); bx.className = 'chk'; bx.style.display = 'inline-block'; bx.append(frameImg(d.name, 0, 3)); hallRow.append(bx); });
+  out.insertAdjacentHTML('beforeend', '<h2>Existing backgrounds <small>unchanged</small></h2>');
+  const bgRow = document.createElement('div'); bgRow.className = 'scroll'; out.append(bgRow);
+  by(/^bg_/).forEach((d) => { const bx = document.createElement('div'); bx.className = 'chk'; bx.style.cssText = 'display:inline-block;margin-right:10px'; bx.append(frameImg(d.name, 0, 2)); bgRow.append(bx); });
+}
+
+try {
+  build();
+  // verify the real KAPLAY registration path works too
+  const k = kaplay({ width: 16, height: 16, global: false, debug: false, canvas: Object.assign(document.createElement('canvas'), { width: 16, height: 16 }) });
+  registerArt(k);
+  k.onLoad(() => { document.getElementById('status').textContent = SPRITE_DEFS.length + ' sprites registered OK'; });
+  k.onError?.((e) => { document.getElementById('status').textContent = 'KAPLAY load error: ' + e; });
+} catch (e) {
+  document.getElementById('status').textContent = 'ERROR: ' + e.message;
+  console.error(e);
+}
+document.querySelectorAll('button[data-bg]').forEach((b) => b.addEventListener('click', () => {
+  document.querySelectorAll('.bglayer').forEach((el) => { el.classList.remove('bgsky', 'bgnight', 'bgink'); el.classList.add(b.dataset.bg); });
+}));
+window.__art = { PAL, spriteURL };
+</script>
+</body>
+</html>

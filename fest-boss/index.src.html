@@ -1,0 +1,32 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <title>Fest Boss: Lead the Situation</title>
+  <meta name="description" content="A pixel runner about leading people. Read your team, pick the right road, and save the fest.">
+  <meta name="theme-color" content="#1B1530">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@700;800&family=Pixelify+Sans:wght@500;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css?v=6">
+</head>
+<body>
+  <div id="stage-wrap">
+    <canvas id="stage" tabindex="-1"></canvas>
+    <div id="overlay"></div>
+    <div id="stage-loading">Loading the fest<span class="dots" aria-hidden="true"></span></div>
+  </div>
+  <div class="sr-only" id="sr-live" aria-live="polite"></div>
+
+  <script>
+    // Testing aid: ?timerraf=1 drives frames from a timer (background tabs throttle requestAnimationFrame).
+    if (new URLSearchParams(location.search).has('timerraf')) {
+      window.requestAnimationFrame = cb => setTimeout(() => cb(performance.now()), 16);
+    }
+  </script>
+  <script type="module" src="src/main.js"></script>
+</body>
+</html>

@@ -1,0 +1,144 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Audio Preview</title>
+<style>
+  body { font-family: system-ui, sans-serif; background: #FFF6E5; color: #1B1530; margin: 0; padding: 16px; }
+  h1 { font-size: 20px; margin: 0 0 8px; } h2 { font-size: 15px; margin: 20px 0 8px; }
+  .row { display: flex; flex-wrap: wrap; gap: 8px; }
+  button { font: inherit; padding: 10px 14px; min-height: 44px; border: 3px solid #1B1530; background: #fff;
+    box-shadow: 3px 3px 0 #1B1530; cursor: pointer; border-radius: 4px; }
+  button:hover { background: #FFE9B8; }
+  button:active { transform: translate(2px, 2px); box-shadow: 1px 1px 0 #1B1530; }
+  button:focus-visible { outline: 3px solid #9B6BFF; outline-offset: 2px; }
+  button[aria-pressed="true"] { background: #FF4D6D; color: #fff; }
+  button.on { background: #FFC93C; }
+  button.say { border-color: var(--c); }
+  .say b { color: var(--c); }
+  pre { background: #1B1530; color: #FFF6E5; padding: 10px; border-radius: 6px; font-size: 12px; overflow: auto; max-height: 220px; white-space: pre-wrap; margin: 0; }
+  #errs { color: #FF8FC7; }
+  .sample { font-size: 12px; opacity: .75; margin: 4px 0 0; }
+</style>
+</head>
+<body>
+<h1>Fest Boss audio preview</h1>
+<div class="row">
+  <button id="mute" aria-pressed="false">Mute</button>
+  <button id="warm">Warm up (unlock audio + speech)</button>
+  <button id="stopsp">Stop speech</button>
+</div>
+
+<h2>Say (spoken dialogue + chirp)</h2>
+<div class="row" id="say"></div>
+<p class="sample" id="sayres"></p>
+
+<h2>Music</h2>
+<div class="row" id="music"></div>
+
+<h2>SFX</h2>
+<div class="row" id="sfx"></div>
+
+<h2>Voices found / voice each character picked</h2>
+<pre id="voices">loading...</pre>
+<h2>Babble (typewriter voices at 35 chars/sec)</h2>
+<div class="row" id="babble"></div>
+<h2>Errors</h2>
+<pre id="errs">none</pre>
+
+<script type="module">
+import { audio } from '../src/audio.js';
+
+const LINES = {
+  riya:   { text: 'Budget? Main karungi! Par Excel kya hota hai?', say: 'बजट? मैं करूंगी! पर एक्सेल क्या होता है?', c: '#9B6BFF' },
+  gorp:   { text: 'Stage... toot gaya.', say: 'स्टेज... टूट गया।', c: '#8DBB3A' },
+  zib:    { text: 'Darling, posters are my love language.', c: '#2EC4B6' },
+  blorb:  { text: 'Sab log hall mein aao. Abhi!', say: 'सब लोग हॉल में आओ। अभी!', c: '#C98B5A' },
+  bunty:  { text: 'Main toh chala! Fest ab tumhara hai!', say: 'मैं तो चला! फेस्ट अब तुम्हारा है!', c: '#6E7FD8' },
+  narrator: { text: 'Five days to the fest. Nothing is ready.', c: '#1B1530' },
+};
+const MUSIC = ['run', 'chase', 'hall', 'tense', 'storm', 'fest'];
+const SFX = ['select','confirm','tick','cross','sparkle','crack','smoke','jump','hit','shield','win','lose','fanfare','whoosh','countdown','go',
+  'rumble','crash','creak','slowIn','slowOut','timer','buff','debuff','thunder','wind','cheer','firework','pitfall','stumble','pop','walkie','door','card','stamp'];
+const $ = (id) => document.getElementById(id);
+
+// surface any error on the page
+const errs = [];
+function logErr(m) { errs.push(m); $('errs').textContent = errs.slice(-8).join('\n'); }
+window.addEventListener('error', (e) => logErr(String(e.message)));
+window.addEventListener('unhandledrejection', (e) => logErr('promise: ' + e.reason));
+
+const mute = $('mute');
+function syncMute() {
+  mute.setAttribute('aria-pressed', String(audio.isMuted()));
+  mute.textContent = audio.isMuted() ? 'Muted (click to unmute)' : 'Mute';
+}
+mute.onclick = () => { audio.unlock(); audio.setMuted(!audio.isMuted()); syncMute(); };
+syncMute();
+$('warm').onclick = () => { audio.warmup(); showVoices(); };
+$('stopsp').onclick = () => audio.stopSpeech();
+
+function mk(parent, label, fn, cls) {
+  const b = document.createElement('button');
+  b.innerHTML = label;
+  if (cls) b.className = cls;
+  b.onclick = () => { audio.unlock(); try { fn(b); } catch (e) { logErr(String(e)); } };
+  $(parent).appendChild(b);
+  return b;
+}
+
+// say
+Object.keys(LINES).forEach((who) => {
+  const L = LINES[who];
+  const b = mk('say', 'say <b>' + who + '</b>', () => {
+    audio.warmup();
+    const t0 = performance.now();
+    $('sayres').textContent = who + ': speaking...';
+    audio.say(who, { text: L.text, say: L.say }).then((r) => {
+      $('sayres').textContent = who + ': ' + JSON.stringify(r) + ' in ' + Math.round(performance.now() - t0) + ' ms';
+    });
+  }, 'say');
+  b.style.setProperty('--c', L.c);
+});
+
+// music
+const mbtn = {};
+MUSIC.forEach((m) => {
+  mbtn[m] = mk('music', m, () => { audio.music(m); markMusic(m); });
+});
+function markMusic(m) { MUSIC.forEach((x) => mbtn[x].classList.toggle('on', x === m)); }
+mk('music', 'stop', () => { audio.music(null); markMusic(null); });
+let slow = false;
+const sm = mk('music', 'slowmo: off', () => {
+  slow = !slow; audio.slowmo(slow); sm.textContent = 'slowmo: ' + (slow ? 'ON' : 'off'); sm.classList.toggle('on', slow);
+});
+
+// sfx
+SFX.forEach((s) => mk('sfx', s, () => audio.sfx(s)));
+
+// babble
+let timer = null;
+const SENTENCE = "Okay so, the budget? It's fine! Probably. Maybe we sell more samosas?";
+Object.keys(LINES).forEach((v) => mk('babble', v, () => {
+  clearInterval(timer);
+  let i = 0;
+  timer = setInterval(() => { if (i >= SENTENCE.length) { clearInterval(timer); return; } audio.babble(v, SENTENCE[i++]); }, 1000 / 35);
+}));
+
+// voices readout
+function showVoices() {
+  try {
+    const info = audio.voiceInfo();
+    let s = 'speechSynthesis: ' + (info.supported ? 'yes' : 'NO') + ' | canSpeak(): ' + audio.canSpeak() + ' | voices: ' + info.count + '\n\n';
+    s += 'Picked per character (hi = Devanagari line.say, en = Roman line.text):\n';
+    Object.keys(info.picks).forEach((w) => { s += '  ' + w.padEnd(9) + ' hi: ' + (info.picks[w].hi || '-') + '\n' + ' '.repeat(12) + 'en: ' + (info.picks[w].en || '-') + '\n'; });
+    s += '\nAll voices:\n' + info.voices.map((v) => '  ' + v.lang.padEnd(7) + ' ' + v.name + (v.local ? '' : ' (network)')).join('\n');
+    $('voices').textContent = s;
+  } catch (e) { logErr(String(e)); }
+}
+showVoices();
+setInterval(showVoices, 1000);
+</script>
+</body>
+</html>

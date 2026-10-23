@@ -1,0 +1,72 @@
+<!doctype html>
+<html><head><meta charset="utf-8"><title>Stage test</title>
+<style>
+body{font:14px system-ui;background:#2B2350;color:#FFF6E5;margin:12px}
+canvas{display:block;width:960px;height:540px;image-rendering:pixelated;background:#000}
+button{margin:2px;padding:4px 8px} fieldset{display:inline-block;margin:4px 8px 4px 0}
+#log{font:12px monospace;white-space:pre-wrap;max-height:120px;overflow:auto}
+</style></head><body>
+<canvas id="c" width="320" height="180"></canvas>
+<div id="ui"></div>
+<label><input type="checkbox" id="real"> use real art</label>
+<label><input type="checkbox" id="bot"> bot plays runner</label>
+<div id="log"></div>
+<script>
+// ?timerraf=1 : drive rAF from setTimeout (for headless/hidden panes where rAF is throttled)
+if (new URLSearchParams(location.search).get('timerraf') === '1') {
+  window.requestAnimationFrame = (cb) => setTimeout(() => cb(performance.now()), 16);
+}
+</script>
+<script type="module">
+import kaplay from '../lib/kaplay.mjs';
+import { createStage } from '../src/stage.js';
+import { audio as stubAudio } from './stub-audio.js';
+const useReal = new URLSearchParams(location.search).get('real') === '1';
+document.getElementById('real').checked = useReal;
+document.getElementById('real').onchange = (e) => {
+  const p = new URLSearchParams(location.search);
+  if (e.target.checked) p.set('real', '1'); else p.delete('real');
+  location.search = p.toString();
+};
+const log = (...a) => { const l = document.getElementById('log'); l.textContent += a.join(' ') + '\n'; l.scrollTop = 1e9; };
+window.addEventListener('error', (e) => log('ERROR', e.message));
+window.addEventListener('unhandledrejection', (e) => log('REJECT', e.reason));
+const k = kaplay({ canvas: document.getElementById('c'), width: 320, height: 180, letterbox: true, crisp: true, global: false, background: [143, 211, 255], touchToMouse: true, debug: false });
+window.k = k;
+let audio = stubAudio;
+if (useReal) {
+  try { const m = await import('../src/audio.js'); audio = m.audio; } catch (e) { log('real audio missing, stub'); }
+  try { const m = await import('../src/art.js'); m.registerArt(k); log('real art'); }
+  catch (e) { log('real art missing:', e.message); const s = await import('./stub-art.js'); s.registerArt(k); }
+} else { const s = await import('./stub-art.js'); s.registerArt(k); }
+const stage = createStage(k, audio);
+window.stage = stage;
+const ui = document.getElementById('ui');
+const add = (parent, label, fn) => { const b = document.createElement('button'); b.textContent = label; b.onclick = fn; parent.appendChild(b); };
+const group = (name) => { const f = document.createElement('fieldset'); f.innerHTML = '<legend>' + name + '</legend>'; ui.appendChild(f); return f; };
+let g = group('scenes');
+add(g, 'title', () => stage.showTitle());
+for (const c of ['riya', 'zib', 'gorp']) add(g, 'talk ' + c, () => stage.showTalk(c, 'budget'));
+for (const th of ['posters', 'stage', 'food']) add(g, 'talk riya/' + th, () => stage.showTalk('riya', th));
+g = group('react (after talk)');
+for (const m of ['match', 'over', 'under']) add(g, m, () => stage.react(m).then(() => log('react', m, 'resolved')));
+g = group('fest');
+add(g, 'fest good', () => stage.showFest({ budget: true, posters: true, stage: true, food: true, creatures: { riya: 'happy', zib: 'happy', gorp: 'happy' } }));
+add(g, 'fest bad', () => stage.showFest({ budget: false, posters: true, stage: false, food: false, creatures: { riya: 'sad', zib: 'happy', gorp: 'sad' } }));
+g = group('run');
+for (const th of ['budget', 'posters', 'stage', 'food']) for (const mode of ['match', 'over', 'under']) {
+  add(g, mode + '/' + th, () => { const t0 = performance.now(); log('run', mode, th); stage.run({ creature: 'zib', theme: th, mode }).then((r) => log('  ->', JSON.stringify(r), ((performance.now() - t0) / 1000).toFixed(1) + 's')); });
+}
+// bot: jumps when a ground/low obstacle is the right distance away
+setInterval(() => {
+  if (!document.getElementById('bot').checked) return;
+  const p = k.get('player')[0]; if (!p) return;
+  for (const o of k.get('ob')) {
+    if (!o.live || o.hit || o.kind === 'high') continue;
+    const dx = o.pos.x + o.box.x - (60 + 6);
+    const lead = p.speed * 0.255;
+    if (dx > 0 && dx <= lead) { window.dispatchEvent(new KeyboardEvent('keydown', { code: 'Space' })); break; }
+  }
+}, 8);
+k.onLoad(() => { stage.showTitle(); log('loaded'); });
+</script></body></html>

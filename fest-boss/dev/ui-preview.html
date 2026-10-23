@@ -1,0 +1,189 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Fest Boss UI preview</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@700;800&family=Pixelify+Sans:wght@500;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../styles.css">
+  <style>
+    #ctl { position: fixed; left: 0; right: 0; bottom: 0; z-index: 100; font: 12px/1.3 system-ui, sans-serif; color: #fff; pointer-events: none; }
+    #ctl .bar { pointer-events: auto; display: flex; flex-wrap: wrap; gap: 4px; padding: 6px; background: rgba(0,0,0,.82); max-height: 46vh; overflow: auto; }
+    #ctl[data-open="0"] .bar { display: none; }
+    #ctl button.tog { pointer-events: auto; position: absolute; right: 6px; bottom: 6px; z-index: 2; }
+    #ctl[data-open="1"] button.tog { bottom: auto; top: -26px; }
+    #ctl button { font: inherit; padding: 4px 8px; border: 1px solid #888; border-radius: 4px; background: #333; color: #fff; cursor: pointer; }
+    #ctl button:hover { background: #555; }
+    #ctl .grp { display: flex; flex-wrap: wrap; gap: 4px; align-items: center; padding-right: 8px; margin-right: 4px; border-right: 1px solid #555; }
+    #ctl .grp b { color: #FFC93C; font-weight: 700; }
+    #log { position: fixed; left: 6px; top: 6px; z-index: 100; font: 11px/1.3 monospace; color: #fff; background: rgba(0,0,0,.6); padding: 2px 6px; pointer-events: none; max-width: 40vw; }
+    #log:empty { display: none; }
+  </style>
+</head>
+<body>
+  <div id="stage-wrap">
+    <canvas id="stage" width="400" height="180"></canvas>
+    <div id="overlay"></div>
+  </div>
+  <div class="sr-only" id="sr-live" aria-live="polite"></div>
+  <div id="log"></div>
+  <div id="ctl" data-open="1">
+    <button class="tog" id="tog" type="button">controls</button>
+    <div class="bar" id="bar"></div>
+  </div>
+
+  <script type="module">
+    import * as ui from '../src/ui.js';
+    import * as C from '../src/content.js';
+
+    // ---------- plain coloured "game" background ----------
+    const cv = document.getElementById('stage');
+    cv.style.cssText = 'display:block;width:100%;height:100%;image-rendering:pixelated';
+    const g = cv.getContext('2d');
+    const sky = g.createLinearGradient(0, 0, 0, 130);
+    sky.addColorStop(0, '#8FD3FF'); sky.addColorStop(1, '#C9EEFF');
+    g.fillStyle = sky; g.fillRect(0, 0, 400, 180);
+    g.fillStyle = '#6BCB5A'; g.fillRect(0, 130, 400, 50);
+    g.fillStyle = '#3E9A47'; g.fillRect(0, 130, 400, 3);
+    g.fillStyle = '#FF4D6D'; g.fillRect(60, 100, 20, 30);
+    g.fillStyle = '#FFC93C'; g.fillRect(150, 112, 16, 18);
+    g.fillStyle = '#9B6BFF'; g.fillRect(260, 96, 24, 34);
+    g.fillStyle = '#fff'; for (let i = 0; i < 6; i++) g.fillRect(20 + i * 70, 20 + (i % 3) * 14, 28, 8);
+
+    // ---------- data (real content if present, else mocks) ----------
+    const L = (C.LOOPS && C.LOOPS[0]) || {
+      creature: 'riya', task: 'budget', title: 'Budget Bawaal', skill: 'low', will: 'high', need: 'direct',
+      ask: { who: 'riya', text: 'Boss, budget ka kya karun? Main ready hoon!' },
+      read: { skill: 'Never used a spreadsheet', will: 'Super excited' },
+      reactions: {
+        match: { line: { who: 'riya', text: 'Wow, ab samajh aaya!' }, lesson: 'New to the task but keen? Tell them exactly how, step by step.' },
+        over: { line: { who: 'riya', text: 'Aap hi kar lo na...' }, lesson: 'Too much control. They were ready to learn, not to be told every step.' },
+        under: { line: { who: 'riya', text: 'Main kya karun ab?' }, lesson: 'Too hands-off. Without a plan, a beginner just guesses.' },
+      },
+    };
+    const M = C.MEETING || {};
+    const meeting = {
+      lines: M.lines || [{ who: 'blorb', text: 'Namaste, Fest Boss! Main hoon Dean Blorb.' }],
+      roadsIntro: M.roadsIntro || { who: 'blorb', text: 'Har bande ko alag raasta chahiye.' },
+      roads: M.roads || Object.fromEntries(['direct', 'coach', 'support', 'delegate'].map(id => [id, { who: 'blorb', text: `Raasta: ${id}. Samajh gaye?` }])),
+    };
+    const barks = (C.COLD_OPEN && C.COLD_OPEN.barks) || [
+      { who: 'bunty', text: 'Bhaago bhaago! Scaffold gir raha hai!' },
+      { who: 'zib', text: 'Darling, the stage is literally collapsing!' },
+      { who: 'gorp', text: 'Hmm. Gira.' },
+    ];
+    const summary = (mode) => ({
+      grade: 'A', total: 34, max: 40, profile: 'situational', mode,
+      closing: (C.COPY && C.COPY.closing) || 'Lead the situation in front of you.',
+      loops: [
+        { creature: 'riya', title: 'Budget Bawaal', need: 'direct', chosen: 'direct', fit: 'match', score: 9, max: 10 },
+        { creature: 'zib', title: 'Posters Panga', need: 'delegate', chosen: 'coach', fit: 'over', score: 6, max: 10 },
+        { creature: 'gorp', title: 'Stage Scene', need: 'support', chosen: 'support', fit: 'match', score: 10, max: 10 },
+        { creature: 'riya', title: 'Budget Again', need: 'coach', chosen: 'delegate', fit: 'under', timedOut: true, score: 4, max: 10 },
+        ...(mode === 'long' ? [
+          { creature: 'zib', title: 'Food Stall Fiasco', need: 'direct', chosen: 'direct', fit: 'match', score: 8, max: 10 },
+          { creature: 'gorp', title: 'Final Stage Check', need: 'delegate', chosen: 'delegate', fit: 'match', score: 9, max: 10 },
+        ] : []),
+      ],
+    });
+
+    const log = m => { document.getElementById('log').textContent = m; };
+    const run = async (name, fn) => { log(`${name} ...`); try { const r = await fn(); log(`${name} -> ${JSON.stringify(r ?? 'done')}`); } catch (e) { log(`${name} threw: ${e.message}`); console.error(e); } };
+
+    let hudState = { hearts: 3, maxHearts: 3, progress: 0.35, buff: null };
+    const hud = patch => { hudState = { ...hudState, ...patch }; ui.hud(hudState); };
+
+    const lessonOf = (fit, timedOut) => ui.lesson({
+      creature: L.creature, need: L.need,
+      chosen: timedOut ? 'delegate' : fit === 'match' ? L.need : fit === 'over' ? 'coach' : 'delegate',
+      fit: timedOut ? 'under' : fit, timedOut, reaction: L.reactions[timedOut ? 'under' : fit],
+      read: { skill: L.skill, will: L.will },
+    });
+
+    const ACTIONS = {
+      Screens: {
+        title: () => run('title', () => ui.title({ mode: 'short' })),
+        'bark x3': () => { barks.slice(0, 3).forEach((b, i) => run(`bark${i}`, () => ui.bark(b))); },
+        'clear barks': () => ui.clearBarks(),
+        dialogue: () => run('dialogue', () => ui.dialogue(meeting.lines)),
+        roads: () => run('roads', () => ui.roads(meeting)),
+        chapter: () => run('chapter', () => ui.chapter({ n: 2, total: 4, title: L.title || 'Posters Panga', creature: L.creature, task: L.task })),
+        junction: () => run('junction', () => ui.junction({ creature: L.creature, read: { skill: L.skill, will: L.will }, ask: L.ask, limit: 8 })),
+        'junction 3s': () => run('junction', () => ui.junction({ creature: L.creature, read: { skill: 'high', will: 'low' }, ask: L.ask, limit: 3 })),
+        error: () => ui.error(),
+      },
+      Lesson: {
+        match: () => run('lesson', () => lessonOf('match')),
+        over: () => run('lesson', () => lessonOf('over')),
+        under: () => run('lesson', () => lessonOf('under')),
+        timedOut: () => run('lesson', () => lessonOf('under', true)),
+      },
+      Report: {
+        short: () => run('report', () => ui.report(summary('short'))),
+        long: () => run('report', () => ui.report(summary('long'))),
+      },
+      HUD: {
+        'show': () => hud({}),
+        'hearts 3': () => hud({ hearts: 3 }),
+        'hearts 2': () => hud({ hearts: 2 }),
+        'hearts 1': () => hud({ hearts: 1 }),
+        'hearts 0': () => hud({ hearts: 0 }),
+        'progress 0': () => hud({ progress: 0 }),
+        'progress .6': () => hud({ progress: 0.6 }),
+        'sync': () => hud({ buff: { id: 'sync', label: (C.COPY && C.COPY.buffs && C.COPY.buffs.sync) || 'In Sync', t01: 0.8 } }),
+        'resentful': () => hud({ buff: { id: 'resentful', label: (C.COPY && C.COPY.buffs && C.COPY.buffs.resentful) || 'Resentful', t01: 0.5 } }),
+        'lost': () => hud({ buff: { id: 'lost', label: (C.COPY && C.COPY.buffs && C.COPY.buffs.lost) || 'Lost', t01: 0.2 } }),
+        'no buff': () => hud({ buff: null }),
+        'drain buff': () => { let t = 1; const iv = setInterval(() => { t -= 0.05; if (t <= 0) { clearInterval(iv); hud({ buff: null }); } else hud({ buff: { id: 'sync', t01: t } }); }, 200); },
+        'hide hud': () => ui.hideHud(),
+      },
+      Misc: {
+        'tip tap': () => ui.tip('tap'),
+        'tip hold': () => ui.tip('hold'),
+        'hide tip': () => ui.hideTip(),
+        'toast good': () => ui.toast((C.COPY && C.COPY.shield) || 'Shield!', 'good'),
+        'toast bad': () => ui.toast((C.COPY && C.COPY.stumble) || 'Stumble!', 'bad'),
+      },
+    };
+
+    const bar = document.getElementById('bar');
+    for (const [grp, items] of Object.entries(ACTIONS)) {
+      const d = document.createElement('div'); d.className = 'grp';
+      d.innerHTML = `<b>${grp}</b>`;
+      for (const [name, fn] of Object.entries(items)) {
+        const b = document.createElement('button'); b.type = 'button'; b.textContent = name;
+        b.addEventListener('click', e => { e.stopPropagation(); fn(); });
+        d.append(b);
+      }
+      bar.append(d);
+    }
+    const ctl = document.getElementById('ctl');
+    document.getElementById('tog').addEventListener('click', () => { ctl.dataset.open = ctl.dataset.open === '1' ? '0' : '1'; });
+
+    ui.init();
+    ui.onOrientation(b => log(`orientation blocked=${b}`));
+
+    // ?demo=junction (optionally &ctl=0) auto-runs one thing, for screenshots. ?demo=hud-sync etc. for HUD states.
+    const q = new URLSearchParams(location.search);
+    if (q.get('ctl') === '0') ctl.dataset.open = '0';
+    const demo = q.get('demo');
+    // demo may chain several actions with ';' e.g. ?demo=HUD/hearts 2;HUD/sync;Misc/tip tap
+    if (demo) {
+      setTimeout(() => {
+        for (const d of demo.split(';')) {
+          const [grp, name] = d.includes('/') ? d.split('/') : [null, d];
+          let hit = false;
+          for (const [gname, items] of Object.entries(ACTIONS)) {
+            if (grp && gname.toLowerCase() !== grp.toLowerCase()) continue;
+            if (items[name]) { items[name](); hit = true; break; }
+          }
+          if (!hit) log(`unknown demo ${d}`);
+        }
+      }, 300);
+    }
+    window.__ui = ui;
+  </script>
+</body>
+</html>
