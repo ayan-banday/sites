@@ -226,6 +226,10 @@ ol.adv li{font-size:23px}
 .ladder .n{font-size:34px}
 html.flowmode h2{font-size:30px}
 
+.tiles{display:grid;grid-template-columns:1fr 1fr;gap:0;border-top:1.5px solid var(--line);border-left:1.5px solid var(--line);margin-top:6px}
+.tiles>div{border-right:1.5px solid var(--line);border-bottom:1.5px solid var(--line);border-top:6px solid var(--bc);padding:18px 20px;background:rgba(243,238,228,.92)}
+.tiles p{font-size:21px;line-height:1.35}
+html.flowmode .tiles{grid-template-columns:1fr 1fr}
 @media (prefers-reduced-motion:reduce){
   .s.on .bot .now :is(path,rect,circle,line),.s.on .bot.drawall :is(path,rect,circle,line){animation:none;stroke-dashoffset:0;stroke-dasharray:none}
   .s.on .bot .now text,.s.on .bot.drawall text{animation:none;opacity:1}
@@ -257,7 +261,7 @@ html.flowmode h2{font-size:30px}
   <div class="row" style="grid-template-columns:1.05fr 1fr;align-items:center;gap:30px">
     <div>
       <h1>Reliability<br>before <span style="color:var(--accent)">speed</span></h1>
-      <p style="font-size:27px;margin-top:24px;max-width:640px;color:var(--ink-2)"><b style="color:var(--ink)">Ethics in a founder's first robot</b><br>An interview with <b style="color:var(--steel)">Mario Ronci</b></p>
+      <p style="font-size:27px;margin-top:24px;max-width:640px;color:var(--ink-2)"><b style="color:var(--ink)">Ethics in a founder's first robot</b><br>An interview with <b style="color:var(--steel)">Mario Ronci</b>, founder and business leader</p>
     </div>
     <svg class="bot drawall" data-stage="5" viewBox="0 0 520 340" aria-label="Line drawing of Mario's catering robot: a garden cart with a drive, a sensor and a food-safe cover"></svg>
   </div>
@@ -265,7 +269,7 @@ html.flowmode h2{font-size:30px}
     <div class="cell"><div class="note">ENTREPRENEUR</div><div><b>Mario Ronci</b><br>Founder, Ronci Product Validation</div></div>
     <div class="cell"><div class="note">BUSINESS AND INDUSTRY</div><div>Electromechanical product launch<br>Manufacturing · event robotics</div></div>
     <div class="cell"><div class="note">STUDENT</div><div><b>Ayan</b> · USN JUUG26BBA20722<br>BBA Entrepreneurship, Semester 1</div></div>
-    <div class="cell"><div class="note">FACULTY · SUBMITTED</div><div><b>Dr Panzy Evangeline</b><br>27 October 2026</div></div>
+    <div class="cell"><div class="note">FACULTY · SUBMITTED</div><div><b>Dr Pansy Evangeline</b><br>27 October 2026</div></div>
   </div>
 </section>
 
@@ -276,7 +280,7 @@ html.flowmode h2{font-size:30px}
   <div class="row c3" style="gap:36px">
     <div class="beat b-blue"><div class="big c-blue">01</div><h3>He builds heavy, moving things</h3><ul class="pts"><li>Navy <b>defense</b> hardware</li><li>Building <b>panels</b></li><li><b>Carnival</b> game machines</li></ul></div>
     <div class="beat b-cop"><div class="big c-cop">02</div><h3>He started his own venture</h3><ul class="pts"><li>A <b>catering robot</b>, 2025</li><li>No compliance team</li><li><b>Every call was his</b></li></ul></div>
-    <div class="beat b-plum"><div class="big c-plum">03</div><h3>He is honest about failing</h3><p class="pullsm">“My startup did not succeed at all. But it taught me a lot of lessons.”</p></div>
+    <div class="beat b-plum"><div class="big c-plum">03</div><h3>He leads people and businesses</h3><ul class="pts"><li>Runs <b>his own consultancy</b></li><li>Links <b>finance, engineering, factory</b></li><li><b>Shields his team</b> from pressure</li></ul></div>
   </div>
   <div class="goal"><span class="chip b-ink">THE GOAL</span> See what happens to ethics when <b class="c-cop">money</b>, <b class="c-blue">deadlines</b> and <b class="c-plum">safety</b> all collide.</div>
   <div class="chips"><span class="chip">13 Sep 2026</span><span class="chip">Online video call</span><span class="chip">37 minutes</span><span class="chip">8 questions</span></div>
@@ -285,17 +289,45 @@ html.flowmode h2{font-size:30px}
 <!-- ============ 3 PROFILE ============ -->
 <section class="s" data-dwg="§2 PROFILE">
   <div class="sec">§2 Profile of the entrepreneur</div>
-  <h2>Meet Mario: <span class="c-blue">an engineer who also talks margin</span></h2>
+  <h2>Meet Mario: <span class="c-blue">founder, leader, engineer who talks margin</span></h2>
   <div class="row c2" style="gap:56px;align-items:start">
     <div>
-      <div class="fact"><span class="lbl">ROLE</span><div><b>Founder</b>, Ronci Product Validation<br><span class="dim">+ mechanical engineer at an amusement-game maker</span></div></div>
+      <div class="fact"><span class="lbl">ROLE</span><div><b>Founder &amp; principal</b>, Ronci Product Validation<br><span class="dim">+ drives product definition at a game manufacturer</span></div></div>
       <div class="fact"><span class="lbl">STUDIED</span><div><b>A.S. Engineering Technology</b><br><span class="dim">Daytona State College, 2022–2025</span></div></div>
-      <div class="fact"><span class="lbl">BASED</span><div><b>Orlando, Florida, USA</b></div></div>
+      <div class="fact"><span class="lbl">BASED</span><div><b>Orlando, Florida, USA</b><br><span class="dim">6+ years in business development before engineering</span></div></div>
       <div class="fact"><span class="lbl">WINS</span><div>Navy tooling that <b>eased a task done 120× a day</b><br>Costing system showing <b>margin per game</b></div></div>
     </div>
     <div>
       <div class="biz b-blue"><span class="chip b-ink">EST. 2024</span><h3>Ronci Product Validation</h3><p>Helps manufacturers know a product's <b>real cost</b> before they <b>set its price</b>.</p><p class="dim">Customers: electromechanical shops and OEMs</p></div>
       <div class="biz b-cop" style="margin-top:20px"><span class="chip" style="background:var(--accent);color:#fff;border-color:var(--accent)">2025 · OUR CASE</span><h3>Catering transport robot</h3><p>Carries caterers' <b>heavy gear</b> from <b>van → venue</b>.</p><p class="dim">Customers: caterers and event companies</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 3b SUCCESS & LEADERSHIP ============ -->
+<section class="s" data-dwg="§2 SUCCESS · LEADERSHIP">
+  <div class="sec">§2 Profile · achievements and leadership</div>
+  <h2>A successful founder <span class="c-cop">who'd never call himself one</span></h2>
+  <div class="row c2" style="gap:56px;align-items:start">
+    <div>
+      <span class="lbl c-blue">SUCCESS, BY THE NUMBERS</span>
+      <div class="tiles">
+        <div class="b-blue"><div class="big c-blue">2+</div><p>years running <b>his own consultancy</b></p></div>
+        <div class="b-blue"><div class="big c-blue">2</div><p><b>ventures founded</b>: consultancy + robot</p></div>
+        <div class="b-cop"><div class="big c-cop">120×</div><p>a day: a Navy task he <b>made safer</b></p></div>
+        <div class="b-cop"><div class="big c-cop">6+</div><p>years in <b>business development</b></p></div>
+      </div>
+      <p class="small" style="margin-top:14px">Projects supporting the <b style="color:var(--ink)">U.S. Navy</b> and <b style="color:var(--ink)">Kingspan</b>, a global manufacturer.</p>
+    </div>
+    <div>
+      <span class="lbl c-plum">HOW HE LEADS, WITH OR WITHOUT A TITLE</span>
+      <div class="ladder">
+        <div><span class="n c-plum">→</span><p><b>Across teams:</b> links finance, engineering and the factory</p></div>
+        <div><span class="n c-plum">→</span><p><b>Clients:</b> shapes what they ask for; says no to unsafe work</p></div>
+        <div><span class="n c-plum">→</span><p><b>Change:</b> brings in a documentation-first process</p></div>
+        <div><span class="n c-plum">→</span><p><b>By doing:</b> worked event gigs beside the people he built for</p></div>
+      </div>
+      <p class="pullsm" style="margin-top:16px">“Most people who understand the shop floor can't talk about margin… I've done both.”</p>
     </div>
   </div>
 </section>
@@ -388,7 +420,7 @@ html.flowmode h2{font-size:30px}
       <div><span class="n c-blue">2</span><p><b>Working prototype</b> on the cart base</p></div>
       <div><span class="n c-blue">3</span><p><b>Field tests</b> in parks + event gigs</p></div>
       <div><span class="n c-blue">4</span><p><b>Food-safety</b> redesign</p></div>
-      <div class="end"><span class="n c-cop">✕</span><p><b>Venture closed.</b> Lessons kept: he uses them in his consulting today.</p></div>
+      <div class="end"><span class="n c-cop">→</span><p><b>Paused, not cut corners:</b> no launch without certification. The lessons now <b>power his consultancy</b>.</p></div>
     </div>
   </div>
 </section>
@@ -458,7 +490,7 @@ html.flowmode h2{font-size:30px}
   <div class="sec">§5 Business ethics and social responsibility</div>
   <h2>One promise behind it all: <span class="mark">it does what it says</span></h2>
   <div class="row c2" style="gap:0;border-top:1.5px solid var(--line);border-left:1.5px solid var(--line)">
-    <div class="sheet q4" style="border-top:6px solid var(--steel)"><span class="lbl c-blue">HONESTY</span><p>Tell the client <b>the real cost</b> of a fix. <b>Document every fault.</b> Admit your own failures.</p></div>
+    <div class="sheet q4" style="border-top:6px solid var(--steel)"><span class="lbl c-blue">HONESTY</span><p>Tell the client <b>the real cost</b> of a fix. <b>Document every fault.</b> Own your setbacks.</p></div>
     <div class="sheet q4" style="border-top:6px solid var(--accent)"><span class="lbl c-cop">FAIR PRICING + QUALITY</span><p>Know the <b>real cost</b> → quote a price you can <b>hold for 12 months</b>. <q>My keyboard isn't gonna kill me today.</q></p></div>
     <div class="sheet q4" style="border-top:6px solid #7A4B8C"><span class="lbl c-plum">EMPLOYEES</span><p><b>Shield</b> them from blame. <b>Full documentation.</b> Respect the technicians' skill.</p></div>
     <div class="sheet q4" style="border-top:6px solid var(--brass)"><span class="lbl" style="color:#9A6B00">CUSTOMERS</span><p>Two users: <b>the buyer</b> and <b>the person who uses it</b>. He sides with <b>the user</b>.</p></div>
@@ -574,7 +606,7 @@ html.flowmode h2{font-size:30px}
   <div class="sec">§8 Conclusion</div>
   <div class="row" style="grid-template-columns:1.1fr 1fr;gap:50px;align-items:center">
     <div>
-      <h2 style="margin-bottom:26px">The robot didn't survive. <span class="c-cop">The way he built it did.</span></h2>
+      <h2 style="margin-bottom:26px">A founder who leads <span class="c-cop">by building things right</span></h2>
       <div class="ladder">
         <div><span class="n c-blue">→</span><p><b>Cost it honestly</b></p></div>
         <div><span class="n c-blue">→</span><p><b>Reliable before fast</b></p></div>
