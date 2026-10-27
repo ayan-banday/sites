@@ -1,0 +1,203 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Udyaan 14 Days</title>
+<meta name="description" content="14 days. One team. One real project. How Udyaan onboarding works for students.">
+<link rel="icon" href="logo.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600;9..144,700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#f7f5ec; --card:#ffffff; --ink:#0f2417; --soft:#4a5b4f; --line:#d9dccb;
+  --leaf:#2f8a2f; --leaf-2:#7cc242; --leaf-tint:#e7f3dc; --sun:#f08c00; --sun-tint:#fdebd0;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#0f2417; --card:#163323; --ink:#eef4e8; --soft:#b5c6b6; --line:#2a4a36;
+    --leaf:#7cc242; --leaf-2:#a6dc6e; --leaf-tint:#1d4229; --sun:#ffa62b; --sun-tint:#3d2c12;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#0f2417; --card:#163323; --ink:#eef4e8; --soft:#b5c6b6; --line:#2a4a36;
+  --leaf:#7cc242; --leaf-2:#a6dc6e; --leaf-tint:#1d4229; --sun:#ffa62b; --sun-tint:#3d2c12;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--bg);color:var(--ink);font:400 17px/1.5 Inter,system-ui,sans-serif;-webkit-font-smoothing:antialiased}
+main{max-width:440px;margin:0 auto;padding:0 20px 48px}
+h1,h2{font-family:Fraunces,Georgia,serif;font-weight:700;line-height:1.1;letter-spacing:-.01em}
+h2{font-size:28px;margin-bottom:8px}
+.kicker{font-size:13px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--leaf)}
+.lead{color:var(--soft);margin-bottom:24px}
+section{padding:48px 0 8px}
+
+/* hero */
+.hero{text-align:center;padding:40px 0 8px}
+.hero img{width:84px;height:auto;margin-bottom:6px}
+.brand{font-family:Fraunces,Georgia,serif;font-size:22px;font-weight:600;color:var(--leaf);margin-bottom:28px}
+.hero h1{font-size:40px;margin-bottom:14px}
+.hero h1 span{display:block}
+.hero h1 .hi{color:var(--sun)}
+.hero p{color:var(--soft);font-size:18px}
+.arc{display:flex;align-items:center;justify-content:center;gap:10px;margin-top:26px;font-weight:600}
+.pill{padding:8px 14px;border-radius:999px;background:var(--leaf-tint);color:var(--ink)}
+.pill.end{background:var(--sun-tint)}
+.arc i{flex:0 0 40px;height:2px;background:repeating-linear-gradient(90deg,var(--soft) 0 6px,transparent 6px 11px)}
+
+/* path */
+.path{list-style:none;position:relative;margin-top:8px}
+.path::before{content:"";position:absolute;left:23px;top:12px;bottom:12px;width:3px;border-radius:3px;background:linear-gradient(var(--leaf-2),var(--leaf),var(--sun))}
+.stop{position:relative;display:grid;grid-template-columns:48px 1fr;gap:14px;padding:12px 0}
+.dot{width:48px;height:48px;border-radius:50%;background:var(--card);border:3px solid var(--leaf);display:grid;place-items:center;font-size:22px;z-index:1}
+.stop.final .dot{border-color:var(--sun);background:var(--sun-tint)}
+.day{font-size:13px;font-weight:600;color:var(--leaf);letter-spacing:.04em;text-transform:uppercase}
+.stop.final .day{color:var(--sun)}
+.stop h3{font-size:19px;font-weight:600;margin:1px 0 2px}
+.stop p{color:var(--soft);font-size:16px}
+
+/* web */
+.web{background:var(--card);border:1px solid var(--line);border-radius:20px;padding:12px}
+.web svg{display:block;width:100%;height:auto}
+.web text{font-family:Inter,sans-serif;font-weight:600;fill:var(--ink)}
+.web .center{fill:var(--leaf)} .web .center-t{fill:#fff}
+.web .node{fill:var(--leaf-tint);stroke:var(--leaf);stroke-width:2}
+.web .you{fill:var(--sun-tint);stroke:var(--sun);stroke-width:3}
+.web .link{stroke:var(--leaf);stroke-width:2;stroke-dasharray:5 5;opacity:.6}
+.web .link.you-l{stroke:var(--sun);opacity:1;stroke-dasharray:none;stroke-width:3}
+.chits-label{margin:22px 0 10px;font-weight:600}
+.chits{display:grid;gap:10px}
+.chit{background:var(--card);border:1px dashed var(--soft);border-radius:4px;padding:12px 14px;font-size:16px;display:flex;gap:10px;align-items:center;transform:rotate(-.6deg)}
+.chit:nth-child(2){transform:rotate(.7deg)}
+.chit b{color:var(--sun);font-size:20px}
+
+/* rewards */
+.cards{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:16px}
+.card .ic{font-size:26px}
+.card h3{font-size:17px;font-weight:600;margin-top:6px;line-height:1.25}
+.card p{color:var(--soft);font-size:14px;margin-top:2px}
+.card.more{border-style:dashed;background:transparent}
+
+/* experiment */
+.test{margin-top:28px;display:grid;gap:14px}
+.step{background:var(--card);border:1px solid var(--line);border-radius:20px;padding:18px}
+.step .n{display:inline-grid;place-items:center;width:28px;height:28px;border-radius:50%;background:var(--ink);color:var(--bg);font-weight:600;font-size:14px;margin-right:8px}
+.step h3{display:flex;align-items:center;font-size:19px;font-weight:600;margin-bottom:14px}
+.row{display:grid;grid-template-columns:1fr auto;align-items:center;gap:10px;padding:6px 0;font-size:15px;color:var(--soft)}
+.five{display:flex;gap:6px}
+.p{width:16px;height:16px;border-radius:50%;background:var(--leaf-2)}
+.row.win{color:var(--ink);font-weight:600;background:var(--sun-tint);border-radius:10px;padding:6px 10px;margin:0 -10px}
+.row.win .p{background:var(--sun)}
+.row.dim{opacity:.4}
+.crowd{display:flex;flex-wrap:wrap;gap:6px}
+.crowd .p{background:var(--sun);width:14px;height:14px}
+.down{text-align:center;color:var(--soft);font-size:22px;line-height:1}
+
+footer{text-align:center;padding:56px 0 8px}
+footer p{font-family:Fraunces,Georgia,serif;font-size:24px;line-height:1.25}
+footer a{display:inline-block;margin-top:18px;color:var(--leaf);font-weight:600;text-decoration:none}
+</style>
+</head>
+<body>
+<main>
+
+<header class="hero">
+  <img src="logo.png" alt="Udyaan logo">
+  <div class="brand">Udyaan</div>
+  <h1><span>14 days.</span><span>One team.</span><span class="hi">One real project.</span></h1>
+  <p>Start with an idea. Finish with a demo.</p>
+  <div class="arc"><span class="pill">💡 Idea</span><i></i><span class="pill end">🎤 Demo</span></div>
+</header>
+
+<section>
+  <div class="kicker">Your 14 days</div>
+  <h2>Here's the whole path.</h2>
+  <ol class="path">
+    <li class="stop"><div class="dot">📝</div><div><div class="day">Day 0</div><h3>Fill the form</h3><p>Tell us who you are.</p></div></li>
+    <li class="stop"><div class="dot">🌾</div><div><div class="day">Days 1–3</div><h3>Find your problem</h3><p>See where your subject meets farming. Pick a chit.</p></div></li>
+    <li class="stop"><div class="dot">✅</div><div><div class="day">Day 4</div><h3>Team up and get the green light</h3><p>Choose your team. Define the problem. Your mentor says go.</p></div></li>
+    <li class="stop"><div class="dot">🛠️</div><div><div class="day">Days 5–8</div><h3>Build it</h3><p>Post updates on the dashboard.</p></div></li>
+    <li class="stop"><div class="dot">💬</div><div><div class="day">Days 9–10</div><h3>Mentor check</h3><p>Show your mentor. Get feedback.</p></div></li>
+    <li class="stop"><div class="dot">🌱</div><div><div class="day">Days 11–13</div><h3>Make it better</h3><p>Use the feedback. Keep building.</p></div></li>
+    <li class="stop final"><div class="dot">🏆</div><div><div class="day">Day 14</div><h3>Demo day</h3><p>3-minute demo. Your mentor scores it. Awards.</p></div></li>
+  </ol>
+</section>
+
+<section>
+  <div class="kicker">Days 1–3</div>
+  <h2>Your subject already fits farming.</h2>
+  <p class="lead">We show you where. Say you study computer science:</p>
+  <div class="web">
+    <svg viewBox="0 0 360 260" role="img" aria-label="Agriculture in the middle, linked to computer science, commerce, science and design">
+      <line class="link you-l" x1="180" y1="130" x2="70" y2="52"/>
+      <line class="link" x1="180" y1="130" x2="290" y2="52"/>
+      <line class="link" x1="180" y1="130" x2="70" y2="210"/>
+      <line class="link" x1="180" y1="130" x2="290" y2="210"/>
+      <circle class="center" cx="180" cy="130" r="50"/>
+      <text class="center-t" x="180" y="128" text-anchor="middle" font-size="22">🌾</text>
+      <text class="center-t" x="180" y="152" text-anchor="middle" font-size="13">Agriculture</text>
+      <circle class="you" cx="70" cy="52" r="40"/>
+      <text x="70" y="49" text-anchor="middle" font-size="13">Computer</text>
+      <text x="70" y="65" text-anchor="middle" font-size="13">science</text>
+      <circle class="node" cx="290" cy="52" r="38"/>
+      <text x="290" y="57" text-anchor="middle" font-size="13">Commerce</text>
+      <circle class="node" cx="70" cy="210" r="38"/>
+      <text x="70" y="215" text-anchor="middle" font-size="13">Science</text>
+      <circle class="node" cx="290" cy="210" r="38"/>
+      <text x="290" y="215" text-anchor="middle" font-size="13">Design</text>
+    </svg>
+  </div>
+  <p class="chits-label">Then you pick a chit, a real problem to solve:</p>
+  <div class="chits">
+    <div class="chit"><b>✂</b>Spot a sick crop from one photo.</div>
+    <div class="chit"><b>✂</b>Tell a farmer the best day to sell.</div>
+    <div class="chit"><b>✂</b>Warn a field before it runs dry.</div>
+  </div>
+</section>
+
+<section>
+  <div class="kicker">What do I get?</div>
+  <h2>Why work this hard?</h2>
+  <p class="lead">Our team came up with these ideas. Got a better one? Tell us.</p>
+  <div class="cards">
+    <div class="card"><div class="ic">🏆</div><h3>Awards</h3><p>Seen by your campus.</p></div>
+    <div class="card"><div class="ic">💵</div><h3>Stipend</h3><p>₹2,000 to ₹3,000.</p></div>
+    <div class="card"><div class="ic">📈</div><h3>Profit cut</h3><p>A share of what your project earns.</p></div>
+    <div class="card"><div class="ic">🚀</div><h3>Startup funding</h3><p>For ideas that really help.</p></div>
+  </div>
+
+  <div class="test">
+    <div class="step">
+      <h3><span class="n">1</span>5 students try each idea</h3>
+      <div class="row"><span>Awards</span><span class="five"><i class="p"></i><i class="p"></i><i class="p"></i><i class="p"></i><i class="p"></i></span></div>
+      <div class="row"><span>Stipend</span><span class="five"><i class="p"></i><i class="p"></i><i class="p"></i><i class="p"></i><i class="p"></i></span></div>
+      <div class="row"><span>Profit cut</span><span class="five"><i class="p"></i><i class="p"></i><i class="p"></i><i class="p"></i><i class="p"></i></span></div>
+      <div class="row"><span>Funding</span><span class="five"><i class="p"></i><i class="p"></i><i class="p"></i><i class="p"></i><i class="p"></i></span></div>
+    </div>
+    <div class="down">↓</div>
+    <div class="step">
+      <h3><span class="n">2</span>We see what works best</h3>
+      <div class="row dim"><span>Idea A</span><span class="five"><i class="p"></i><i class="p"></i><i class="p"></i><i class="p"></i><i class="p"></i></span></div>
+      <div class="row win"><span>Best result ✓</span><span class="five"><i class="p"></i><i class="p"></i><i class="p"></i><i class="p"></i><i class="p"></i></span></div>
+      <div class="row dim"><span>Idea C</span><span class="five"><i class="p"></i><i class="p"></i><i class="p"></i><i class="p"></i><i class="p"></i></span></div>
+    </div>
+    <div class="down">↓</div>
+    <div class="step">
+      <h3><span class="n">3</span>Every student gets it</h3>
+      <div class="crowd" aria-label="Many students">
+        <i class="p"></i><i class="p"></i><i class="p"></i><i class="p"></i><i class="p"></i><i class="p"></i><i class="p"></i><i class="p"></i><i class="p"></i><i class="p"></i><i class="p"></i><i class="p"></i><i class="p"></i><i class="p"></i><i class="p"></i><i class="p"></i><i class="p"></i><i class="p"></i><i class="p"></i><i class="p"></i><i class="p"></i><i class="p"></i><i class="p"></i><i class="p"></i><i class="p"></i><i class="p"></i><i class="p"></i><i class="p"></i><i class="p"></i><i class="p"></i><i class="p"></i><i class="p"></i><i class="p"></i><i class="p"></i><i class="p"></i><i class="p"></i><i class="p"></i><i class="p"></i><i class="p"></i><i class="p"></i>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <p>Every student leaves with a team, a plan and a shipped project.</p>
+  <a href="https://www.udyaan.org/">udyaan.org →</a>
+</footer>
+
+</main>
+</body>
+</html>
