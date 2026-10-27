@@ -4,199 +4,259 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Udyaan 14 Days</title>
-<meta name="description" content="14 days. One team. One real project. How Udyaan onboarding works for students.">
+<meta name="description" content="The Udyaan onboarding plan, simplified for the team: the 14 days as a Mughal garden, and the open question of what students get.">
 <link rel="icon" href="logo.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600;9..144,700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
 <style>
 :root{
-  --bg:#f7f5ec; --card:#ffffff; --ink:#0f2417; --soft:#4a5b4f; --line:#d9dccb;
-  --leaf:#2f8a2f; --leaf-2:#7cc242; --leaf-tint:#e7f3dc; --sun:#f08c00; --sun-tint:#fdebd0;
+  --bg:#f7f2e6; --card:#fffdf7; --ink:#0f2417; --soft:#4f5d50; --line:#e2dac6;
+  --leaf:#2f8a2f; --leaf-2:#7cc242; --leaf-tint:#e7f3dc; --sun:#e07f00; --sun-tint:#fdebd0;
+  --water:#2a86a3; --water-2:#8fd0e0; --stone:#a3482c; --stone-tint:#f3dfd4;
 }
 @media (prefers-color-scheme: dark){
   :root:not([data-theme="light"]){
-    --bg:#0f2417; --card:#163323; --ink:#eef4e8; --soft:#b5c6b6; --line:#2a4a36;
+    --bg:#0f2417; --card:#15301f; --ink:#eef4e8; --soft:#b5c6b6; --line:#2a4a36;
     --leaf:#7cc242; --leaf-2:#a6dc6e; --leaf-tint:#1d4229; --sun:#ffa62b; --sun-tint:#3d2c12;
+    --water:#5cc0d6; --water-2:#1f5a68; --stone:#e48a68; --stone-tint:#3a2219;
   }
 }
 :root[data-theme="dark"]{
-  --bg:#0f2417; --card:#163323; --ink:#eef4e8; --soft:#b5c6b6; --line:#2a4a36;
+  --bg:#0f2417; --card:#15301f; --ink:#eef4e8; --soft:#b5c6b6; --line:#2a4a36;
   --leaf:#7cc242; --leaf-2:#a6dc6e; --leaf-tint:#1d4229; --sun:#ffa62b; --sun-tint:#3d2c12;
+  --water:#5cc0d6; --water-2:#1f5a68; --stone:#e48a68; --stone-tint:#3a2219;
 }
 *{box-sizing:border-box;margin:0;padding:0}
 body{background:var(--bg);color:var(--ink);font:400 17px/1.5 Inter,system-ui,sans-serif;-webkit-font-smoothing:antialiased}
-main{max-width:440px;margin:0 auto;padding:0 20px 48px}
-h1,h2{font-family:Fraunces,Georgia,serif;font-weight:700;line-height:1.1;letter-spacing:-.01em}
-h2{font-size:28px;margin-bottom:8px}
-.kicker{font-size:13px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--leaf)}
-.lead{color:var(--soft);margin-bottom:24px}
-section{padding:48px 0 8px}
+main{max-width:460px;margin:0 auto;padding:0 18px 56px}
+h1,h2{font-family:Fraunces,Georgia,serif;font-weight:700;line-height:1.08;letter-spacing:-.01em}
+h2{font-size:30px;margin-bottom:10px}
+.kicker{font-size:12px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:var(--stone);margin-bottom:6px}
+.lead{color:var(--soft);margin-bottom:22px}
+section{padding:56px 0 0}
+.rule{display:block;width:100%;height:18px;margin:48px 0 0;color:var(--stone);opacity:.55}
 
 /* hero */
-.hero{text-align:center;padding:40px 0 8px}
-.hero img{width:84px;height:auto;margin-bottom:6px}
-.brand{font-family:Fraunces,Georgia,serif;font-size:22px;font-weight:600;color:var(--leaf);margin-bottom:28px}
-.hero h1{font-size:40px;margin-bottom:14px}
+.hero{text-align:center;padding:44px 0 0}
+.arch{position:relative;width:132px;height:160px;margin:0 auto 14px}
+.arch svg{position:absolute;inset:0;width:100%;height:100%;color:var(--stone)}
+.arch img{position:absolute;left:50%;bottom:22px;transform:translateX(-50%);width:78px;height:auto}
+.brand{font-family:Fraunces,Georgia,serif;font-size:20px;font-weight:600;color:var(--leaf);letter-spacing:.02em}
+.for{display:inline-block;margin:10px 0 26px;font-size:12px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:var(--soft);border:1px solid var(--line);border-radius:999px;padding:5px 12px}
+.hero h1{font-size:44px;margin-bottom:16px}
 .hero h1 span{display:block}
 .hero h1 .hi{color:var(--sun)}
-.hero p{color:var(--soft);font-size:18px}
-.arc{display:flex;align-items:center;justify-content:center;gap:10px;margin-top:26px;font-weight:600}
-.pill{padding:8px 14px;border-radius:999px;background:var(--leaf-tint);color:var(--ink)}
-.pill.end{background:var(--sun-tint)}
-.arc i{flex:0 0 40px;height:2px;background:repeating-linear-gradient(90deg,var(--soft) 0 6px,transparent 6px 11px)}
+.hero p{color:var(--soft);font-size:18px;max-width:340px;margin:0 auto}
+.legend{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:30px}
+.legend div{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:12px 6px;font-size:13px;color:var(--soft)}
+.legend b{display:block;font-size:22px;margin-bottom:2px}
+.legend strong{color:var(--ink);font-weight:600}
 
-/* path */
-.path{list-style:none;position:relative;margin-top:8px}
-.path::before{content:"";position:absolute;left:23px;top:12px;bottom:12px;width:3px;border-radius:3px;background:linear-gradient(var(--leaf-2),var(--leaf),var(--sun))}
-.stop{position:relative;display:grid;grid-template-columns:48px 1fr;gap:14px;padding:12px 0}
-.dot{width:48px;height:48px;border-radius:50%;background:var(--card);border:3px solid var(--leaf);display:grid;place-items:center;font-size:22px;z-index:1}
-.stop.final .dot{border-color:var(--sun);background:var(--sun-tint)}
-.day{font-size:13px;font-weight:600;color:var(--leaf);letter-spacing:.04em;text-transform:uppercase}
-.stop.final .day{color:var(--sun)}
-.stop h3{font-size:19px;font-weight:600;margin:1px 0 2px}
-.stop p{color:var(--soft);font-size:16px}
+/* the channel */
+.channel{position:relative;list-style:none;margin-top:10px}
+.channel::before{content:"";position:absolute;left:27px;top:20px;bottom:40px;width:10px;border-radius:6px;
+  background:repeating-linear-gradient(180deg,var(--water) 0 14px,var(--water-2) 14px 22px);background-size:100% 44px;
+  animation:flow 1.6s linear infinite}
+@keyframes flow{to{background-position:0 44px}}
+@media (prefers-reduced-motion: reduce){.channel::before{animation:none}}
+.st{position:relative;display:grid;grid-template-columns:64px 1fr;gap:12px;padding:12px 0;align-items:start}
+.pool{width:64px;height:64px;display:grid;place-items:center;z-index:1}
+.pool i{width:46px;height:46px;transform:rotate(45deg);background:var(--card);border:3px solid var(--water);display:grid;place-items:center;outline:3px solid var(--bg)}
+.pool i span{transform:rotate(-45deg);font-style:normal;font-size:20px}
+.gate .pool svg{width:58px;height:64px;color:var(--stone);background:var(--bg)}
+.fount .pool i{border-color:var(--sun);background:var(--sun-tint);width:52px;height:52px}
+.day{font-size:12px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--water)}
+.gate .day{color:var(--stone)}
+.fount .day{color:var(--sun)}
+.st h3{font-size:20px;font-weight:600;line-height:1.25;margin:2px 0 3px}
+.st p{color:var(--soft);font-size:16px}
+.tag{display:inline-block;font-size:11px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;background:var(--stone-tint);color:var(--stone);border-radius:6px;padding:2px 7px;margin-left:6px;vertical-align:2px}
 
-/* web */
-.web{background:var(--card);border:1px solid var(--line);border-radius:20px;padding:12px}
-.web svg{display:block;width:100%;height:auto}
-.web text{font-family:Inter,sans-serif;font-weight:600;fill:var(--ink)}
-.web .center{fill:var(--leaf)} .web .center-t{fill:#fff}
-.web .node{fill:var(--leaf-tint);stroke:var(--leaf);stroke-width:2}
-.web .you{fill:var(--sun-tint);stroke:var(--sun);stroke-width:3}
-.web .link{stroke:var(--leaf);stroke-width:2;stroke-dasharray:5 5;opacity:.6}
-.web .link.you-l{stroke:var(--sun);opacity:1;stroke-dasharray:none;stroke-width:3}
-.chits-label{margin:22px 0 10px;font-weight:600}
-.chits{display:grid;gap:10px}
-.chit{background:var(--card);border:1px dashed var(--soft);border-radius:4px;padding:12px 14px;font-size:16px;display:flex;gap:10px;align-items:center;transform:rotate(-.6deg)}
-.chit:nth-child(2){transform:rotate(.7deg)}
-.chit b{color:var(--sun);font-size:20px}
+/* char bagh */
+.bagh{background:var(--card);border:1px solid var(--line);border-radius:22px;padding:14px}
+.bagh svg{display:block;width:100%;height:auto}
+.bagh text{font-family:Inter,sans-serif;font-weight:600;fill:var(--ink)}
+.bagh .bed{fill:var(--leaf-tint)}
+.bagh .bed.you{fill:var(--sun-tint)}
+.bagh .wall{fill:none;stroke:var(--stone);stroke-width:3}
+.bagh .canal{fill:var(--water)}
+.bagh .tank{fill:var(--water);stroke:var(--card);stroke-width:4}
+.bagh .tank-t{fill:#fff}
+.bagh .small{font-weight:500;fill:var(--soft)}
+.chit-note{margin-top:14px;color:var(--soft);font-size:16px}
+.chit-note b{color:var(--ink)}
 
-/* rewards */
+/* incentives */
+.group{font-size:13px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--soft);margin:22px 0 10px}
 .cards{display:grid;grid-template-columns:1fr 1fr;gap:10px}
-.card{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:16px}
-.card .ic{font-size:26px}
-.card h3{font-size:17px;font-weight:600;margin-top:6px;line-height:1.25}
-.card p{color:var(--soft);font-size:14px;margin-top:2px}
-.card.more{border-style:dashed;background:transparent}
+.card{position:relative;background:var(--card);border:1px solid var(--line);border-radius:16px;padding:15px 14px}
+.card .ic{font-size:24px}
+.card h3{font-size:16px;font-weight:600;margin-top:6px;line-height:1.25}
+.card p{color:var(--soft);font-size:14px;margin-top:3px;line-height:1.4}
+.card.new{border-color:var(--leaf);background:var(--leaf-tint)}
+.card.weak h3::after{content:"not enough alone";display:block;font-size:11px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--stone);margin-top:4px}
+.card.yours{border:2px dashed var(--soft);background:transparent;grid-column:1 / -1;text-align:center}
 
-/* experiment */
-.test{margin-top:28px;display:grid;gap:14px}
+/* test */
+.test{display:grid;gap:10px;margin-top:8px}
 .step{background:var(--card);border:1px solid var(--line);border-radius:20px;padding:18px}
-.step .n{display:inline-grid;place-items:center;width:28px;height:28px;border-radius:50%;background:var(--ink);color:var(--bg);font-weight:600;font-size:14px;margin-right:8px}
-.step h3{display:flex;align-items:center;font-size:19px;font-weight:600;margin-bottom:14px}
-.row{display:grid;grid-template-columns:1fr auto;align-items:center;gap:10px;padding:6px 0;font-size:15px;color:var(--soft)}
+.step h3{display:flex;align-items:center;gap:10px;font-size:19px;font-weight:600;margin-bottom:6px}
+.step > p{color:var(--soft);font-size:15px;margin-bottom:12px}
+.n{flex:0 0 30px;height:30px;border-radius:50%;background:var(--ink);color:var(--bg);display:grid;place-items:center;font-size:14px}
+.row{display:grid;grid-template-columns:1fr auto;align-items:center;gap:10px;padding:5px 0;font-size:14px;color:var(--soft)}
 .five{display:flex;gap:6px}
-.p{width:16px;height:16px;border-radius:50%;background:var(--leaf-2)}
-.row.win{color:var(--ink);font-weight:600;background:var(--sun-tint);border-radius:10px;padding:6px 10px;margin:0 -10px}
-.row.win .p{background:var(--sun)}
-.row.dim{opacity:.4}
-.crowd{display:flex;flex-wrap:wrap;gap:6px}
-.crowd .p{background:var(--sun);width:14px;height:14px}
-.down{text-align:center;color:var(--soft);font-size:22px;line-height:1}
+.d{width:15px;height:15px;border-radius:50%;background:var(--water)}
+.row.win{color:var(--ink);font-weight:600;background:var(--sun-tint);border-radius:10px;padding:7px 10px;margin:0 -10px}
+.row.win .d{background:var(--sun)}
+.row.dry{opacity:.35}
+.row.dry .d{background:transparent;border:2px solid var(--soft)}
+.flood{display:flex;flex-wrap:wrap;gap:5px}
+.flood .d{background:var(--sun);width:13px;height:13px}
+.down{text-align:center;color:var(--water);font-size:22px;line-height:1}
 
-footer{text-align:center;padding:56px 0 8px}
-footer p{font-family:Fraunces,Georgia,serif;font-size:24px;line-height:1.25}
-footer a{display:inline-block;margin-top:18px;color:var(--leaf);font-weight:600;text-decoration:none}
+/* ask */
+.ask{margin-top:56px;background:var(--ink);color:var(--bg);border-radius:24px;padding:28px 22px;text-align:center}
+.ask h2{color:var(--bg);font-size:28px}
+.ask p{opacity:.85;margin-top:8px}
+.ask .when{display:inline-block;margin-top:18px;background:var(--sun);color:#1b1206;font-weight:600;border-radius:999px;padding:8px 16px}
+footer{text-align:center;padding:28px 0 0;font-size:14px;color:var(--soft)}
+footer a{color:var(--leaf);font-weight:600;text-decoration:none}
 </style>
 </head>
 <body>
 <main>
 
 <header class="hero">
-  <img src="logo.png" alt="Udyaan logo">
+  <div class="arch">
+    <svg viewBox="0 0 132 160" aria-hidden="true"><path d="M8 158 V78 Q8 34 66 6 Q124 34 124 78 V158" fill="none" stroke="currentColor" stroke-width="3"/><path d="M18 158 V80 Q18 44 66 18 Q114 44 114 80 V158" fill="none" stroke="currentColor" stroke-width="1.5" opacity=".5"/></svg>
+    <img src="logo.png" alt="Udyaan logo">
+  </div>
   <div class="brand">Udyaan</div>
-  <h1><span>14 days.</span><span>One team.</span><span class="hi">One real project.</span></h1>
-  <p>Start with an idea. Finish with a demo.</p>
-  <div class="arc"><span class="pill">💡 Idea</span><i></i><span class="pill end">🎤 Demo</span></div>
+  <div class="for">Onboarding · for the team</div>
+  <h1><span>Same garden.</span><span class="hi">Fewer channels.</span></h1>
+  <p>You told us the plan was too much. Here it is as one channel, from&nbsp;Day&nbsp;0 to&nbsp;Day&nbsp;14.</p>
+  <div class="legend">
+    <div><b>💧</b><strong>Students</strong><br>are the water</div>
+    <div><b><svg viewBox="0 0 24 26" width="22" height="24" style="color:var(--stone)" aria-hidden="true"><path d="M3 25 V12 Q3 5 12 1 Q21 5 21 12 V25" fill="none" stroke="currentColor" stroke-width="2.4"/></svg></b><strong>Mentors</strong><br>hold the gates</div>
+    <div><b>⛲</b><strong>Day 14</strong><br>is the fountain</div>
+  </div>
 </header>
 
+<svg class="rule" viewBox="0 0 400 18" preserveAspectRatio="none" aria-hidden="true"><path d="M0 9 H170 M230 9 H400" stroke="currentColor" stroke-width="1.5"/><path d="M200 1 L208 9 L200 17 L192 9 Z M180 9 l4-4 4 4-4 4z M212 9 l4-4 4 4-4 4z" fill="currentColor"/></svg>
+
 <section>
-  <div class="kicker">Your 14 days</div>
-  <h2>Here's the whole path.</h2>
-  <ol class="path">
-    <li class="stop"><div class="dot">📝</div><div><div class="day">Day 0</div><h3>Fill the form</h3><p>Tell us who you are.</p></div></li>
-    <li class="stop"><div class="dot">🌾</div><div><div class="day">Days 1–3</div><h3>Find your problem</h3><p>See where your subject meets farming. Pick a chit.</p></div></li>
-    <li class="stop"><div class="dot">✅</div><div><div class="day">Day 4</div><h3>Team up and get the green light</h3><p>Choose your team. Define the problem. Your mentor says go.</p></div></li>
-    <li class="stop"><div class="dot">🛠️</div><div><div class="day">Days 5–8</div><h3>Build it</h3><p>Post updates on the dashboard.</p></div></li>
-    <li class="stop"><div class="dot">💬</div><div><div class="day">Days 9–10</div><h3>Mentor check</h3><p>Show your mentor. Get feedback.</p></div></li>
-    <li class="stop"><div class="dot">🌱</div><div><div class="day">Days 11–13</div><h3>Make it better</h3><p>Use the feedback. Keep building.</p></div></li>
-    <li class="stop final"><div class="dot">🏆</div><div><div class="day">Day 14</div><h3>Demo day</h3><p>3-minute demo. Your mentor scores it. Awards.</p></div></li>
+  <div class="kicker">The 14 days</div>
+  <h2>One channel, two gates.</h2>
+  <p class="lead">Water goes in on Day 0. A demo comes out on Day 14.</p>
+  <ol class="channel">
+    <li class="st"><div class="pool"><i><span>📝</span></i></div><div><div class="day">Day 0 · The source</div><h3>Fill the form</h3><p>We learn who they are.</p></div></li>
+    <li class="st"><div class="pool"><i><span>🎟️</span></i></div><div><div class="day">Days 1–3</div><h3>Pick a problem</h3><p>From their campus chit sheet.</p></div></li>
+    <li class="st"><div class="pool"><i><span>👥</span></i></div><div><div class="day">Day 4</div><h3>Teams form</h3><p>Team built. Problem defined.</p></div></li>
+    <li class="st gate"><div class="pool"><svg viewBox="0 0 58 64" aria-hidden="true"><path d="M6 62 V30 Q6 12 29 3 Q52 12 52 30 V62" fill="none" stroke="currentColor" stroke-width="3"/><text x="29" y="47" text-anchor="middle" font-size="18">🟢</text></svg></div><div><div class="day">Days 5–8 · Gate 1 · Mentor</div><h3>Green light, then build</h3><p>Updates go on the dashboard.</p></div></li>
+    <li class="st gate"><div class="pool"><svg viewBox="0 0 58 64" aria-hidden="true"><path d="M6 62 V30 Q6 12 29 3 Q52 12 52 30 V62" fill="none" stroke="currentColor" stroke-width="3"/><text x="29" y="47" text-anchor="middle" font-size="18">💬</text></svg></div><div><div class="day">Days 9–10 · Gate 2 · Mentor</div><h3>Mentor check</h3><p>Feedback on what works.</p></div></li>
+    <li class="st"><div class="pool"><i><span>🌱</span></i></div><div><div class="day">Days 11–13</div><h3>Make it better</h3><p>Fix what the mentor flagged.</p></div></li>
+    <li class="st fount"><div class="pool"><i><span>⛲</span></i></div><div><div class="day">Day 14 · The fountain</div><h3>Demo day</h3><p>3 minutes. Awards.</p></div></li>
   </ol>
 </section>
 
+<svg class="rule" viewBox="0 0 400 18" preserveAspectRatio="none" aria-hidden="true"><path d="M0 9 H170 M230 9 H400" stroke="currentColor" stroke-width="1.5"/><path d="M200 1 L208 9 L200 17 L192 9 Z M180 9 l4-4 4 4-4 4z M212 9 l4-4 4 4-4 4z" fill="currentColor"/></svg>
+
 <section>
   <div class="kicker">Days 1–3</div>
-  <h2>Your subject already fits farming.</h2>
-  <p class="lead">We show you where. Say you study computer science:</p>
-  <div class="web">
-    <svg viewBox="0 0 360 260" role="img" aria-label="Agriculture in the middle, linked to computer science, commerce, science and design">
-      <line class="link you-l" x1="180" y1="130" x2="70" y2="52"/>
-      <line class="link" x1="180" y1="130" x2="290" y2="52"/>
-      <line class="link" x1="180" y1="130" x2="70" y2="210"/>
-      <line class="link" x1="180" y1="130" x2="290" y2="210"/>
-      <circle class="center" cx="180" cy="130" r="50"/>
-      <text class="center-t" x="180" y="128" text-anchor="middle" font-size="22">🌾</text>
-      <text class="center-t" x="180" y="152" text-anchor="middle" font-size="13">Agriculture</text>
-      <circle class="you" cx="70" cy="52" r="40"/>
-      <text x="70" y="49" text-anchor="middle" font-size="13">Computer</text>
-      <text x="70" y="65" text-anchor="middle" font-size="13">science</text>
-      <circle class="node" cx="290" cy="52" r="38"/>
-      <text x="290" y="57" text-anchor="middle" font-size="13">Commerce</text>
-      <circle class="node" cx="70" cy="210" r="38"/>
-      <text x="70" y="215" text-anchor="middle" font-size="13">Science</text>
-      <circle class="node" cx="290" cy="210" r="38"/>
-      <text x="290" y="215" text-anchor="middle" font-size="13">Design</text>
+  <h2>Every subject waters the same garden.</h2>
+  <p class="lead">A char bagh: four beds, one tank. Agriculture sits in the middle.</p>
+  <div class="bagh">
+    <svg viewBox="0 0 320 320" role="img" aria-label="A four-part Mughal garden. Computer science, commerce, science and design are the four beds; agriculture is the central water tank.">
+      <rect class="bed you" x="14" y="14" width="136" height="136" rx="6"/>
+      <rect class="bed" x="170" y="14" width="136" height="136" rx="6"/>
+      <rect class="bed" x="14" y="170" width="136" height="136" rx="6"/>
+      <rect class="bed" x="170" y="170" width="136" height="136" rx="6"/>
+      <rect class="canal" x="150" y="14" width="20" height="292"/>
+      <rect class="canal" x="14" y="150" width="292" height="20"/>
+      <rect class="wall" x="6" y="6" width="308" height="308" rx="10"/>
+      <rect class="tank" x="112" y="112" width="96" height="96" rx="8" transform="rotate(45 160 160)"/>
+      <text class="tank-t" x="160" y="156" text-anchor="middle" font-size="20">🌾</text>
+      <text class="tank-t" x="160" y="176" text-anchor="middle" font-size="12">Agriculture</text>
+      <text x="82" y="64" text-anchor="middle" font-size="22">💻</text>
+      <text x="82" y="88" text-anchor="middle" font-size="13">Computer</text>
+      <text x="82" y="104" text-anchor="middle" font-size="13">science</text>
+      <text x="238" y="72" text-anchor="middle" font-size="22">📊</text>
+      <text x="238" y="96" text-anchor="middle" font-size="13">Commerce</text>
+      <text x="82" y="234" text-anchor="middle" font-size="22">🔬</text>
+      <text x="82" y="258" text-anchor="middle" font-size="13">Science</text>
+      <text x="238" y="234" text-anchor="middle" font-size="22">🎨</text>
+      <text x="238" y="258" text-anchor="middle" font-size="13">Design</text>
     </svg>
   </div>
-  <p class="chits-label">Then you pick a chit, a real problem to solve:</p>
-  <div class="chits">
-    <div class="chit"><b>✂</b>Spot a sick crop from one photo.</div>
-    <div class="chit"><b>✂</b>Tell a farmer the best day to sell.</div>
-    <div class="chit"><b>✂</b>Warn a field before it runs dry.</div>
+  <p class="chit-note">A <b>CS student</b> gets farm problems that CS solves: spot a sick crop from a photo, tell a farmer the best day to sell. They pick one off the chit sheet.</p>
+</section>
+
+<svg class="rule" viewBox="0 0 400 18" preserveAspectRatio="none" aria-hidden="true"><path d="M0 9 H170 M230 9 H400" stroke="currentColor" stroke-width="1.5"/><path d="M200 1 L208 9 L200 17 L192 9 Z M180 9 l4-4 4 4-4 4z M212 9 l4-4 4 4-4 4z" fill="currentColor"/></svg>
+
+<section>
+  <div class="kicker">The open question</div>
+  <h2>What keeps the water flowing?</h2>
+  <p class="lead">You said it: students will ask "what do I get?" Here's every answer on the table.</p>
+
+  <div class="group">From our meeting</div>
+  <div class="cards">
+    <div class="card weak"><div class="ic">🏆</div><h3>Awards</h3><p>Seen by campus and class.</p></div>
+    <div class="card"><div class="ic">💵</div><h3>Stipend</h3><p>₹2,000–3,000 for the 14 days.</p></div>
+    <div class="card"><div class="ic">📈</div><h3>Profit cut</h3><p>A share of what the project earns.</p></div>
+    <div class="card"><div class="ic">🚀</div><h3>Startup funding</h3><p>For projects that help farmers.</p></div>
+  </div>
+
+  <div class="group">New ideas</div>
+  <div class="cards">
+    <div class="card new"><div class="ic">🤝</div><h3>A paying client</h3><p>We bring the client. The team keeps the fee.</p></div>
+    <div class="card new"><div class="ic">✉️</div><h3>Letter + referral</h3><p>Faculty letter and a referral to a partner company.</p></div>
+    <div class="card new"><div class="ic">🎤</div><h3>Pitch to investors</h3><p>Top teams demo to real investors and farmers.</p></div>
+    <div class="card new"><div class="ic">🪴</div><h3>Incubation seat</h3><p>The best team gets 3 months, a desk and a mentor.</p></div>
+    <div class="card new"><div class="ic">🤖</div><h3>Paid AI tools</h3><p>Claude or ChatGPT Pro while they build.</p></div>
+    <div class="card new"><div class="ic">🚜</div><h3>A field visit</h3><p>A day on a real farm with their team.</p></div>
+    <div class="card yours"><div class="ic">➕</div><h3>Yours</h3><p>What would make you work 14 days?</p></div>
   </div>
 </section>
 
 <section>
-  <div class="kicker">What do I get?</div>
-  <h2>Why work this hard?</h2>
-  <p class="lead">Our team came up with these ideas. Got a better one? Tell us.</p>
-  <div class="cards">
-    <div class="card"><div class="ic">🏆</div><h3>Awards</h3><p>Seen by your campus.</p></div>
-    <div class="card"><div class="ic">💵</div><h3>Stipend</h3><p>₹2,000 to ₹3,000.</p></div>
-    <div class="card"><div class="ic">📈</div><h3>Profit cut</h3><p>A share of what your project earns.</p></div>
-    <div class="card"><div class="ic">🚀</div><h3>Startup funding</h3><p>For ideas that really help.</p></div>
-  </div>
-
+  <div class="kicker">How we pick</div>
+  <h2>Open one channel at a time.</h2>
   <div class="test">
     <div class="step">
-      <h3><span class="n">1</span>5 students try each idea</h3>
-      <div class="row"><span>Awards</span><span class="five"><i class="p"></i><i class="p"></i><i class="p"></i><i class="p"></i><i class="p"></i></span></div>
-      <div class="row"><span>Stipend</span><span class="five"><i class="p"></i><i class="p"></i><i class="p"></i><i class="p"></i><i class="p"></i></span></div>
-      <div class="row"><span>Profit cut</span><span class="five"><i class="p"></i><i class="p"></i><i class="p"></i><i class="p"></i><i class="p"></i></span></div>
-      <div class="row"><span>Funding</span><span class="five"><i class="p"></i><i class="p"></i><i class="p"></i><i class="p"></i><i class="p"></i></span></div>
+      <h3><span class="n">1</span>5 students per idea</h3>
+      <p>Same 14 days. Only the reward changes.</p>
+      <div class="row"><span>Stipend</span><span class="five"><i class="d"></i><i class="d"></i><i class="d"></i><i class="d"></i><i class="d"></i></span></div>
+      <div class="row"><span>Profit cut</span><span class="five"><i class="d"></i><i class="d"></i><i class="d"></i><i class="d"></i><i class="d"></i></span></div>
+      <div class="row"><span>Paying client</span><span class="five"><i class="d"></i><i class="d"></i><i class="d"></i><i class="d"></i><i class="d"></i></span></div>
+      <div class="row"><span>Incubation seat</span><span class="five"><i class="d"></i><i class="d"></i><i class="d"></i><i class="d"></i><i class="d"></i></span></div>
     </div>
     <div class="down">↓</div>
     <div class="step">
-      <h3><span class="n">2</span>We see what works best</h3>
-      <div class="row dim"><span>Idea A</span><span class="five"><i class="p"></i><i class="p"></i><i class="p"></i><i class="p"></i><i class="p"></i></span></div>
-      <div class="row win"><span>Best result ✓</span><span class="five"><i class="p"></i><i class="p"></i><i class="p"></i><i class="p"></i><i class="p"></i></span></div>
-      <div class="row dim"><span>Idea C</span><span class="five"><i class="p"></i><i class="p"></i><i class="p"></i><i class="p"></i><i class="p"></i></span></div>
+      <h3><span class="n">2</span>See which channel stays full</h3>
+      <p>Who keeps posting updates. Who reaches Day 14.</p>
+      <div class="row dry"><span>Idea A</span><span class="five"><i class="d"></i><i class="d"></i><i class="d"></i><i class="d"></i><i class="d"></i></span></div>
+      <div class="row win"><span>Winner ✓</span><span class="five"><i class="d"></i><i class="d"></i><i class="d"></i><i class="d"></i><i class="d"></i></span></div>
+      <div class="row dry"><span>Idea C</span><span class="five"><i class="d"></i><i class="d"></i><i class="d"></i><i class="d"></i><i class="d"></i></span></div>
     </div>
     <div class="down">↓</div>
     <div class="step">
-      <h3><span class="n">3</span>Every student gets it</h3>
-      <div class="crowd" aria-label="Many students">
-        <i class="p"></i><i class="p"></i><i class="p"></i><i class="p"></i><i class="p"></i><i class="p"></i><i class="p"></i><i class="p"></i><i class="p"></i><i class="p"></i><i class="p"></i><i class="p"></i><i class="p"></i><i class="p"></i><i class="p"></i><i class="p"></i><i class="p"></i><i class="p"></i><i class="p"></i><i class="p"></i><i class="p"></i><i class="p"></i><i class="p"></i><i class="p"></i><i class="p"></i><i class="p"></i><i class="p"></i><i class="p"></i><i class="p"></i><i class="p"></i><i class="p"></i><i class="p"></i><i class="p"></i><i class="p"></i><i class="p"></i><i class="p"></i><i class="p"></i><i class="p"></i><i class="p"></i><i class="p"></i>
+      <h3><span class="n">3</span>Every student gets the winner</h3>
+      <p>Then 50. Then all of Udyaan.</p>
+      <div class="flood" aria-label="Many students">
+        <i class="d"></i><i class="d"></i><i class="d"></i><i class="d"></i><i class="d"></i><i class="d"></i><i class="d"></i><i class="d"></i><i class="d"></i><i class="d"></i><i class="d"></i><i class="d"></i><i class="d"></i><i class="d"></i><i class="d"></i><i class="d"></i><i class="d"></i><i class="d"></i><i class="d"></i><i class="d"></i><i class="d"></i><i class="d"></i><i class="d"></i><i class="d"></i><i class="d"></i><i class="d"></i><i class="d"></i><i class="d"></i><i class="d"></i><i class="d"></i><i class="d"></i><i class="d"></i><i class="d"></i><i class="d"></i><i class="d"></i><i class="d"></i><i class="d"></i><i class="d"></i><i class="d"></i><i class="d"></i><i class="d"></i><i class="d"></i><i class="d"></i><i class="d"></i><i class="d"></i><i class="d"></i><i class="d"></i><i class="d"></i><i class="d"></i><i class="d"></i>
       </div>
     </div>
   </div>
 </section>
 
-<footer>
-  <p>Every student leaves with a team, a plan and a shipped project.</p>
-  <a href="https://www.udyaan.org/">udyaan.org →</a>
-</footer>
+<div class="ask">
+  <h2>Help us pick the reward.</h2>
+  <p>Add your ideas. Pick the 4 we test first.</p>
+  <span class="when">Thu Oct 29 · 10 am</span>
+</div>
+
+<footer><a href="https://www.udyaan.org/">udyaan.org</a></footer>
 
 </main>
 </body>
