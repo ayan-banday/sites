@@ -1,0 +1,423 @@
+<!doctype html>
+<!-- Edit: open the page with #edit at the end of the URL. -->
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Udyaan Plan</title>
+<style>
+  :root {
+    --bg: #fafaf8;
+    --ink: #1c1c1e;
+    --muted: #5f6368;
+    --accent: #4a6b8a;
+    --line: #d6d6d0;
+    --card: #ffffff;
+    --soft: #eeeeea;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --bg: #16181b;
+      --ink: #ececec;
+      --muted: #9aa0a6;
+      --accent: #8fb0d0;
+      --line: #3a3d42;
+      --card: #1e2125;
+      --soft: #22262b;
+    }
+  }
+  :root[data-theme="dark"] {
+    --bg: #16181b;
+    --ink: #ececec;
+    --muted: #9aa0a6;
+    --accent: #8fb0d0;
+    --line: #3a3d42;
+    --card: #1e2125;
+    --soft: #22262b;
+  }
+  * { box-sizing: border-box; }
+  [hidden] { display: none !important; }
+  body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--ink);
+    font-family: "Georgia", "Times New Roman", serif;
+    font-size: 18px;
+    line-height: 1.5;
+  }
+  main {
+    max-width: 440px;
+    margin: 0 auto;
+    padding: 40px 16px 48px;
+  }
+  main[contenteditable="true"] { outline: 1px dashed var(--line); outline-offset: 8px; }
+  .logo { display: block; margin: 0 0 24px; }
+  h1 { font-size: 28px; line-height: 1.25; margin: 0 0 8px; font-weight: 700; }
+  h2 { font-size: 22px; line-height: 1.3; margin: 48px 0 16px; font-weight: 700; }
+  p { margin: 0 0 12px; }
+  .muted { color: var(--muted); font-size: 17px; }
+  .sans, .day, .lab, .num, .net text { font-family: "Helvetica", "Arial", sans-serif; }
+
+  /* Timeline */
+  .path { position: relative; padding-left: 28px; margin: 0; }
+  .path::before {
+    content: "";
+    position: absolute;
+    left: 6px;
+    top: 10px;
+    bottom: 10px;
+    width: 2px;
+    background: var(--line);
+  }
+  .step { position: relative; margin-bottom: 24px; }
+  .step:last-child { margin-bottom: 0; }
+  .step::before {
+    content: "";
+    position: absolute;
+    left: -27px;
+    top: 7px;
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    background: var(--accent);
+  }
+  .day {
+    font-size: 13px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: var(--muted);
+  }
+  .title { font-size: 19px; font-weight: 700; margin: 2px 0 2px; }
+  .step p { margin: 0; }
+
+  /* Department diagram */
+  .net { width: 100%; height: auto; display: block; margin: 0 0 16px; }
+  .net line { stroke: var(--line); stroke-width: 2; }
+  .net circle { fill: var(--card); stroke: var(--muted); stroke-width: 1.5; }
+  .net circle.center { fill: var(--soft); }
+  .net circle.hi { fill: var(--accent); stroke: var(--accent); }
+  .net text { fill: var(--ink); font-size: 14px; text-anchor: middle; }
+  .net text.center { font-size: 15px; font-weight: 700; }
+  .net text.on { fill: var(--bg); }
+
+  .chit {
+    border: 2px dashed var(--muted);
+    border-radius: 12px;
+    padding: 14px 16px;
+    margin-bottom: 10px;
+    font-size: 17px;
+  }
+
+  /* Cards */
+  .grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+    margin-bottom: 16px;
+  }
+  .card {
+    background: var(--card);
+    border: 1px solid var(--line);
+    border-radius: 12px;
+    padding: 16px 14px;
+  }
+  .card .emo { font-size: 28px; display: block; margin-bottom: 6px; }
+  .card h3 { font-size: 17px; margin: 0 0 4px; }
+  .card p { font-size: 15px; color: var(--muted); margin: 0; }
+
+  /* How we pick */
+  .pick-card {
+    background: var(--card);
+    border: 1px solid var(--line);
+    border-radius: 12px;
+    padding: 18px 16px;
+  }
+  .num {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    background: var(--accent);
+    color: var(--bg);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+    font-size: 16px;
+    margin-bottom: 10px;
+  }
+  .pick-card h3 { font-size: 18px; margin: 0 0 12px; }
+  .row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin: 8px 0;
+    font-size: 14px;
+  }
+  .row .lab { width: 118px; flex: none; }
+  .row.hi .lab { color: var(--accent); font-weight: 700; }
+  .dots { display: flex; flex-wrap: wrap; gap: 6px; }
+  .dot {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    background: var(--accent);
+    display: inline-block;
+  }
+  .dot.faded { background: var(--line); }
+  .arrow-down {
+    text-align: center;
+    color: var(--muted);
+    font-size: 20px;
+    margin: 10px 0;
+    font-family: "Helvetica", "Arial", sans-serif;
+  }
+
+  /* Edit bar */
+  #editbar {
+    position: fixed;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: var(--card);
+    border-top: 1px solid var(--line);
+    padding: 10px 16px;
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+    font-family: "Helvetica", "Arial", sans-serif;
+    font-size: 14px;
+  }
+  #editbar button {
+    font: inherit;
+    color: var(--ink);
+    background: var(--bg);
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    padding: 8px 14px;
+    cursor: pointer;
+  }
+  #editbar button.primary { border-color: var(--accent); color: var(--accent); }
+</style>
+</head>
+<body>
+<main>
+
+  <img class="logo" src="logo.png" alt="Udyaan" width="56">
+
+  <h1>Here is my updated plan for the simplified Udyaan onboarding, based on your feedback.</h1>
+
+  <section>
+    <h2>The 14 days, simpler</h2>
+    <div class="path">
+
+      <div class="step">
+        <div class="day">Day 0</div>
+        <div class="title">📝 Fill the form</div>
+        <p>We collect what we need.</p>
+      </div>
+
+      <div class="step">
+        <div class="day">Days 1–3</div>
+        <div class="title">🔍 Pick a problem</div>
+        <p>From their campus chit sheet.</p>
+      </div>
+
+      <div class="step">
+        <div class="day">Day 4</div>
+        <div class="title">👥 Teams form</div>
+        <p>Team built. Problem defined.</p>
+      </div>
+
+      <div class="step">
+        <div class="day">Days 5–8</div>
+        <div class="title">🛠️ Mentor green light, then build</div>
+        <p>Updates go on the dashboard.</p>
+      </div>
+
+      <div class="step">
+        <div class="day">Days 9–10</div>
+        <div class="title">🗣️ Mentor check</div>
+        <p>Feedback on what works.</p>
+      </div>
+
+      <div class="step">
+        <div class="day">Days 11–13</div>
+        <div class="title">🔁 Make it better</div>
+        <p>Fix what the mentor flagged.</p>
+      </div>
+
+      <div class="step">
+        <div class="day">Day 14</div>
+        <div class="title">🎤 Demo day</div>
+        <p>3-minute demo. Awards.</p>
+      </div>
+
+    </div>
+  </section>
+
+  <section>
+    <h2>Their department, applied to agriculture</h2>
+    <p class="muted">Each student sees farm problems their own subject can solve. Example: a computer science student.</p>
+
+    <svg class="net" viewBox="0 0 400 250" role="img" aria-label="Agriculture in the middle, linked to Computer science, Commerce, Science and Design">
+      <line x1="200" y1="125" x2="70" y2="55"></line>
+      <line x1="200" y1="125" x2="330" y2="55"></line>
+      <line x1="200" y1="125" x2="70" y2="195"></line>
+      <line x1="200" y1="125" x2="330" y2="195"></line>
+
+      <circle class="center" cx="200" cy="125" r="50"></circle>
+      <text class="center" x="200" y="130">Agriculture</text>
+
+      <circle class="hi" cx="70" cy="55" r="42"></circle>
+      <text class="on" x="70" y="52">Computer</text>
+      <text class="on" x="70" y="68">science</text>
+
+      <circle cx="330" cy="55" r="42"></circle>
+      <text x="330" y="60">Commerce</text>
+
+      <circle cx="70" cy="195" r="42"></circle>
+      <text x="70" y="200">Science</text>
+
+      <circle cx="330" cy="195" r="42"></circle>
+      <text x="330" y="200">Design</text>
+    </svg>
+
+    <p>Then they pick a chit: a real problem to solve.</p>
+    <div class="chit">Spot a sick crop from one photo.</div>
+    <div class="chit">Tell a farmer the best day to sell.</div>
+    <div class="chit">Warn a field before it runs dry.</div>
+  </section>
+
+  <section>
+    <h2>What do students get?</h2>
+    <p class="muted">Ideas from our meeting:</p>
+
+    <div class="grid">
+      <div class="card">
+        <span class="emo">🏅</span>
+        <h3>Awards</h3>
+        <p>Most of us felt this isn't enough alone.</p>
+      </div>
+      <div class="card">
+        <span class="emo">💰</span>
+        <h3>Stipend</h3>
+        <p>₹2,000–3,000.</p>
+      </div>
+      <div class="card">
+        <span class="emo">📈</span>
+        <h3>Profit cut</h3>
+        <p>A share of what the project earns.</p>
+      </div>
+      <div class="card">
+        <span class="emo">🚀</span>
+        <h3>Startup funding</h3>
+        <p>For projects that work.</p>
+      </div>
+    </div>
+
+    <p class="muted">Add your own ideas.</p>
+  </section>
+
+  <section>
+    <h2>How we pick</h2>
+
+    <div class="pick-card">
+      <div class="num">1</div>
+      <h3>5 students try each idea</h3>
+      <div class="row"><span class="lab">Awards</span><span class="dots"><i class="dot"></i><i class="dot"></i><i class="dot"></i><i class="dot"></i><i class="dot"></i></span></div>
+      <div class="row"><span class="lab">Stipend</span><span class="dots"><i class="dot"></i><i class="dot"></i><i class="dot"></i><i class="dot"></i><i class="dot"></i></span></div>
+      <div class="row"><span class="lab">Profit cut</span><span class="dots"><i class="dot"></i><i class="dot"></i><i class="dot"></i><i class="dot"></i><i class="dot"></i></span></div>
+      <div class="row"><span class="lab">Startup funding</span><span class="dots"><i class="dot"></i><i class="dot"></i><i class="dot"></i><i class="dot"></i><i class="dot"></i></span></div>
+    </div>
+
+    <div class="arrow-down">↓</div>
+
+    <div class="pick-card">
+      <div class="num">2</div>
+      <h3>We see what works best</h3>
+      <div class="row"><span class="lab">Awards</span><span class="dots"><i class="dot faded"></i><i class="dot faded"></i><i class="dot faded"></i><i class="dot faded"></i><i class="dot faded"></i></span></div>
+      <div class="row"><span class="lab">Profit cut</span><span class="dots"><i class="dot faded"></i><i class="dot faded"></i><i class="dot faded"></i><i class="dot faded"></i><i class="dot faded"></i></span></div>
+      <div class="row hi"><span class="lab">Works best</span><span class="dots"><i class="dot"></i><i class="dot"></i><i class="dot"></i><i class="dot"></i><i class="dot"></i></span></div>
+    </div>
+
+    <div class="arrow-down">↓</div>
+
+    <div class="pick-card">
+      <div class="num">3</div>
+      <h3>Every student gets it</h3>
+      <div class="dots">
+        <i class="dot"></i><i class="dot"></i><i class="dot"></i><i class="dot"></i><i class="dot"></i><i class="dot"></i><i class="dot"></i><i class="dot"></i><i class="dot"></i><i class="dot"></i>
+        <i class="dot"></i><i class="dot"></i><i class="dot"></i><i class="dot"></i><i class="dot"></i><i class="dot"></i><i class="dot"></i><i class="dot"></i><i class="dot"></i><i class="dot"></i>
+        <i class="dot"></i><i class="dot"></i><i class="dot"></i><i class="dot"></i><i class="dot"></i><i class="dot"></i><i class="dot"></i><i class="dot"></i><i class="dot"></i><i class="dot"></i>
+        <i class="dot"></i><i class="dot"></i><i class="dot"></i><i class="dot"></i><i class="dot"></i><i class="dot"></i><i class="dot"></i><i class="dot"></i><i class="dot"></i><i class="dot"></i>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<div id="editbar" hidden>
+  <button type="button" class="primary" id="dl">Download HTML</button>
+  <button type="button" id="reset">Reset</button>
+</div>
+
+<script>
+(function () {
+  var KEY = "udyaan-plan-edit";
+  var main = document.querySelector("main");
+  var bar = document.getElementById("editbar");
+
+  function getSaved() {
+    try { return localStorage.getItem(KEY); } catch (e) { return null; }
+  }
+  function setSaved(v) {
+    try { localStorage.setItem(KEY, v); } catch (e) {}
+  }
+  function clearSaved() {
+    try { localStorage.removeItem(KEY); } catch (e) {}
+  }
+
+  if (location.hash !== "#edit") {
+    return;
+  }
+
+  bar.hidden = false;
+  main.setAttribute("contenteditable", "true");
+
+  var saved = getSaved();
+  if (saved) {
+    main.innerHTML = saved;
+  }
+
+  main.addEventListener("input", function () {
+    setSaved(main.innerHTML);
+  });
+
+  document.getElementById("dl").addEventListener("click", function () {
+    var clone = document.documentElement.cloneNode(true);
+    var m = clone.querySelector("main");
+    if (m) m.removeAttribute("contenteditable");
+    var b = clone.querySelector("#editbar");
+    if (b) b.parentNode.removeChild(b);
+    var html = "<!doctype html>\n" + clone.outerHTML;
+    var blob = new Blob([html], { type: "text/html" });
+    var url = URL.createObjectURL(blob);
+    var a = document.createElement("a");
+    a.href = url;
+    a.download = "index.html";
+    document.body.appendChild(a);
+    a.click();
+    setTimeout(function () {
+      URL.revokeObjectURL(url);
+      a.parentNode.removeChild(a);
+    }, 0);
+  });
+
+  document.getElementById("reset").addEventListener("click", function () {
+    clearSaved();
+    location.reload();
+  });
+})();
+</script>
+</body>
+</html>

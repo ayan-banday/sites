@@ -1,423 +1,303 @@
 <!doctype html>
-<!-- Edit: open the page with #edit at the end of the URL. -->
 <html lang="en">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Udyaan Plan</title>
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cpath d='M0 15 6 4l3 5 2-3 5 9z' fill='%232b2722'/%3E%3C/svg%3E">
 <style>
-  :root {
-    --bg: #fafaf8;
-    --ink: #1c1c1e;
-    --muted: #5f6368;
-    --accent: #4a6b8a;
-    --line: #d6d6d0;
-    --card: #ffffff;
-    --soft: #eeeeea;
-  }
-  @media (prefers-color-scheme: dark) {
-    :root:not([data-theme="light"]) {
-      --bg: #16181b;
-      --ink: #ececec;
-      --muted: #9aa0a6;
-      --accent: #8fb0d0;
-      --line: #3a3d42;
-      --card: #1e2125;
-      --soft: #22262b;
-    }
-  }
-  :root[data-theme="dark"] {
-    --bg: #16181b;
-    --ink: #ececec;
-    --muted: #9aa0a6;
-    --accent: #8fb0d0;
-    --line: #3a3d42;
-    --card: #1e2125;
-    --soft: #22262b;
-  }
-  * { box-sizing: border-box; }
-  [hidden] { display: none !important; }
-  body {
-    margin: 0;
-    background: var(--bg);
-    color: var(--ink);
-    font-family: "Georgia", "Times New Roman", serif;
-    font-size: 18px;
-    line-height: 1.5;
-  }
-  main {
-    max-width: 440px;
-    margin: 0 auto;
-    padding: 40px 16px 48px;
-  }
-  main[contenteditable="true"] { outline: 1px dashed var(--line); outline-offset: 8px; }
-  .logo { display: block; margin: 0 0 24px; }
-  h1 { font-size: 28px; line-height: 1.25; margin: 0 0 8px; font-weight: 700; }
-  h2 { font-size: 22px; line-height: 1.3; margin: 48px 0 16px; font-weight: 700; }
-  p { margin: 0 0 12px; }
-  .muted { color: var(--muted); font-size: 17px; }
-  .sans, .day, .lab, .num, .net text { font-family: "Helvetica", "Arial", sans-serif; }
-
-  /* Timeline */
-  .path { position: relative; padding-left: 28px; margin: 0; }
-  .path::before {
-    content: "";
-    position: absolute;
-    left: 6px;
-    top: 10px;
-    bottom: 10px;
-    width: 2px;
-    background: var(--line);
-  }
-  .step { position: relative; margin-bottom: 24px; }
-  .step:last-child { margin-bottom: 0; }
-  .step::before {
-    content: "";
-    position: absolute;
-    left: -27px;
-    top: 7px;
-    width: 12px;
-    height: 12px;
-    border-radius: 50%;
-    background: var(--accent);
-  }
-  .day {
-    font-size: 13px;
-    text-transform: uppercase;
-    letter-spacing: 1px;
-    color: var(--muted);
-  }
-  .title { font-size: 19px; font-weight: 700; margin: 2px 0 2px; }
-  .step p { margin: 0; }
-
-  /* Department diagram */
-  .net { width: 100%; height: auto; display: block; margin: 0 0 16px; }
-  .net line { stroke: var(--line); stroke-width: 2; }
-  .net circle { fill: var(--card); stroke: var(--muted); stroke-width: 1.5; }
-  .net circle.center { fill: var(--soft); }
-  .net circle.hi { fill: var(--accent); stroke: var(--accent); }
-  .net text { fill: var(--ink); font-size: 14px; text-anchor: middle; }
-  .net text.center { font-size: 15px; font-weight: 700; }
-  .net text.on { fill: var(--bg); }
-
-  .chit {
-    border: 2px dashed var(--muted);
-    border-radius: 12px;
-    padding: 14px 16px;
-    margin-bottom: 10px;
-    font-size: 17px;
-  }
-
-  /* Cards */
-  .grid {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 12px;
-    margin-bottom: 16px;
-  }
-  .card {
-    background: var(--card);
-    border: 1px solid var(--line);
-    border-radius: 12px;
-    padding: 16px 14px;
-  }
-  .card .emo { font-size: 28px; display: block; margin-bottom: 6px; }
-  .card h3 { font-size: 17px; margin: 0 0 4px; }
-  .card p { font-size: 15px; color: var(--muted); margin: 0; }
-
-  /* How we pick */
-  .pick-card {
-    background: var(--card);
-    border: 1px solid var(--line);
-    border-radius: 12px;
-    padding: 18px 16px;
-  }
-  .num {
-    width: 32px;
-    height: 32px;
-    border-radius: 50%;
-    background: var(--accent);
-    color: var(--bg);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-weight: 700;
-    font-size: 16px;
-    margin-bottom: 10px;
-  }
-  .pick-card h3 { font-size: 18px; margin: 0 0 12px; }
-  .row {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    margin: 8px 0;
-    font-size: 14px;
-  }
-  .row .lab { width: 118px; flex: none; }
-  .row.hi .lab { color: var(--accent); font-weight: 700; }
-  .dots { display: flex; flex-wrap: wrap; gap: 6px; }
-  .dot {
-    width: 12px;
-    height: 12px;
-    border-radius: 50%;
-    background: var(--accent);
-    display: inline-block;
-  }
-  .dot.faded { background: var(--line); }
-  .arrow-down {
-    text-align: center;
-    color: var(--muted);
-    font-size: 20px;
-    margin: 10px 0;
-    font-family: "Helvetica", "Arial", sans-serif;
-  }
-
-  /* Edit bar */
-  #editbar {
-    position: fixed;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background: var(--card);
-    border-top: 1px solid var(--line);
-    padding: 10px 16px;
-    display: flex;
-    gap: 10px;
-    justify-content: center;
-    font-family: "Helvetica", "Arial", sans-serif;
-    font-size: 14px;
-  }
-  #editbar button {
-    font: inherit;
-    color: var(--ink);
-    background: var(--bg);
-    border: 1px solid var(--line);
-    border-radius: 8px;
-    padding: 8px 14px;
-    cursor: pointer;
-  }
-  #editbar button.primary { border-color: var(--accent); color: var(--accent); }
+:root{color-scheme:light;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+body{margin:0;font:14px/1.4 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif}
+img{max-width:100%}
+[hidden]{display:none!important}
 </style>
-</head>
-<body>
-<main>
+<title>Updated 14-Day Onboarding Plan for Udyaan</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Anton&family=Hind:wght@400;500;600;700&display=swap">
+<style>
+/* Layout: an Indian tear-off wall calendar. A printed board at the top (logo, name), a brass binding, and a pad of
+   pages. Each page is one phase of the 14 days with its day number printed huge. Tap the page to tear it off; the
+   pad gets thinner and the torn stubs build up under the binding. Day 14 is printed in festival red. */
+:root{
+  --wall:#e9e4d6; --paper:#fcfaf3; --ink:#1b1f1a; --muted:#5f655b; --rule:#d8d2c2;
+  --board:#0f2417; --board-ink:#f4f0e2; --brass:#c79a3a;
+  --num:#f08c00; --fest:#c0392b; --leaf:#2f8a2f; --tint:#fdebd0;
+  --numeral:"Anton", "Impact", "Arial Narrow", sans-serif;
+  --text:"Hind", "Segoe UI", system-ui, sans-serif;
+}
+@media (prefers-color-scheme: dark){ :root:not([data-theme="light"]){
+  --wall:#121611; --paper:#1d221c; --ink:#eeeadc; --muted:#a8ad9f; --rule:#343a32;
+  --board:#0b1a10; --board-ink:#eeeadc; --brass:#b98d33;
+  --num:#ffa62b; --fest:#ff6b57; --leaf:#7cc242; --tint:#3d2c12; color-scheme:dark } }
+:root[data-theme="dark"]{
+  --wall:#121611; --paper:#1d221c; --ink:#eeeadc; --muted:#a8ad9f; --rule:#343a32;
+  --board:#0b1a10; --board-ink:#eeeadc; --brass:#b98d33;
+  --num:#ffa62b; --fest:#ff6b57; --leaf:#7cc242; --tint:#3d2c12; color-scheme:dark }
 
-  <img class="logo" src="logo.png" alt="Udyaan" width="56">
+*{box-sizing:border-box}
+html,body{height:100%}
+body{background:var(--wall);color:var(--ink);font-family:var(--text);font-size:18px;line-height:1.45;overflow:hidden}
 
-  <h1>Here is my updated plan for the simplified Udyaan onboarding, based on your feedback.</h1>
+.cal{height:100%;max-width:460px;margin:0 auto;display:flex;flex-direction:column;
+  padding-left:max(14px,env(safe-area-inset-left,0px));padding-right:max(14px,env(safe-area-inset-right,0px));
+  padding-block:calc(10px + env(safe-area-inset-top,0px)) 0}
 
-  <section>
-    <h2>The 14 days, simpler</h2>
-    <div class="path">
+/* the printed board, like the shop block on a calendar */
+.board{background:var(--board);color:var(--board-ink);border-radius:10px 10px 0 0;padding:12px 16px 14px;display:flex;align-items:center;gap:12px}
+.board img{width:40px;height:auto;flex:none}
+.board b{display:block;font:700 20px/1.1 var(--text);letter-spacing:.02em}
+.board span{display:block;font-size:13px;opacity:.75}
+.binding{height:12px;background:linear-gradient(var(--brass),color-mix(in srgb,var(--brass) 70%,#000));position:relative;z-index:3}
+.binding::before,.binding::after{content:"";position:absolute;top:3px;width:6px;height:6px;border-radius:50%;background:var(--board)}
+.binding::before{left:22%}.binding::after{right:22%}
 
-      <div class="step">
-        <div class="day">Day 0</div>
-        <div class="title">📝 Fill the form</div>
-        <p>We collect what we need.</p>
+/* the pad */
+.pad{position:relative;flex:1;min-height:0}
+.stubs{position:absolute;left:0;right:0;top:0;height:0;z-index:2;background:var(--paper);transition:height .4s;
+  -webkit-mask:radial-gradient(circle at 7px 100%,transparent 3.5px,#000 4px) 0 0/14px 100% repeat-x;
+          mask:radial-gradient(circle at 7px 100%,transparent 3.5px,#000 4px) 0 0/14px 100% repeat-x;
+  box-shadow:inset 0 -1px 0 var(--rule)}
+.slide{position:absolute;inset:0;background:var(--paper);display:flex;flex-direction:column;gap:12px;
+  padding:34px 22px 18px;box-shadow:0 1px 0 var(--rule),0 6px 18px -10px rgba(0,0,0,.25);transform-origin:12% 0;cursor:pointer;touch-action:pan-y}
+.slide::before{content:"";position:absolute;left:0;right:0;top:0;height:8px;
+  background:radial-gradient(circle at 7px 0,var(--wall) 3.5px,transparent 4px) 0 0/14px 8px repeat-x}
+.slide.gone{animation:tear .6s cubic-bezier(.5,0,.75,0) forwards;pointer-events:none}
+.slide.off{visibility:hidden}
+.slide.back{animation:untear .45s cubic-bezier(.25,1,.5,1)}
+@keyframes tear{0%{transform:none}25%{transform:rotate(-3deg) translateY(-4px)}100%{transform:rotate(-16deg) translate(-25%,115%);opacity:0}}
+@keyframes untear{from{transform:rotate(-8deg) translate(-10%,40%);opacity:0}}
+.edge{height:var(--left,0px);background:repeating-linear-gradient(var(--paper) 0 2px,var(--rule) 2px 3px);transition:height .4s;flex:none}
+
+/* page type */
+.top{display:flex;flex-wrap:wrap;align-items:flex-end;column-gap:12px}
+.n{font:400 clamp(104px,34vw,144px)/0.86 var(--numeral);color:var(--num);letter-spacing:-.01em}
+.nextline{margin-top:auto;border-top:1.5px dashed var(--rule);padding-top:10px;font-size:15px;color:var(--muted)}
+.nextline b{color:var(--ink);font-weight:600}
+.pic + .nextline{margin-top:14px}
+.n.fest{color:var(--fest)}
+.lab{font:600 13px/1.2 var(--text);letter-spacing:.14em;text-transform:uppercase;color:var(--muted);padding-bottom:6px}
+.lab small{display:block;letter-spacing:.04em;text-transform:none;font-weight:500;font-size:14px;color:var(--ink)}
+h1,h2{font:700 28px/1.12 var(--text);margin:6px 0 0;text-wrap:balance;letter-spacing:-.005em}
+h1{font-size:32px}
+p{margin:0;color:var(--muted);text-wrap:pretty}
+p b{color:var(--ink);font-weight:600}
+.pic{margin-top:auto}
+.rule{border-top:1.5px dashed var(--rule);margin:2px 0}
+
+/* chits */
+.chits{display:grid;gap:8px}
+.chit{position:relative;border:1.5px dashed var(--muted);border-radius:8px;padding:8px 12px;font-size:16px}
+.chit.pick{border:1.5px solid var(--ink)}
+.chit.pick::after{content:"";position:absolute;inset:-7px -6px;border:2.5px solid var(--num);border-radius:50% 46% 52% 44%/60% 50% 56% 48%;transform:rotate(-1.5deg)}
+.chit i{font-style:normal;font-size:12px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);display:block}
+/* team */
+.team{display:flex;gap:10px;align-items:center}
+.team span{width:34px;height:34px;border-radius:50%;margin-left:-14px;border:3px solid var(--paper)}
+.team span:first-child{margin-left:0}
+.team em{font-style:normal;font-size:15px;color:var(--muted);margin-left:8px}
+/* timer */
+.timer{font:400 76px/1 var(--numeral);color:var(--fest)}
+.timer small{font:600 15px var(--text);color:var(--muted);margin-left:8px}
+/* ideas */
+.ideas{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.idea{border:1.5px solid var(--ink);border-radius:8px;padding:9px 10px;background:var(--paper)}
+.idea b{display:block;font-size:16px;line-height:1.15}
+.idea span{display:block;font-size:13px;color:var(--muted);line-height:1.3;margin-top:3px}
+/* trial */
+.trial{display:grid;gap:6px;font-size:14px}
+.trial div{display:grid;grid-template-columns:96px 1fr;align-items:center}
+.trial i{display:inline-block;width:12px;height:12px;border-radius:50%;background:var(--rule);margin-right:5px}
+.trial .win{font-weight:600}
+.trial .win i{background:var(--num)}
+.trial .all i{background:var(--num);width:9px;height:9px;margin-right:3px}
+/* end */
+.cta{display:grid;gap:10px}
+.btn{display:flex;justify-content:center;align-items:center;min-height:48px;border-radius:999px;font:600 16px var(--text);text-decoration:none;cursor:pointer}
+.btn.go{background:var(--ink);color:var(--paper);border:0}
+.btn.plain{background:none;border:0;color:var(--muted);text-decoration:underline;min-height:40px}
+
+/* bottom bar */
+.bar{display:flex;align-items:center;justify-content:space-between;gap:10px;flex:none;
+  padding-block:10px calc(12px + env(safe-area-inset-bottom,0px))}
+.nav{font:600 15px var(--text);min-height:44px;padding:0 18px;border-radius:999px;border:1.5px solid var(--ink);background:var(--paper);color:var(--ink);cursor:pointer}
+.nav.go{background:var(--ink);color:var(--paper)}
+.nav[disabled]{visibility:hidden}
+.nav:focus-visible,.btn:focus-visible,.slide:focus-visible{outline:2px solid var(--num);outline-offset:3px}
+.hint{font-size:13px;color:var(--muted);text-align:center}
+
+@media (prefers-reduced-motion:reduce){.slide.gone{animation:none;visibility:hidden}.slide.back{animation:none}.stubs,.edge{transition:none}}
+</style>
+
+<div class="cal" id="cal">
+  <div class="board">
+    <img src="data:image/png;base64,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" alt="Udyaan">
+    <div><b>Udyaan</b><span>Updated 14-day onboarding plan</span></div>
+  </div>
+  <div class="binding"></div>
+
+  <div class="pad cal-deck" id="pad">
+    <div class="stubs" id="stubs"></div>
+
+    <section class="slide" tabindex="0" aria-label="Cover">
+      <div class="top"><span class="n">14</span><span class="lab">Days</span></div>
+      <h1>What happens in Udyaan's 14 days?</h1>
+      <p>This is the simpler plan, <b>updated after your feedback</b>. Tap the page to tear it off.</p>
+    </section>
+
+    <section class="slide" tabindex="0">
+      <div class="top"><span class="n">0</span><span class="lab">Day</span></div>
+      <h2>We collect each student's details.</h2>
+      <p>Students <b>fill one form</b>. That is all we need.</p>
+    </section>
+
+    <section class="slide" tabindex="0">
+      <div class="top"><span class="n">1–3</span><span class="lab">Days</span></div>
+      <h2>Each student picks a farm problem.</h2>
+      <p>They pick one <b>their subject can solve</b>, from the campus chit sheet.</p>
+      <div class="pic chits">
+        <div class="chit pick"><i>Computer science</i>Spot a sick crop from one photo.</div>
+        <div class="chit"><i>Commerce</i>Tell a farmer the best day to sell.</div>
+        <div class="chit"><i>Science</i>Warn a field before it runs dry.</div>
       </div>
+    </section>
 
-      <div class="step">
-        <div class="day">Days 1–3</div>
-        <div class="title">🔍 Pick a problem</div>
-        <p>From their campus chit sheet.</p>
+    <section class="slide" tabindex="0">
+      <div class="top"><span class="n">4</span><span class="lab">Day</span></div>
+      <h2>We help students form teams.</h2>
+      <p>Each team <b>agrees on one problem</b>.</p>
+      <div class="pic team" aria-hidden="true">
+        <span style="background:var(--num)"></span><span style="background:var(--leaf)"></span><span style="background:var(--fest)"></span><span style="background:var(--ink)"></span>
+        <em>one team, one problem</em>
       </div>
+    </section>
 
-      <div class="step">
-        <div class="day">Day 4</div>
-        <div class="title">👥 Teams form</div>
-        <p>Team built. Problem defined.</p>
+    <section class="slide" tabindex="0">
+      <div class="top"><span class="n">5–8</span><span class="lab">Days</span></div>
+      <h2>Teams build once a mentor says go.</h2>
+      <p>They <b>post updates on the dashboard</b>.</p>
+    </section>
+
+    <section class="slide" tabindex="0">
+      <div class="top"><span class="n">9–10</span><span class="lab">Days</span></div>
+      <h2>A mentor checks the work.</h2>
+      <p>Teams hear <b>what works and what to fix</b>.</p>
+    </section>
+
+    <section class="slide" tabindex="0">
+      <div class="top"><span class="n">11–13</span><span class="lab">Days</span></div>
+      <h2>Teams fix what the mentor flagged.</h2>
+      <p>This is the <b>last stretch before demo day</b>.</p>
+    </section>
+
+    <section class="slide" tabindex="0">
+      <div class="top"><span class="n fest">14</span><span class="lab">Day<small>Demo day</small></span></div>
+      <h2>Each team gives a 3-minute demo.</h2>
+      <p>Then <b>we give awards</b>.</p>
+      <div class="pic timer">3:00<small>per demo</small></div>
+    </section>
+
+    <section class="slide" tabindex="0">
+      <div class="top"><span class="lab">Still open<small>Back of the calendar</small></span></div>
+      <h2>What do students get?</h2>
+      <p><b>We haven't decided yet.</b> These four ideas came from our meeting.</p>
+      <div class="pic ideas">
+        <div class="idea"><b>Awards</b><span>Most of us felt this isn't enough alone.</span></div>
+        <div class="idea"><b>Stipend</b><span>₹2,000–3,000.</span></div>
+        <div class="idea"><b>Profit cut</b><span>A share of what the project earns.</span></div>
+        <div class="idea"><b>Startup funding</b><span>For projects that work.</span></div>
       </div>
+    </section>
 
-      <div class="step">
-        <div class="day">Days 5–8</div>
-        <div class="title">🛠️ Mentor green light, then build</div>
-        <p>Updates go on the dashboard.</p>
+    <section class="slide" tabindex="0">
+      <div class="top"><span class="lab">How we pick</span></div>
+      <h2>We test each idea on 5 students.</h2>
+      <p>The one that works best <b>goes to every student</b>.</p>
+      <div class="pic trial" aria-label="Four ideas, five students each; one works best and goes to everyone">
+        <div><span>Idea 1</span><span><i></i><i></i><i></i><i></i><i></i></span></div>
+        <div><span>Idea 2</span><span><i></i><i></i><i></i><i></i><i></i></span></div>
+        <div class="win"><span>Works best</span><span><i></i><i></i><i></i><i></i><i></i></span></div>
+        <div><span>Idea 4</span><span><i></i><i></i><i></i><i></i><i></i></span></div>
+        <div class="all win"><span>Everyone</span><span><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></span></div>
       </div>
+    </section>
 
-      <div class="step">
-        <div class="day">Days 9–10</div>
-        <div class="title">🗣️ Mentor check</div>
-        <p>Feedback on what works.</p>
+    <section class="slide" tabindex="0">
+      <div class="top"><span class="lab">Your turn</span></div>
+      <h2>Have another idea?</h2>
+      <p><b>Send it to me</b>, and we'll test it with the other four.</p>
+      <div class="pic cta">
+        <a class="btn go" href="https://ayan-banday.github.io/sites/udyaan-14-days/plain/" target="_blank" rel="noopener">See the full plan on one page</a>
+        <button class="btn plain" type="button" id="again">Start again</button>
       </div>
+    </section>
+  </div>
+  <div class="edge" id="edge"></div>
 
-      <div class="step">
-        <div class="day">Days 11–13</div>
-        <div class="title">🔁 Make it better</div>
-        <p>Fix what the mentor flagged.</p>
-      </div>
-
-      <div class="step">
-        <div class="day">Day 14</div>
-        <div class="title">🎤 Demo day</div>
-        <p>3-minute demo. Awards.</p>
-      </div>
-
-    </div>
-  </section>
-
-  <section>
-    <h2>Their department, applied to agriculture</h2>
-    <p class="muted">Each student sees farm problems their own subject can solve. Example: a computer science student.</p>
-
-    <svg class="net" viewBox="0 0 400 250" role="img" aria-label="Agriculture in the middle, linked to Computer science, Commerce, Science and Design">
-      <line x1="200" y1="125" x2="70" y2="55"></line>
-      <line x1="200" y1="125" x2="330" y2="55"></line>
-      <line x1="200" y1="125" x2="70" y2="195"></line>
-      <line x1="200" y1="125" x2="330" y2="195"></line>
-
-      <circle class="center" cx="200" cy="125" r="50"></circle>
-      <text class="center" x="200" y="130">Agriculture</text>
-
-      <circle class="hi" cx="70" cy="55" r="42"></circle>
-      <text class="on" x="70" y="52">Computer</text>
-      <text class="on" x="70" y="68">science</text>
-
-      <circle cx="330" cy="55" r="42"></circle>
-      <text x="330" y="60">Commerce</text>
-
-      <circle cx="70" cy="195" r="42"></circle>
-      <text x="70" y="200">Science</text>
-
-      <circle cx="330" cy="195" r="42"></circle>
-      <text x="330" y="200">Design</text>
-    </svg>
-
-    <p>Then they pick a chit: a real problem to solve.</p>
-    <div class="chit">Spot a sick crop from one photo.</div>
-    <div class="chit">Tell a farmer the best day to sell.</div>
-    <div class="chit">Warn a field before it runs dry.</div>
-  </section>
-
-  <section>
-    <h2>What do students get?</h2>
-    <p class="muted">Ideas from our meeting:</p>
-
-    <div class="grid">
-      <div class="card">
-        <span class="emo">🏅</span>
-        <h3>Awards</h3>
-        <p>Most of us felt this isn't enough alone.</p>
-      </div>
-      <div class="card">
-        <span class="emo">💰</span>
-        <h3>Stipend</h3>
-        <p>₹2,000–3,000.</p>
-      </div>
-      <div class="card">
-        <span class="emo">📈</span>
-        <h3>Profit cut</h3>
-        <p>A share of what the project earns.</p>
-      </div>
-      <div class="card">
-        <span class="emo">🚀</span>
-        <h3>Startup funding</h3>
-        <p>For projects that work.</p>
-      </div>
-    </div>
-
-    <p class="muted">Add your own ideas.</p>
-  </section>
-
-  <section>
-    <h2>How we pick</h2>
-
-    <div class="pick-card">
-      <div class="num">1</div>
-      <h3>5 students try each idea</h3>
-      <div class="row"><span class="lab">Awards</span><span class="dots"><i class="dot"></i><i class="dot"></i><i class="dot"></i><i class="dot"></i><i class="dot"></i></span></div>
-      <div class="row"><span class="lab">Stipend</span><span class="dots"><i class="dot"></i><i class="dot"></i><i class="dot"></i><i class="dot"></i><i class="dot"></i></span></div>
-      <div class="row"><span class="lab">Profit cut</span><span class="dots"><i class="dot"></i><i class="dot"></i><i class="dot"></i><i class="dot"></i><i class="dot"></i></span></div>
-      <div class="row"><span class="lab">Startup funding</span><span class="dots"><i class="dot"></i><i class="dot"></i><i class="dot"></i><i class="dot"></i><i class="dot"></i></span></div>
-    </div>
-
-    <div class="arrow-down">↓</div>
-
-    <div class="pick-card">
-      <div class="num">2</div>
-      <h3>We see what works best</h3>
-      <div class="row"><span class="lab">Awards</span><span class="dots"><i class="dot faded"></i><i class="dot faded"></i><i class="dot faded"></i><i class="dot faded"></i><i class="dot faded"></i></span></div>
-      <div class="row"><span class="lab">Profit cut</span><span class="dots"><i class="dot faded"></i><i class="dot faded"></i><i class="dot faded"></i><i class="dot faded"></i><i class="dot faded"></i></span></div>
-      <div class="row hi"><span class="lab">Works best</span><span class="dots"><i class="dot"></i><i class="dot"></i><i class="dot"></i><i class="dot"></i><i class="dot"></i></span></div>
-    </div>
-
-    <div class="arrow-down">↓</div>
-
-    <div class="pick-card">
-      <div class="num">3</div>
-      <h3>Every student gets it</h3>
-      <div class="dots">
-        <i class="dot"></i><i class="dot"></i><i class="dot"></i><i class="dot"></i><i class="dot"></i><i class="dot"></i><i class="dot"></i><i class="dot"></i><i class="dot"></i><i class="dot"></i>
-        <i class="dot"></i><i class="dot"></i><i class="dot"></i><i class="dot"></i><i class="dot"></i><i class="dot"></i><i class="dot"></i><i class="dot"></i><i class="dot"></i><i class="dot"></i>
-        <i class="dot"></i><i class="dot"></i><i class="dot"></i><i class="dot"></i><i class="dot"></i><i class="dot"></i><i class="dot"></i><i class="dot"></i><i class="dot"></i><i class="dot"></i>
-        <i class="dot"></i><i class="dot"></i><i class="dot"></i><i class="dot"></i><i class="dot"></i><i class="dot"></i><i class="dot"></i><i class="dot"></i><i class="dot"></i><i class="dot"></i>
-      </div>
-    </div>
-  </section>
-
-</main>
-
-<div id="editbar" hidden>
-  <button type="button" class="primary" id="dl">Download HTML</button>
-  <button type="button" id="reset">Reset</button>
+  <div class="bar">
+    <button class="nav" type="button" id="prev" aria-label="Put the last page back">←</button>
+    <span class="hint" id="hint">Tap the page to tear it off</span>
+    <button class="nav go" type="button" id="next">Tear off →</button>
+  </div>
 </div>
 
 <script>
-(function () {
-  var KEY = "udyaan-plan-edit";
-  var main = document.querySelector("main");
-  var bar = document.getElementById("editbar");
-
-  function getSaved() {
-    try { return localStorage.getItem(KEY); } catch (e) { return null; }
-  }
-  function setSaved(v) {
-    try { localStorage.setItem(KEY, v); } catch (e) {}
-  }
-  function clearSaved() {
-    try { localStorage.removeItem(KEY); } catch (e) {}
-  }
-
-  if (location.hash !== "#edit") {
-    return;
-  }
-
-  bar.hidden = false;
-  main.setAttribute("contenteditable", "true");
-
-  var saved = getSaved();
-  if (saved) {
-    main.innerHTML = saved;
-  }
-
-  main.addEventListener("input", function () {
-    setSaved(main.innerHTML);
+(function(){
+  var pages = [].slice.call(document.querySelectorAll('#pad > .slide')), n = pages.length, cur = 0;
+  var stubs = document.getElementById('stubs'), edge = document.getElementById('edge');
+  // The first page sits on top; later pages sit under it.
+  pages.forEach(function(p, i){ p.style.zIndex = n - i; });
+  // Each page ends with the next page's question, so the reader wants to tear.
+  pages.forEach(function(p, i){
+    if (i >= n - 1) return;
+    var q = pages[i + 1].querySelector('h2'), line = document.createElement('p');
+    line.className = 'nextline';
+    line.innerHTML = 'Next page: <b></b>';
+    line.querySelector('b').textContent = q.textContent;
+    p.appendChild(line);
   });
 
-  document.getElementById("dl").addEventListener("click", function () {
-    var clone = document.documentElement.cloneNode(true);
-    var m = clone.querySelector("main");
-    if (m) m.removeAttribute("contenteditable");
-    var b = clone.querySelector("#editbar");
-    if (b) b.parentNode.removeChild(b);
-    var html = "<!doctype html>\n" + clone.outerHTML;
-    var blob = new Blob([html], { type: "text/html" });
-    var url = URL.createObjectURL(blob);
-    var a = document.createElement("a");
-    a.href = url;
-    a.download = "index.html";
-    document.body.appendChild(a);
-    a.click();
-    setTimeout(function () {
-      URL.revokeObjectURL(url);
-      a.parentNode.removeChild(a);
-    }, 0);
-  });
+  function paint(){
+    stubs.style.height = cur ? (6 + cur * 3) + 'px' : '0px';
+    edge.style.setProperty('--left', ((n - 1 - cur) * 3) + 'px');
+    document.getElementById('prev').disabled = cur === 0;
+    document.getElementById('next').disabled = cur === n - 1;
+    document.getElementById('hint').textContent = cur === 0 ? 'Tap the page to tear it off' : '';
+  }
+  function tear(){
+    if (cur >= n - 1) return;
+    var p = pages[cur];
+    p.classList.remove('back'); p.classList.add('gone');
+    setTimeout(function(){ if (p.classList.contains('gone')) p.classList.add('off'); }, 620);
+    cur++; paint(); pages[cur].focus({preventScroll:true});
+  }
+  function back(){
+    if (cur === 0) return;
+    cur--; var p = pages[cur];
+    p.classList.remove('gone', 'off'); void p.offsetWidth; p.classList.add('back'); paint();
+  }
+  window.__go = function(i){
+    cur = i;
+    pages.forEach(function(p, k){ p.classList.remove('back'); p.classList.toggle('gone', k < i); p.classList.toggle('off', k < i); });
+    paint();
+  };
 
-  document.getElementById("reset").addEventListener("click", function () {
-    clearSaved();
-    location.reload();
+  // Tap or swipe the page to tear; links and buttons on the page work as normal.
+  var x0 = 0, y0 = 0;
+  pages.forEach(function(p){
+    p.addEventListener('pointerdown', function(e){ x0 = e.clientX; y0 = e.clientY; });
+    p.addEventListener('click', function(e){
+      if (e.target.closest('a,button')) return;
+      var dx = e.clientX - x0;
+      if (dx > 40) back(); else tear();
+    });
+    p.addEventListener('keydown', function(e){ if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); tear(); } });
   });
+  document.getElementById('next').addEventListener('click', tear);
+  document.getElementById('prev').addEventListener('click', back);
+  document.getElementById('again').addEventListener('click', function(){ window.__go(0); });
+  addEventListener('keydown', function(e){ if (e.key === 'ArrowRight') tear(); if (e.key === 'ArrowLeft') back(); });
+  paint();
 })();
 </script>
-</body>
-</html>
+
