@@ -1,0 +1,798 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cpath d='M0 15 6 4l3 5 2-3 5 9z' fill='%232b2722'/%3E%3C/svg%3E">
+<style>
+:root{color-scheme:light;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+body{margin:0;font:14px/1.4 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif}
+img{max-width:100%}
+[hidden]{display:none!important}
+</style>
+<!-- exception 1 · rubric screens run over 80 words on the laptop · Ash asked for the rubric mapping in detail there; the phone cut is short -->
+<!-- exception 2 · week colour and chalk classes shared across sections · one meaning each, everywhere, as in the course itself -->
+<title>Udyaan Course Update</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Kalam:wght@400;700&family=Mrs+Saint+Delafield&family=Atkinson+Hyperlegible:wght@400;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  color-scheme: dark;
+  --ground:#3A2B22; --ground-2:#4A382C; --paper:#F3EDE4; --dim:#D3C8BB; --marker:#F2C94C; --ink:#2A1E17;
+  --tint-1:#E6C0AB; --tint-2:#EBC2C6; --tint-3:#C6CFDA; --tint-4:#D2CBE0; --tint-5:#C9D8BF; --tint-6:#BFD8D6;
+}
+/* The page is always chalk on wood, the course's own look, so light and dark are the same board. */
+:root[data-theme="light"],:root[data-theme="dark"]{color-scheme:dark}
+@media (prefers-color-scheme: light){ :root:not([data-theme="dark"]){color-scheme:dark} }
+[hidden]{display:none !important}
+*{box-sizing:border-box}
+html{background:var(--ground);-webkit-text-size-adjust:100%}
+body{margin:0;background:var(--ground);color:var(--paper);font-family:"Atkinson Hyperlegible",system-ui,sans-serif;font-size:18px;line-height:1.55;overflow-x:hidden}
+h1,h2,h3{font-family:Kalam,cursive;font-weight:700;line-height:1.15;margin:0 0 .35em;text-wrap:balance}
+p{margin:0 0 .75em;max-width:60ch}
+a{color:var(--paper)}
+strong{font-weight:700}
+mark{background:none;color:var(--marker);font-weight:700}
+.dim{color:var(--dim)}
+.sig{font-family:"Mrs Saint Delafield","Kalam",cursive;font-weight:400;line-height:.9;margin:4px 0 0;display:inline-flex;flex-direction:column;color:var(--paper)}
+.sig svg{width:120px;height:auto;margin:-6px 0 0 18px}
+.small{font-size:15px;color:var(--dim)}
+.btn{display:inline-block;background:var(--marker);color:var(--ink);font:700 18px "Atkinson Hyperlegible",sans-serif;padding:13px 24px;border-radius:999px;text-decoration:none;border:0;cursor:pointer;line-height:1.2}
+.btn:focus-visible,.tg button:focus-visible,.ph-dot:focus-visible,a:focus-visible{outline:3px solid var(--paper);outline-offset:3px}
+.ch{fill:none;stroke:var(--paper);stroke-width:2.4;stroke-linecap:round;stroke-linejoin:round}
+.ch.thin{stroke-width:1.6}
+.ch.dash{stroke-dasharray:6 7;stroke:var(--dim)}
+svg text{font-family:Kalam,cursive;fill:var(--paper)}
+svg .lab{font-size:17px}
+svg .lab-s{font-size:15px;fill:var(--dim)}
+.wc1{stroke:var(--tint-1)} .wc2{stroke:var(--tint-2)} .wc3{stroke:var(--tint-3)} .wc4{stroke:var(--tint-4)} .wc5{stroke:var(--tint-5)} .wc6{stroke:var(--tint-6)}
+.wf1{fill:var(--tint-1)} .wf2{fill:var(--tint-2)} .wf3{fill:var(--tint-3)} .wf4{fill:var(--tint-4)} .wf5{fill:var(--tint-5)} .wf6{fill:var(--tint-6)}
+svg text.wf1,svg text.wf2,svg text.wf3,svg text.wf4,svg text.wf5,svg text.wf6{font-weight:700}
+.wk1{--wk:var(--tint-1)} .wk2{--wk:var(--tint-2)} .wk3{--wk:var(--tint-3)} .wk4{--wk:var(--tint-4)} .wk5{--wk:var(--tint-5)} .wk6{--wk:var(--tint-6)}
+
+/* Phone or laptop toggle */
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:21;background:var(--ground)}
+.tg-bar{position:sticky;top:env(safe-area-inset-top,0px);z-index:20;background:var(--ground);padding:10px 16px;display:flex;justify-content:center;border-bottom:2px dashed rgba(243,237,228,.18)}
+.tg{display:inline-flex;border:2px dashed var(--paper);border-radius:999px;padding:3px}
+.tg button{font:700 16px "Atkinson Hyperlegible",sans-serif;color:var(--paper);background:none;border:0;border-radius:999px;padding:9px 22px;min-height:44px;cursor:pointer}
+.tg button[aria-pressed="true"]{background:var(--paper);color:var(--ground)}
+
+/* draw-on: lines draw like chalk, once */
+.js .drawon .ch{stroke-dasharray:1;stroke-dashoffset:1;animation:draw 1.6s ease-out forwards}
+.js .drawon .ch.dash{stroke-dasharray:6 7;stroke-dashoffset:0;animation:none}
+.js .drawon text{opacity:0;animation:fade .6s ease-out 1.2s forwards}
+@keyframes draw{to{stroke-dashoffset:0}}
+@keyframes fade{to{opacity:1}}
+.final .drawon .ch,.final .drawon text{animation:none !important;stroke-dashoffset:0 !important;opacity:1 !important}
+@media (prefers-reduced-motion: reduce){ .js .drawon .ch,.js .drawon text{animation:none;stroke-dashoffset:0;opacity:1} }
+</style>
+
+<div class="tg-bar"><div class="tg" role="group" aria-label="Choose a version">
+  <button type="button" data-v="phone" aria-pressed="false">Phone</button>
+  <button type="button" data-v="laptop" aria-pressed="false">Laptop</button>
+</div></div>
+
+<style>
+#phone{padding:14px 0 28px}
+.ph-track{display:flex;gap:12px;overflow-x:auto;scroll-snap-type:x mandatory;-webkit-overflow-scrolling:touch;scrollbar-width:none;padding:0 16px;scroll-padding:0 16px}
+.ph-track::-webkit-scrollbar{display:none}
+.ph-card{flex:0 0 calc(100% - 8px);max-width:460px;scroll-snap-align:start;min-height:min(68vh,560px);display:flex;flex-direction:column;justify-content:center;gap:14px;background:var(--ground-2);border:2px dashed rgba(243,237,228,.38);border-radius:18px;padding:24px 20px}
+.ph-card h2{font-size:30px;margin:0}
+.ph-card p{font-size:19px;margin:0;max-width:none}
+.ph-card svg{width:100%;height:auto;display:block}
+.ph-card svg .lab{font-size:26px} .ph-card svg .lab-s{font-size:22px} .ph-card svg .who{display:none}
+.ph-card a,.ph-code{white-space:nowrap}
+.ph-card .btn{align-self:flex-start}
+.ph-weeks{list-style:none;margin:0;padding:0 0 0 30px;position:relative;display:grid;gap:9px}
+.ph-weeks::before{content:"";position:absolute;left:10px;top:8px;bottom:8px;border-left:2px dashed rgba(243,237,228,.5)}
+.ph-weeks li{position:relative;font-size:18px;line-height:1.3}
+.ph-weeks li::before{content:"";position:absolute;left:-26px;top:4px;width:14px;height:14px;border-radius:50%;background:var(--wk)}
+.ph-weeks b{font-family:Kalam,cursive;font-size:17px;color:var(--wk);margin-right:6px}
+.ph-pts{list-style:none;margin:0;padding:0;display:grid;gap:10px}
+.ph-pts li{border:2px dashed var(--paper);border-radius:14px;padding:10px 14px;font-size:18px;line-height:1.35}
+.ph-pts li:nth-child(odd){transform:rotate(-.6deg)} .ph-pts li:nth-child(even){transform:rotate(.5deg)}
+.ph-quote{font-family:Kalam,cursive;font-size:21px;line-height:1.3;border-left:3px solid var(--tint-3);padding-left:12px}
+.ph-tick{font-family:Kalam,cursive;font-size:19px}
+.ph-tick span{display:block}
+.ph-link{font:700 16px "Atkinson Hyperlegible",sans-serif;border:2px dashed var(--paper);border-radius:10px;padding:10px 12px;overflow-wrap:anywhere;user-select:all;-webkit-user-select:all}
+.ph-here{background:none;border:0;color:var(--paper);font:16px "Atkinson Hyperlegible",sans-serif;text-decoration:underline;padding:8px 0;min-height:44px;cursor:pointer;align-self:flex-start}
+.ph-card .sig{font-size:58px;align-self:flex-start}
+.ph-card .sig svg{width:120px}
+.ph-code{font:700 20px "Atkinson Hyperlegible",sans-serif;letter-spacing:.04em;border:2px dashed var(--marker);border-radius:8px;padding:2px 8px;color:var(--paper)}
+.ph-nav{display:flex;align-items:center;justify-content:center;gap:6px;margin-top:14px;padding:0 16px}
+.ph-arrow{font:700 22px "Atkinson Hyperlegible",sans-serif;color:var(--paper);background:none;border:2px dashed rgba(243,237,228,.6);border-radius:999px;width:44px;height:44px;cursor:pointer}
+.ph-arrow:disabled{opacity:.3;cursor:default}
+.ph-dot{width:30px;height:44px;background:none;border:0;padding:0;position:relative;cursor:pointer}
+.ph-dot::before{content:"";position:absolute;left:8px;top:15px;width:14px;height:14px;border-radius:50%;border:2px solid var(--paper)}
+.ph-dot[aria-current="true"]::before{background:var(--paper)}
+@media (min-width:600px){ .ph-track{max-width:520px;margin:0 auto} .ph-nav{max-width:520px;margin:14px auto 0} }
+</style>
+
+<div id="phone" hidden>
+  <div class="ph-track" id="ph-track" tabindex="0" aria-label="Six cards. Swipe or use the arrows.">
+    <article class="ph-card" aria-label="Card 1 of 6">
+      <h2>The Udyaan course is ready for you to try.</h2>
+      <p>All 35 days are built, and <strong>your rubric points are built into every day.</strong></p>
+      <p class="small">This is the third draft. I'm still improving it.</p>
+    </article>
+
+    <article class="ph-card" aria-label="Card 2 of 6">
+      <h2>Every student solves one real problem.</h2>
+      <div data-scene="0" data-label="Shivanna walking to his pump at 2 a.m. with a torch"></div>
+      <p>Gia's uncle walks to his pump at <strong>2&nbsp;a.m.</strong> with a torch. If he sleeps instead, weak power can burn the motor.</p>
+    </article>
+
+    <article class="ph-card" aria-label="Card 3 of 6">
+      <h2>In six weeks, Gia solves it.</h2>
+      <ol class="ph-weeks">
+        <li class="wk1"><b>1</b>Defines the problem</li>
+        <li class="wk2"><b>2</b>Asks the market, cheaply, online</li>
+        <li class="wk3"><b>3</b>Collects evidence from real people</li>
+        <li class="wk4"><b>4</b>Validates the problem with them</li>
+        <li class="wk5"><b>5</b>Builds a business that can run</li>
+        <li class="wk6"><b>6</b>Gets a mentor, and grows</li>
+      </ol>
+      <p class="small">Gia is our example student. The crisis she takes on is real: power that comes only at night, and pump motors that burn.</p>
+    </article>
+
+    <article class="ph-card" aria-label="Card 4 of 6">
+      <h2>How we built your rubric points in.</h2>
+      <ul class="ph-pts">
+        <li>Every day names the skills it trains.</li>
+        <li>Every day has a learning mode, and field time grows each week.</li>
+        <li>Grit is read from what students do.</li>
+        <li><mark>Showing up earns no marks.</mark></li>
+      </ul>
+    </article>
+
+    <article class="ph-card" aria-label="Card 5 of 6">
+      <h2>The AI helps, and it can't fake evidence.</h2>
+      <p>A quote gets a tick only if it's <strong>found word for word</strong> in what the student pasted.</p>
+      <p class="ph-tick"><span>✓ in her paste: the quote counts</span><span class="dim">✗ not in her paste: no tick, no points</span></p>
+    </article>
+
+    <article class="ph-card" aria-label="Card 6 of 6">
+      <h2>Open it on your laptop to see the report.</h2>
+      <p>The full report, with the course to try, is at this link:</p>
+      <p class="ph-link" id="ph-link">https://ayan-banday.github.io/sites/udyaan-course-update/</p>
+      <button class="btn" type="button" id="ph-copy">Copy the link</button>
+      <p class="small" id="ph-copied" aria-live="polite">Paste it into WhatsApp Web or an email to yourself, and open it on your laptop.</p>
+      <button class="ph-here" type="button" data-to-laptop>Or read it here on your phone</button>
+      <p class="sig" aria-label="Signed, Ayan">Ayan<svg viewBox="0 0 120 18" aria-hidden="true"><path class="ch" d="M2 10 Q30 2 58 9 T118 6"/></svg></p>
+    </article>
+  </div>
+  <div class="ph-nav">
+    <button class="ph-arrow" type="button" id="ph-prev" aria-label="Previous card">&#8249;</button>
+    <button class="ph-dot" type="button" aria-label="Card 1"></button>
+    <button class="ph-dot" type="button" aria-label="Card 2"></button>
+    <button class="ph-dot" type="button" aria-label="Card 3"></button>
+    <button class="ph-dot" type="button" aria-label="Card 4"></button>
+    <button class="ph-dot" type="button" aria-label="Card 5"></button>
+    <button class="ph-dot" type="button" aria-label="Card 6"></button>
+    <button class="ph-arrow" type="button" id="ph-next" aria-label="Next card">&#8250;</button>
+  </div>
+</div>
+
+<style>
+main#laptop{max-width:1140px;margin:0 auto;padding-left:max(16px, env(safe-area-inset-left,0px));padding-right:max(16px, env(safe-area-inset-right,0px));padding-block:0 64px}
+main#laptop > section{scroll-margin-top:72px;padding:56px 0;border-top:2px dashed rgba(243,237,228,.2)}
+main#laptop h2{font-size:clamp(30px,4vw,44px)}
+.lead{color:var(--dim);font-size:19px;max-width:62ch}
+#hero{border-top:0 !important;min-height:calc(100vh - 70px);display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.05fr);gap:40px;align-items:center;padding:24px 0 40px !important}
+#hero h1{font-size:clamp(38px,5.4vw,64px);margin-bottom:.3em}
+#hero .hr-sub{font-size:21px;max-width:44ch}
+#hero .hr-quiet{font-size:16px;color:var(--dim);margin-top:18px}
+#hero .hr-draw svg{width:100%;height:auto;display:block}
+#hero .hr-cap{font-family:Kalam,cursive;font-size:18px;color:var(--dim);margin:6px 0 0;max-width:none}
+@media (max-width:860px){
+  #hero{grid-template-columns:1fr;min-height:0;gap:20px;padding-top:28px !important}
+  #hero .hr-draw{order:2}
+}
+</style>
+
+<main id="laptop" hidden>
+<section id="hero">
+  <div>
+    <h1>The Udyaan course is ready for you to try.</h1>
+    <p class="hr-sub">All 35 days are built, and <mark>your rubric points are built into every day.</mark> This page shows one student's six weeks, then how we built your points in.</p>
+    <a class="btn" href="#try">Try it as a student</a>
+    <p class="hr-quiet">This is the third draft. I'm still improving it.</p>
+  </div>
+  <figure class="hr-draw" style="margin:0">
+    <div data-scene="0" data-draw data-label="Shivanna walking to his pump at 2 a.m. with a torch"></div>
+    <figcaption class="hr-cap">The problem one student takes on: her uncle's walk to the pump at 2&nbsp;a.m.</figcaption>
+  </figure>
+</section>
+
+<style>
+#story .st-open{display:grid;grid-template-columns:minmax(0,1.1fr) minmax(0,.9fr);gap:36px;align-items:end;margin-bottom:28px}
+#story .st-open p{font-size:20px}
+#story .st-note{font-size:15px;color:var(--dim);border-top:1px dashed rgba(243,237,228,.3);padding-top:10px}
+.st-grid{display:grid;grid-template-columns:minmax(0,.9fr) minmax(0,1.1fr);gap:44px}
+.st-steps{padding:4vh 0 20vh}
+.st-step{min-height:62vh;display:flex;flex-direction:column;justify-content:center;padding-left:22px;border-left:4px solid rgba(243,237,228,.14);transition:border-color .3s}
+.st-step.on{border-left-color:var(--wk)}
+.st-step .st-wk{font:700 18px Kalam,cursive;color:var(--wk);margin:0 0 2px}
+.st-step h3{font-size:clamp(26px,2.8vw,34px);margin:0 0 .35em}
+.st-step p{font-size:18px}
+.st-step .st-proof{font-size:15px;color:var(--dim);margin:4px 0 0}
+.st-step .st-proof b{color:var(--paper)}
+.st-step q{font-family:Kalam,cursive;font-size:21px;quotes:"\201C" "\201D"}
+.st-mini{display:none}
+.st-pin{position:sticky;top:84px;height:calc(100vh - 110px);display:flex;flex-direction:column;justify-content:center}
+.st-pin .st-lbl{font:700 20px Kalam,cursive;color:var(--dim);margin:0 0 6px}
+#st-stage svg{width:100%;height:auto;display:block}
+#st-stage.swap svg{animation:fade-in .5s ease-out}
+@keyframes fade-in{from{opacity:.25}to{opacity:1}}
+.st-end{font-size:20px;max-width:60ch;margin-top:8px}
+@media (max-width:860px){
+  #story .st-open,.st-grid{grid-template-columns:1fr;gap:16px}
+  .st-pin{display:none}
+  .st-steps{padding:0}
+  .st-step{min-height:0;padding:22px 0 22px 18px;border-left-color:var(--wk)}
+  .st-mini{display:block;margin-top:10px;max-width:520px}
+  .st-mini svg{width:100%;height:auto;display:block}
+}
+</style>
+
+<section id="story">
+  <div class="st-open">
+    <div>
+      <h2>This is what the course looks like for a student.</h2>
+      <p>Gia is a second-year BCA student at Jain. Her uncle Shivanna grows vegetables on four acres near Kunigal.</p>
+      <p>The power for his pump comes at night, so at <strong>2&nbsp;a.m.</strong> he walks to the field with a torch to switch it on. If he sleeps instead, weak power can burn the motor.</p>
+    </div>
+    <p class="st-note">Gia is our example student. The crisis she takes on is real: farm power that comes only at night, and pump motors that burn. The prices are real too.</p>
+  </div>
+
+  <div class="st-grid">
+    <div class="st-steps">
+      <article class="st-step wk1" data-wk="1">
+        <p class="st-wk">Week 1: First Offer</p>
+        <h3>She defines the problem.</h3>
+        <p>She names the problem in one sentence and writes a first offer from her own research, marking what she still has to check. Gia's: her uncle's night walk, solved with <strong>a box on the pump's switch and an app,</strong> Rs 4,000 plus Rs 100 a month.</p>
+        <p class="st-proof">She ends the week with <b>Offer v1</b>.</p>
+        <div class="st-mini" data-scene="1" data-label="Week 1: a box and an app, a guess"></div>
+      </article>
+      <article class="st-step wk2" data-wk="2">
+        <p class="st-wk">Week 2: Ask the Market</p>
+        <h3>She asks the market, cheaply, online.</h3>
+        <p>Before spending money on trips to farms, she listens to farmers on YouTube, in the news and on social media. Gia finds <strong>burnt motors come up as often as night walks,</strong> and a switch that protects the motor already sells from ₹400.</p>
+        <p class="st-proof">She ends the week with <b>Offer v2 and a list of people to reach</b>.</p>
+        <div class="st-mini" data-scene="2" data-label="Week 2: burnt motors"></div>
+      </article>
+      <article class="st-step wk3" data-wk="3">
+        <p class="st-wk">Week 3: Reach Out</p>
+        <h3>She collects evidence from real people.</h3>
+        <p>She sends five requests a day and has her first real calls. Gia learns a farmer either walks out at 2&nbsp;a.m., or <strong>sleeps and risks the motor.</strong> Her mentor Varun tells her why the cheap switch hasn't spread: <q>If the mechanic doesn't fit it, the farmer won't buy it.</q></p>
+        <p class="st-proof">She ends the week with <b>Offer v3</b>, fitted by the mechanic farmers trust.</p>
+        <div class="st-mini" data-scene="3" data-label="Week 3: walk and lose sleep, or sleep and risk the motor"></div>
+      </article>
+      <article class="st-step wk4" data-wk="4">
+        <p class="st-wk">Week 4: Validate</p>
+        <h3>She validates the problem.</h3>
+        <p>Validating means checking the problem with the people who live it, until they say "yes, exactly".</p>
+        <p>Gia goes back to the people she reached in Week 3: Ramesh, Krishnappa and Raju, the mechanic. Together they find the one cause: at night <strong>nobody can see the pump when the power turns weak.</strong> Ramesh reads her problem document: <q>Yes, this is exactly what happens.</q></p>
+        <p class="st-proof">She ends the week with <b>a problem document a farmer agreed with</b>.</p>
+        <div class="st-mini" data-scene="4" data-label="Week 4: weak power nobody sees"></div>
+      </article>
+      <article class="st-step wk5" data-wk="5">
+        <p class="st-wk">Week 5: Business Model</p>
+        <h3>She builds a business that can actually run.</h3>
+        <p>It has to be feasible (someone can build and fit it) and viable (it pays). Gia's: a switch that <strong>turns the pump off when the power turns weak,</strong> fitted by Raju. A pilot on three farms, free for a season, then about 10% of the repair money it saves.</p>
+        <p class="st-proof">She ends the week with <b>her business on one page and Offer v4</b>.</p>
+        <div class="st-mini" data-scene="5" data-label="Week 5: a switch fitted by Raju"></div>
+      </article>
+      <article class="st-step wk6" data-wk="6">
+        <p class="st-wk">Week 6: Next Steps</p>
+        <h3>How do we support her so she grows?</h3>
+        <p>Udyaan gives her a mentor and shows her where to find help.</p>
+        <p>Her mentor Varun asks what happens if the switch cuts the pump wrongly at 2&nbsp;a.m. So her first build <strong>only messages her uncle when the power turns weak.</strong> Raju fits it, and a licensed electrician checks the wiring.</p>
+        <p class="st-proof">She ends the course with <b>a project file, her next task, and a mentor</b>.</p>
+        <div class="st-mini" data-scene="6" data-label="Week 6: a message to her uncle when the power turns weak"></div>
+      </article>
+    </div>
+    <div class="st-pin" aria-hidden="false">
+      <p class="st-lbl" id="st-stage-wk">The problem</p>
+      <div id="st-stage" aria-live="off"></div>
+    </div>
+  </div>
+  <p class="st-end">Every week of the course moves her one step on the same problem. Her uncle now gets a message from his pump instead of guessing in the dark.</p>
+</section>
+
+<style>
+#rubric .rb-head{max-width:760px}
+.rb-scale{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:40px;margin:30px 0 20px;align-items:start}
+.rb-scale h3,.rb-pt h3{font-size:clamp(24px,2.4vw,30px)}
+.rb-ruler{width:100%;height:auto;display:block;margin-top:6px}
+.rb-skills{display:grid;gap:14px;margin:0;padding:0;list-style:none}
+.rb-skills li{display:grid;grid-template-columns:44px minmax(0,1fr);gap:12px;align-items:start}
+.rb-skills svg{width:44px;height:44px}
+.rb-skills b{font-family:Kalam,cursive;font-size:22px;display:block;line-height:1.15}
+.rb-skills span{font-size:16px;color:var(--dim)}
+
+.rb-pt{display:grid;grid-template-columns:minmax(0,.62fr) minmax(0,1.38fr);gap:36px;padding:44px 0;border-top:2px dashed rgba(243,237,228,.14)}
+.rb-ask{position:sticky;top:90px;align-self:start}
+.rb-ask .rb-n{display:inline-grid;place-items:center;width:44px;height:44px;border:2px solid var(--paper);border-radius:50%;font:700 22px Kalam,cursive;margin-bottom:10px}
+.rb-ask blockquote{margin:0;font-family:Kalam,cursive;font-size:24px;line-height:1.3;border:2px dashed var(--paper);border-radius:16px;padding:16px 18px;transform:rotate(-.6deg)}
+.rb-ask .rb-who{font-size:15px;color:var(--dim);margin-top:8px}
+.rb-ans p{max-width:58ch}
+
+.rb-day{margin-top:18px;background:var(--ground-2);border-left:8px solid var(--wk);border-radius:6px 14px 14px 6px;padding:16px 20px}
+.rb-day .rb-dn{font:700 16px Kalam,cursive;color:var(--wk);margin:0}
+.rb-day h4{font:700 23px/1.25 Kalam,cursive;margin:2px 0 10px}
+.rb-day p{font-size:17px;margin:0 0 8px;max-width:none}
+.rb-day q{font-family:Kalam,cursive;font-size:19px}
+.rb-tags{display:flex;flex-wrap:wrap;gap:8px;margin-top:6px}
+.rb-tags span{border:1.5px solid var(--paper);border-radius:999px;padding:2px 12px;font-size:15px}
+.rb-ae{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:6px}
+.rb-ae > div{border-top:2px solid var(--dim);padding-top:8px}
+.rb-ae > div.ex{border-top-color:var(--paper)}
+.rb-ae b{font-family:Kalam,cursive;font-size:20px;display:block}
+.rb-ae p{font-size:16px}
+
+.rb-dots{display:grid;grid-template-columns:minmax(84px,auto) repeat(6,minmax(0,1fr));gap:4px;margin-top:14px;max-width:560px}
+.rb-dots .wh{font:700 14px "Atkinson Hyperlegible",sans-serif;text-align:center;color:var(--ink);border-radius:6px;padding:3px 0;background:var(--wk)}
+.rb-dots .rl{font-family:Kalam,cursive;font-size:18px;align-self:center}
+.rb-dots > i{display:grid;place-items:center;height:30px}
+.rb-dots > i::before{content:"";width:var(--sz,0);height:var(--sz,0);border-radius:50%;background:var(--paper)}
+.rb-dots .s0::before{--sz:7px;background:none;box-shadow:inset 0 0 0 1.5px var(--dim)}
+.rb-dots .s1{--sz:9px} .rb-dots .s2{--sz:15px} .rb-dots .s3{--sz:21px}
+
+.rb-modes{display:grid;gap:0;margin-top:16px}
+.rb-mode{display:grid;grid-template-columns:150px minmax(0,1fr) minmax(0,1.25fr);gap:16px;align-items:center;padding:12px 0;border-bottom:1px dashed rgba(243,237,228,.25)}
+.rb-mode b{font-family:Kalam,cursive;font-size:22px}
+.rb-flow{display:flex;flex-wrap:wrap;align-items:center;gap:4px 6px;font-size:15px}
+.rb-flow span{border:1.5px solid var(--dim);border-radius:8px;padding:1px 8px}
+.rb-flow i{font-style:normal;color:var(--dim)}
+.rb-mode p{font-size:16px;margin:0}
+.rb-mode p .dn{font-family:Kalam,cursive;font-size:17px;color:var(--wk);font-weight:700}
+.rb-stair{width:100%;max-width:700px;height:auto;display:block;margin-top:22px}
+
+.rb-streak{width:100%;max-width:560px;height:auto;display:block;margin-top:12px}
+.rb-ladder{width:100%;max-width:700px;height:auto;display:block;margin-top:12px}
+@media (max-width:860px){
+  .rb-scale,.rb-pt{grid-template-columns:1fr;gap:18px}
+  .rb-ask{position:static}
+  .rb-mode{grid-template-columns:1fr;gap:4px}
+  .rb-ae{grid-template-columns:1fr}
+}
+</style>
+
+<section id="rubric">
+  <div class="rb-head">
+    <h2>How we built your rubric points into the course</h2>
+    <p class="lead">We started from your points and shaped every day around them. First, the rubric that came out of them. Then each point, and a real day that shows it at work.</p>
+  </div>
+
+  <div class="rb-scale">
+    <div>
+      <h3>Your points became five scored skills.</h3>
+      <p>Each skill is scored from 1 to 10, on five levels. <strong>A student who only turns up stops at 4.</strong></p>
+      <svg class="rb-ruler" viewBox="0 0 520 210" role="img" aria-label="The five levels: 1 to 2 Missing, 3 to 4 Attended, 5 to 6 Applied, 7 to 8 Excelled, 9 to 10 Excelled and acted. Attendance stops earning marks after 4.">
+        <path class="ch" d="M10 150 H510"/>
+        <path class="ch thin" d="M10 140 V160 M110 140 V160 M210 140 V160 M310 140 V160 M410 140 V160 M510 140 V160"/>
+        <text class="lab" x="60" y="128" text-anchor="middle">1-2</text><text class="lab" x="160" y="128" text-anchor="middle">3-4</text>
+        <text class="lab" x="260" y="128" text-anchor="middle">5-6</text><text class="lab" x="360" y="128" text-anchor="middle">7-8</text><text class="lab" x="460" y="128" text-anchor="middle">9-10</text>
+        <text class="lab" x="60" y="186" text-anchor="middle">Missing</text><text class="lab" x="160" y="186" text-anchor="middle">Attended</text>
+        <text class="lab" x="260" y="186" text-anchor="middle">Applied</text><text class="lab" x="360" y="186" text-anchor="middle">Excelled</text>
+        <text class="lab" x="460" y="186" text-anchor="middle">Excelled</text><text class="lab" x="460" y="205" text-anchor="middle">and acted</text>
+        <path d="M210 30 V196" stroke="var(--marker)" stroke-width="3" stroke-dasharray="9 7" stroke-linecap="round" fill="none"/>
+        <text x="218" y="44" font-size="19" style="fill:var(--marker)">attendance stops here</text>
+        <path class="ch thin" d="M200 66 H70 M78 58 L70 66 L78 74"/><text class="lab-s" x="40" y="94">turning up alone</text>
+        <path class="ch thin" d="M220 66 H440 M432 58 L440 66 L432 74"/><text class="lab-s" x="226" y="94">marks for real work</text>
+      </svg>
+    </div>
+    <ul class="rb-skills">
+      <li><svg viewBox="0 0 44 44" aria-hidden="true"><circle class="ch" cx="19" cy="19" r="11"/><path class="ch" d="M27 27 L38 38"/></svg><div><b>Problem Finding</b><span>names the problem in one sentence.</span></div></li>
+      <li><svg viewBox="0 0 44 44" aria-hidden="true"><path class="ch" d="M8 10 h28 v20 h-16 l-8 7 v-7 h-4 Z"/><path class="ch thin" d="M14 18 h16 M14 23 h10"/></svg><div><b>Evidence Seeking</b><span>tells Known from Guess, with real quotes.</span></div></li>
+      <li><svg viewBox="0 0 44 44" aria-hidden="true"><circle class="ch" cx="22" cy="22" r="15"/><path class="ch thin" d="M15 14 H29 M15 19 H29 M16 14 Q27 14 26 20 Q24 25 16 25 L27 32"/></svg><div><b>Business Model Sense</b><span>puts a number and a payer on the price.</span></div></li>
+      <li><svg viewBox="0 0 44 44" aria-hidden="true"><path class="ch" d="M6 30 L38 14 L30 38 L22 26 Z M22 26 L38 14"/></svg><div><b>Communicating and Asking</b><span>says the offer in the customer's words.</span></div></li>
+      <li><svg viewBox="0 0 44 44" aria-hidden="true"><path class="ch" d="M6 36 L16 24 L24 30 L38 10 M30 10 H38 V18"/></svg><div><b>Agency</b><span>starts unchased, and comes back after a miss.</span></div></li>
+    </ul>
+  </div>
+
+  <!-- Point 1 -->
+  <div class="rb-pt">
+    <div class="rb-ask"><span class="rb-n">1</span><blockquote>"Name the competencies each learning experience builds."</blockquote><p class="rb-who">Your point</p></div>
+    <div class="rb-ans">
+      <h3>Every day names the skills it trains.</h3>
+      <p>Each lesson opens by saying its skill in one line. Across the six weeks, every skill is trained, each week leaning a different way.</p>
+      <div class="rb-dots" role="img" aria-label="How strongly each week trains each skill, from 0 to 3. Problem: 3,2,2,3,1,1. Evidence: 2,3,2,3,2,1. Model: 1,1,0,1,3,1. Asking: 2,2,3,3,3,3. Agency: 1,2,3,3,2,3.">
+        <span></span><span class="wh wk1">W1</span><span class="wh wk2">W2</span><span class="wh wk3">W3</span><span class="wh wk4">W4</span><span class="wh wk5">W5</span><span class="wh wk6">W6</span>
+        <span class="rl">Problem</span><i class="s3"></i><i class="s2"></i><i class="s2"></i><i class="s3"></i><i class="s1"></i><i class="s1"></i>
+        <span class="rl">Evidence</span><i class="s2"></i><i class="s3"></i><i class="s2"></i><i class="s3"></i><i class="s2"></i><i class="s1"></i>
+        <span class="rl">Model</span><i class="s1"></i><i class="s1"></i><i class="s0"></i><i class="s1"></i><i class="s3"></i><i class="s1"></i>
+        <span class="rl">Asking</span><i class="s2"></i><i class="s2"></i><i class="s3"></i><i class="s3"></i><i class="s3"></i><i class="s3"></i>
+        <span class="rl">Agency</span><i class="s1"></i><i class="s2"></i><i class="s3"></i><i class="s3"></i><i class="s2"></i><i class="s3"></i>
+      </div>
+      <p class="small">A bigger dot means the week trains that skill more.</p>
+      <div class="rb-day wk5">
+        <p class="rb-dn">A real day: Day 28, Week 5</p>
+        <h4>What will it take, and what will it cost?</h4>
+        <p>The lesson opens: <q>It trains problem finding: writing the work ahead as problems you can solve one at a time, so you always know what comes next.</q></p>
+        <div class="rb-tags" aria-label="Skills tagged on Day 28"><span>Problem Finding</span><span>Business Model Sense</span><span>Agency</span></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Point 2 -->
+  <div class="rb-pt">
+    <div class="rb-ask"><span class="rb-n">2</span><blockquote>"A learning mode for each day, with time in the field."</blockquote><p class="rb-who">Your point</p></div>
+    <div class="rb-ans">
+      <h3>Every day has a learning mode, picked for what it teaches.</h3>
+      <p>Some days give the example first and let students find the rule. Others give the rule first. Each mode below comes with a real day.</p>
+      <div class="rb-modes">
+        <div class="rb-mode wk2"><b>Deductive</b><div class="rb-flow"><span>the rule</span><i>→</i><span>examples</span><i>→</i><span>yours</span></div><p><span class="dn">Day 8:</span> the cost rule (how often × how much each time), Gia's numbers, then theirs.</p></div>
+        <div class="rb-mode wk2"><b>Inductive</b><div class="rb-flow"><span>examples</span><i>→</i><span>they find the rule</span></div><p><span class="dn">Day 7:</span> farmers' quotes lined up against their offer; they spot the line that breaks.</p></div>
+        <div class="rb-mode wk6"><b>Exploratory</b><div class="rb-flow"><span>options</span><i>→</i><span>they pick</span></div><p><span class="dn">Day 31:</span> the kinds of help in Karnataka; they pick what removes their biggest blocker.</p></div>
+        <div class="rb-mode wk2"><b>Immersion</b><div class="rb-flow"><span>how it looks</span><i>→</i><span>they go do it</span></div><p><span class="dn">Day 11:</span> LinkedIn shown step by step, then they send five requests.</p></div>
+        <div class="rb-mode wk5"><b>Production</b><div class="rb-flow"><span>all so far</span><i>→</i><span>one piece of work</span></div><p><span class="dn">Day 29:</span> their business on one page, and Offer v4.</p></div>
+      </div>
+      <h3 style="margin-top:34px">Time in the field grows every week.</h3>
+      <svg class="rb-stair" viewBox="0 0 720 250" role="img" aria-label="Field time by week: 1 own research, 2 listening online, 3 five requests a day, 4 real conversations, 5 a pilot ask, 6 a mentor.">
+        <path class="ch" d="M4 236 V200 H120 V166 H238 V132 H356 V98 H474 V64 H592 V30 H716 V236"/>
+        <g font-size="22" text-anchor="middle"><text x="62" y="226" class="wf1">W1</text><text x="179" y="226" class="wf2">W2</text><text x="297" y="226" class="wf3">W3</text><text x="415" y="226" class="wf4">W4</text><text x="533" y="226" class="wf5">W5</text><text x="654" y="226" class="wf6">W6</text></g>
+        <g class="lab-s" text-anchor="middle"><text x="62" y="190">own research</text><text x="179" y="156">listening online</text><text x="297" y="122">5 requests a day</text><text x="415" y="88">real talks</text><text x="533" y="54">a pilot ask</text><text x="654" y="20">a mentor</text></g>
+      </svg>
+    </div>
+  </div>
+
+  <!-- Point 3 -->
+  <div class="rb-pt">
+    <div class="rb-ask"><span class="rb-n">3</span><blockquote>"Make grit and resilience measurable."</blockquote><p class="rb-who">Your point</p></div>
+    <div class="rb-ans">
+      <h3>Grit is read from what students do.</h3>
+      <p>Grit is the skill the rubric calls Agency. It is scored from what students log each day: <strong>requests sent, days in a row, and coming back after a missed day.</strong> If a student logs nothing for two days, the Udyaan team sees it.</p>
+      <svg class="rb-streak" viewBox="0 0 560 120" role="img" aria-label="An example week in the log: five days of requests, one missed day, then the student comes back.">
+        <g class="lab-s" text-anchor="middle"><text x="40" y="18">Mon</text><text x="120" y="18">Tue</text><text x="200" y="18">Wed</text><text x="280" y="18">Thu</text><text x="360" y="18">Fri</text><text x="440" y="18">Sat</text></g>
+        <g class="ch"><rect x="14" y="30" width="52" height="44" rx="6"/><rect x="94" y="30" width="52" height="44" rx="6"/><rect x="174" y="30" width="52" height="44" rx="6"/><rect x="334" y="30" width="52" height="44" rx="6"/><rect x="414" y="30" width="52" height="44" rx="6"/></g>
+        <rect class="ch dash" x="254" y="30" width="52" height="44" rx="6"/>
+        <g class="lab" text-anchor="middle"><text x="40" y="60">5</text><text x="120" y="60">5</text><text x="200" y="60">5</text><text x="360" y="60">5</text><text x="440" y="60">5</text><text x="280" y="60" class="lab-s">0</text></g>
+        <path class="ch wc3" d="M282 84 Q300 108 352 84 M344 80 L352 84 L346 92"/>
+        <text class="lab wf3" x="372" y="106">comes back: Agency</text>
+        <text class="lab-s" x="486" y="58">requests</text>
+      </svg>
+      <div class="rb-day wk3">
+        <p class="rb-dn">A real day: Day 12, Week 3</p>
+        <h4>How do I turn a LinkedIn connection into a call?</h4>
+        <div class="rb-ae">
+          <div><b>Applied</b><p>A message with a customer's words, one question and a 15-minute ask. Five requests sent today.</p></div>
+          <div class="ex"><b>Excelled</b><p>Someone replied, and their reply is pasted.</p></div>
+        </div>
+        <p>Gia's founder contact, Deepak, doesn't reply. On day three she sends a one-line follow-up, and he answers with a time.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Point 4 -->
+  <div class="rb-pt">
+    <div class="rb-ask"><span class="rb-n">4</span><blockquote>"A rubric that separates excellent work from attendance."</blockquote><p class="rb-who">Your point</p></div>
+    <div class="rb-ans">
+      <h3>Showing up earns no marks.</h3>
+      <p>Applied and Excelled are worked out by code from the student's own work, never ticked by hand. <strong>A talk counts only when the person's own words are saved.</strong> The ladder shows one real day at each level.</p>
+      <svg class="rb-ladder" viewBox="0 0 700 400" role="img" aria-label="Day 23 on the five levels. Attended: opened the day. Applied: her problem document and the message to send it. Excelled: Ramesh's reply word for word and a next step. Excelled and acted: she visits his pump that Sunday and fixes her one page.">
+        <path class="ch" d="M40 20 V396 M150 20 V396"/>
+        <path class="ch" d="M40 370 H150 M40 296 H150 M40 222 H150 M40 130 H150 M40 48 H150"/>
+        <g class="lab"><text x="170" y="376">1-2 Missing</text><text x="170" y="302">3-4 Attended</text><text x="170" y="228">5-6 Applied</text><text x="170" y="136">7-8 Excelled</text><text x="170" y="54">9-10 Excelled and acted</text></g>
+        <text class="lab wf4" x="400" y="18">Gia on Day 23</text>
+        <g class="lab-s"><text x="400" y="376">nothing saved</text><text x="400" y="302">opened the day and read it</text>
+          <text x="400" y="228">her problem document, and the</text><text x="400" y="246">message to send it with</text>
+          <text x="400" y="136">Ramesh's reply, word for word,</text><text x="400" y="154">and a next step he agreed to</text>
+          <text x="400" y="54">she visits his pump that Sunday</text><text x="400" y="72">and changes a line from it (Day 24)</text></g>
+        <path class="ch wc4" d="M372 222 l6 7 l12 -14 M372 130 l6 7 l12 -14 M372 48 l6 7 l12 -14"/>
+        <path d="M10 262 H690" stroke="var(--marker)" stroke-width="3" stroke-dasharray="10 7" stroke-linecap="round" fill="none"/>
+        <text x="480" y="284" font-size="19" style="fill:var(--marker)">attendance stops here</text>
+        
+      </svg>
+      <div class="rb-day wk4">
+        <p class="rb-dn">A real day: Day 23, Week 4</p>
+        <h4>How do I write their problem so they say "yes, exactly"?</h4>
+        <div class="rb-ae">
+          <div><b>Applied</b><p>Your problem document, and the message to send it with.</p></div>
+          <div class="ex"><b>Excelled</b><p>Their reply, word for word, and a next step they agreed to.</p></div>
+        </div>
+        <p>Ramesh's reply to Gia: <q>Yes, this is exactly what happens.</q> He invites her to see the box at his pump on Sunday.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+.ai-two{display:grid;grid-template-columns:1fr 1fr;gap:28px;margin-top:24px}
+.ai-half h3{font-size:clamp(24px,2.4vw,30px)}
+.ai-half > p{max-width:none}
+.ai-sheet{background:var(--ground-2);border:2px solid rgba(243,237,228,.55);border-radius:4px;padding:16px 18px;margin-top:14px;transform:rotate(-.4deg)}
+.ai-half + .ai-half .ai-sheet{transform:rotate(.4deg)}
+.ai-sheet .ai-k{font:700 16px Kalam,cursive;color:var(--dim);margin:0 0 6px}
+.ai-sheet p{font-size:16px;margin:0 0 8px;max-width:none}
+.ai-paste{display:flex;flex-wrap:wrap;gap:6px;margin:4px 0 10px}
+.ai-paste span{border:1.5px dashed var(--dim);border-radius:6px;padding:1px 8px;font-size:14px;color:var(--dim)}
+.ai-q{font-family:Kalam,cursive;font-size:18px;border-left:3px solid var(--tint-2);padding-left:10px}
+.ai-row{display:grid;grid-template-columns:32px minmax(0,1fr);gap:8px;align-items:start;padding:8px 0;border-top:1px dashed rgba(243,237,228,.25)}
+.ai-row .t{font:700 22px Kalam,cursive;line-height:1}
+.ai-row.no{color:var(--dim)}
+@media (max-width:860px){ .ai-two{grid-template-columns:1fr} }
+</style>
+
+<section id="ai">
+  <h2>How we make sure the AI helps students</h2>
+  <p class="lead">The AI does the slow parts, so students spend their time on farmers. It never decides what counts.</p>
+  <div class="ai-two">
+    <div class="ai-half">
+      <h3>It helps.</h3>
+      <p>A coach on each day knows today's lesson and the student's own work. It asks <strong>one question at a time, four turns at most.</strong> Helpers sort what students paste into tables and draft their messages.</p>
+      <div class="ai-sheet">
+        <p class="ai-k">Day 6, Week 2: Gia pastes what she found</p>
+        <div class="ai-paste"><span>3 videos</span><span>3 news stories</span><span>1 agri entrepreneur</span></div>
+        <p>She presses <b>Sort it</b>. The page asks with her problem in it:</p>
+        <p class="ai-q">What do farmers say about walking to the field at night to switch on the pump? And what do agri entrepreneurs say about it?</p>
+        <p>The sort comes back: <q>Power comes at night, so they water at night. One farmer nearly stepped on a snake in the dark.</q></p>
+      </div>
+    </div>
+    <div class="ai-half">
+      <h3>It's kept honest.</h3>
+      <p>A quote gets a tick <strong>only if it's found word for word</strong> in what the student pasted. Plain code does all the counting and the points. The AI never gives a score.</p>
+      <div class="ai-sheet">
+        <p class="ai-k">What the student sees after a sort</p>
+        <div class="ai-row"><span class="t">✓</span><p>A farmer's sentence found in her paste. It counts.</p></div>
+        <div class="ai-row no"><span class="t">✗</span><p>A sentence that isn't in her paste. No tick, no points.</p></div>
+        <div class="ai-row"><span class="t">✓</span><p>A call counts only with six or more of the person's own words saved.</p></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+.sm-wrap{display:grid;grid-template-columns:minmax(0,1.1fr) minmax(0,.9fr);gap:40px;align-items:center;margin-top:20px}
+.sm-sketch{width:100%;height:auto;display:block}
+.sm-notes{list-style:none;margin:0;padding:0;display:grid;gap:22px;counter-reset:sm}
+.sm-notes li{display:grid;grid-template-columns:44px minmax(0,1fr);gap:12px;align-items:start}
+.sm-notes .n{display:grid;place-items:center;width:40px;height:40px;border:2px solid var(--paper);border-radius:50%;font:700 20px Kalam,cursive}
+.sm-notes b{font-family:Kalam,cursive;font-size:23px;display:block;line-height:1.2}
+.sm-notes span{font-size:17px;color:var(--dim)}
+@media (max-width:860px){ .sm-wrap{grid-template-columns:1fr} }
+</style>
+
+<section id="simple">
+  <h2>The course is simple to use.</h2>
+  <div class="sm-wrap">
+    <svg class="sm-sketch" viewBox="0 0 560 360" role="img" aria-label="A sketch of a course day: today's question and Start button at the top, four part tabs, one card showing, and an offer box already filled from Day 5.">
+      <rect class="ch" x="10" y="10" width="540" height="340" rx="14"/>
+      <rect class="ch wc5" x="34" y="34" width="492" height="78" rx="10"/>
+      <text class="lab" x="52" y="66">Today: Day 29</text><text class="lab-s" x="52" y="92">How do I check my one page, and offer a pilot?</text>
+      <rect class="ch" x="420" y="54" width="86" height="38" rx="19"/><text class="lab" x="438" y="79">Start</text>
+      <g class="ch thin"><rect x="34" y="132" width="110" height="32" rx="16"/><rect x="154" y="132" width="110" height="32" rx="16"/><rect x="274" y="132" width="110" height="32" rx="16"/><rect x="394" y="132" width="110" height="32" rx="16"/></g>
+      <g class="lab-s" text-anchor="middle"><text x="89" y="154">part 1</text><text x="209" y="154">part 2</text><text x="329" y="154">part 3</text><text x="449" y="154">part 4</text></g>
+      <rect class="ch" x="34" y="184" width="492" height="142" rx="10"/>
+      <text class="lab-s" x="52" y="212">Who it's for</text><path class="ch dash" d="M52 228 H500"/>
+      <text class="lab" x="52" y="252">Small borewell farmers near Kunigal</text>
+      <text class="lab-s" x="52" y="288">filled from Day 5, Offer v1</text>
+      <path class="ch thin" d="M266 284 Q300 300 330 286 M322 282 L330 286 L324 294"/>
+      <g class="lab" text-anchor="middle"><text x="22" y="30">1</text><text x="22" y="150">2</text><text x="22" y="200">3</text></g>
+    </svg>
+    <ol class="sm-notes">
+      <li><span class="n">1</span><div><b>Today's step comes first.</b><span>The day's question and one Start button open the page. Nobody hunts for what to do.</span></div></li>
+      <li><span class="n">2</span><div><b>At most four parts a day.</b><span>Each part shows one card at a time, on a phone or a laptop.</span></div></li>
+      <li><span class="n">3</span><div><b>Nothing is typed twice.</b><span>The offer a student writes on Day 5 fills Day 29, ready to change.</span></div></li>
+    </ol>
+  </div>
+</section>
+
+<style>
+.op-board{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:22px;margin-top:26px}
+.op-note{background:var(--ground-2);border:2px dashed rgba(243,237,228,.55);border-radius:6px;padding:18px 18px 16px;position:relative}
+.op-note:nth-child(odd){transform:rotate(-.7deg)} .op-note:nth-child(even){transform:rotate(.6deg)}
+.op-note::before{content:"";position:absolute;top:-9px;left:50%;width:16px;height:16px;margin-left:-8px;border-radius:50%;background:var(--paper)}
+.op-note h3{font-size:24px;margin:0 0 8px}
+.op-note p{font-size:16px;margin:0;max-width:none}
+.op-note .op-s{font:700 14px "Atkinson Hyperlegible",sans-serif;color:var(--dim);display:block;margin-bottom:2px}
+.op-note.done{border-style:solid;border-color:var(--tint-5)}
+@media (max-width:980px){ .op-board{grid-template-columns:repeat(2,minmax(0,1fr))} }
+@media (max-width:600px){ .op-board{grid-template-columns:1fr} }
+</style>
+
+<section id="open">
+  <h2>What we're still working on</h2>
+  <p class="lead">Four open questions with my suggestion, and one already answered in the course. Tell me yes, or what to change, when we meet.</p>
+  <div class="op-board">
+    <div class="op-note"><h3>Who scores?</h3><span class="op-s">My suggestion</span><p>The course marks Applied or Excelled each day. The Udyaan team scores the five skills three times: in Weeks 1, 4 and 6.</p></div>
+    <div class="op-note"><h3>The pass mark and the certificate</h3><span class="op-s">My suggestion</span><p>Six weekly proofs, the one piece of work each week ends with, earn the certificate. The grade is the five skill scores, plus growth since Week 1.</p></div>
+    <div class="op-note done"><h3>Safe to sell</h3><span class="op-s">Now in the course</span><p>Week 5, Day 28 asks each student to name the quality, safety or legal check before selling, and who does it. Gia's: a licensed electrician checks the wiring.</p></div>
+    <div class="op-note"><h3>How we measure impact</h3><span class="op-s">My suggestion</span><p>How many students come back to Udyaan after the course.</p></div>
+    <div class="op-note"><h3>How we measure success</h3><span class="op-s">My suggestion</span><p>First, real conversations per student. Then, how many students finish.</p></div>
+  </div>
+</section>
+
+<style>
+#try{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:44px;align-items:center}
+#try h2{font-size:clamp(34px,4.6vw,52px)}
+.tr-steps{list-style:none;margin:18px 0 22px;padding:0;display:grid;gap:12px}
+.tr-steps li{display:grid;grid-template-columns:40px minmax(0,1fr);gap:12px;align-items:center;font-size:19px}
+.tr-steps .n{display:grid;place-items:center;width:36px;height:36px;border:2px solid var(--paper);border-radius:50%;font:700 18px Kalam,cursive}
+.tr-steps a{overflow-wrap:anywhere}
+.tr-code{white-space:nowrap;font:700 20px "Atkinson Hyperlegible",sans-serif;letter-spacing:.04em;border:2px dashed var(--paper);border-radius:8px;padding:1px 8px}
+.tr-ask{font-family:Kalam,cursive;font-size:26px;line-height:1.3;margin:0 0 14px;max-width:none}
+#try .sig{font-size:72px}
+.tr-draw svg{width:100%;height:auto;display:block}
+@media (max-width:860px){ #try{grid-template-columns:1fr} }
+</style>
+
+<section id="try">
+  <div>
+    <h2>Try it as a student.</h2>
+    <ol class="tr-steps">
+      <li><span class="n">1</span><span>Go to <a href="https://udyaan-course.vercel.app">udyaan-course.vercel.app</a>.</span></li>
+      <li><span class="n">2</span><span>Put in your name and the class code <span class="tr-code">udyaan-ragi-236</span>.</span></li>
+      <li><span class="n">3</span><span>You're in. Each day opens with its question and a Start button.</span></li>
+    </ol>
+    <a class="btn" href="https://udyaan-course.vercel.app">Open the course</a>
+  </div>
+  <div>
+    <p class="tr-ask">Is there anything you'd like me to work on more?</p>
+    <p class="tr-ask">Any questions you have, I'd love to hear them.</p>
+    <p class="sig" aria-label="Signed, Ayan">Ayan<svg viewBox="0 0 120 18" aria-hidden="true"><path class="ch" d="M2 10 Q30 2 58 9 T118 6"/></svg></p>
+    <div class="tr-draw" data-scene="6" data-label="Shivanna's field at 2 a.m., with Gia's first build sending him a message"></div>
+  </div>
+</section>
+</main>
+
+
+<script>
+/* The 2 a.m. scene at Shivanna's field. wk 0 is the problem; 1 to 6 add what Gia did that week. */
+function dskScene(wk, opts){
+  opts = opts || {};
+  var c = function(cls){ return 'class="ch ' + (cls||'') + '"'; };
+  var s = '<svg viewBox="0 0 520 340" role="img" aria-label="' + (opts.label || 'Shivanna\'s field at 2 a.m.') + '"' + (opts.cls ? ' class="'+opts.cls+'"' : '') + '>';
+  /* the field, always */
+  s += '<path ' + c() + ' pathLength="1" d="M8 292 Q260 284 512 294"/>';
+  s += '<circle ' + c() + ' pathLength="1" cx="472" cy="42" r="17"/><path ' + c('thin') + ' pathLength="1" d="M478 30 A15 15 0 0 0 478 54"/>';
+  s += '<text class="lab tm" x="452" y="48" text-anchor="end">2 a.m.</text>';
+  /* house */
+  s += '<path ' + c() + ' pathLength="1" d="M34 290 V196 H124 V290 M24 198 L79 152 L134 198"/>';
+  s += '<path ' + c('thin') + ' pathLength="1" d="M66 290 V246 H90 V290 M98 212 H116 V230 H98 Z"/>';
+  /* sprouts in the field */
+  for (var x = 160; x <= 320; x += 32){
+    s += '<path ' + c('thin') + ' pathLength="1" d="M'+x+' 288 V274 M'+x+' 280 Q'+(x-8)+' 272 '+(x-11)+' 276 M'+x+' 277 Q'+(x+8)+' 268 '+(x+11)+' 272"/>';
+  }
+  /* power line, pole, starter box, motor */
+  var wire = (wk === 4) ? 'M0 84 L40 80 L60 92 L80 76 L100 94 L120 78 L140 92 L160 80 L200 90 L240 82 L280 92 L320 80 L360 78' : 'M0 84 Q180 104 360 78';
+  s += '<path ' + c(wk === 4 ? 'wc4' : '') + ' pathLength="1" d="' + wire + '"/>';
+  s += '<path ' + c() + ' pathLength="1" d="M360 64 V290 M344 74 H376 M360 82 Q392 120 408 186"/>';
+  s += '<rect ' + c() + ' pathLength="1" x="392" y="186" width="34" height="42" rx="3"/><path ' + c('thin') + ' pathLength="1" d="M409 228 V290"/>';
+  s += '<circle ' + c() + ' pathLength="1" cx="468" cy="266" r="20"/><path ' + c('thin') + ' pathLength="1" d="M426 214 Q452 222 460 248 M488 266 H512"/>';
+  s += '<text class="lab-s" x="432" y="182">switch</text><text class="lab-s" x="452" y="318">motor</text>';
+  /* the path he walks */
+  s += '<path class="ch dash" d="M92 306 Q260 324 446 302"/>';
+
+  function walker(x, col){
+    return '<g><circle ' + c(col) + ' cx="'+x+'" cy="236" r="8"/><path ' + c(col) + ' d="M'+x+' 244 V266 M'+x+' 266 L'+(x-8)+' 286 M'+x+' 266 L'+(x+9)+' 286 M'+x+' 250 L'+(x+14)+' 256"/>' +
+      '<path ' + c('thin ' + (col||'')) + ' d="M'+(x+14)+' 256 L'+(x+60)+' 240 M'+(x+14)+' 256 L'+(x+62)+' 270"/></g>';
+  }
+  function sleeper(col){
+    return '<path ' + c(col) + ' d="M42 280 H118 M48 280 V268 H112 V280"/><circle ' + c(col) + ' cx="56" cy="262" r="6"/><text class="lab-s" x="78" y="186">z z</text>';
+  }
+  if (wk === 0){
+    s += walker(250, '');
+    s += '<text class="lab who" x="160" y="222">Shivanna walks out</text>';
+  }
+  if (wk === 1){
+    s += walker(250, '');
+    s += '<rect ' + c('wc1') + ' x="398" y="194" width="22" height="16" rx="2"/><path ' + c('wc1') + ' d="M166 140 h26 v44 h-26 Z M176 178 h6"/>';
+    s += '<text class="lab wf1" x="138" y="128">Offer v1: a box and an app</text><text class="lab-s" x="200" y="172">a guess</text>';
+  }
+  if (wk === 2){
+    s += '<path ' + c('wc2') + ' d="M458 240 q-6 -12 2 -20 q8 -8 0 -18 M474 238 q6 -10 -2 -18 q-8 -8 2 -16"/>';
+    s += '<path ' + c('wc2') + ' d="M136 100 h204 a10 10 0 0 1 10 10 v50 a10 10 0 0 1 -10 10 h-158 l-16 14 v-14 h-30 a10 10 0 0 1 -10 -10 v-50 a10 10 0 0 1 10 -10 Z"/>';
+    s += '<text class="lab wf2" x="154" y="128">Motors burn out as</text><text class="lab wf2" x="154" y="152">often as the night walk</text>';
+    s += '<text class="lab-s" x="150" y="214">switches that protect</text><text class="lab-s" x="150" y="232">the motor sell from ₹400</text>';
+  }
+  if (wk === 3){
+    s += walker(250, 'wc3') + sleeper('wc3');
+    s += '<path ' + c('wc3') + ' d="M454 240 l6 -10 l4 8 l6 -12 M480 244 l8 -8"/>';
+    s += '<text class="lab wf3" x="196" y="214">walk, lose sleep</text><text class="lab wf3" x="120" y="132">or sleep, risk the motor</text>';
+  }
+  if (wk === 4){
+    s += sleeper('');
+    s += '<path ' + c('wc4') + ' d="M432 132 q36 -26 72 0 q-36 26 -72 0 Z"/><circle ' + c('wc4') + ' cx="468" cy="132" r="7"/><path ' + c('wc4') + ' d="M430 156 L506 108"/>';
+    s += '<text class="lab wf4" x="150" y="140">the power turns weak</text><text class="lab-s" x="150" y="164">and nobody can see the pump</text>';
+  }
+  if (wk === 5){
+    s += sleeper('');
+    s += '<rect ' + c('wc5') + ' x="396" y="192" width="26" height="30" rx="2"/><path ' + c('wc5') + ' d="M402 216 L416 198"/>';
+    s += '<circle ' + c('wc5') + ' cx="330" cy="226" r="8"/><path ' + c('wc5') + ' d="M330 234 V260 M330 260 L322 284 M330 260 L338 284 M330 242 L352 230 M352 230 l6 -6 l4 4"/>';
+    s += '<text class="lab wf5" x="120" y="136">a switch that cuts</text><text class="lab wf5" x="120" y="158">weak power</text><text class="lab-s" x="236" y="206">Raju fits it</text>';
+  }
+  if (wk === 6){
+    s += '<path ' + c('wc6') + ' d="M48 280 H118 M48 280 V268 H112 V280"/><circle ' + c('wc6') + ' cx="56" cy="262" r="6"/>';
+    s += '<rect ' + c('wc6') + ' x="96" y="206" width="24" height="30" rx="4"/>';
+    s += '<path ' + c('wc6') + ' d="M398 196 h22 v14 h-22 Z M380 176 q-12 -12 -24 0 M372 168 q-18 -18 -36 0"/>';
+    s += '<path ' + c('wc6') + ' d="M150 100 h176 a10 10 0 0 1 10 10 v50 a10 10 0 0 1 -10 10 h-176 l-20 18 v-18 a10 10 0 0 1 -10 -10 v-50 a10 10 0 0 1 10 -10 Z"/>';
+    s += '<text class="lab wf6" x="154" y="128">“Power is weak,</text><text class="lab wf6" x="154" y="152">switch the pump off”</text>';
+    s += '<text class="lab-s" x="236" y="206">wiring checked</text>';
+  }
+  return s + '</svg>';
+}
+(function(){
+  var root = document.documentElement;
+  root.classList.add('js');
+  var FINAL = /[?&]final=1/.test(location.search) || matchMedia('(prefers-reduced-motion: reduce)').matches;
+  if (FINAL) root.classList.add('final');
+
+  /* drawings */
+  var slots = document.querySelectorAll('[data-scene]');
+  for (var i = 0; i < slots.length; i++){
+    var el = slots[i];
+    el.innerHTML = dskScene(+el.getAttribute('data-scene'), {label: el.getAttribute('data-label')});
+    var sv = el.querySelector('svg');
+    if (el.hasAttribute('data-draw')) sv.classList.add('drawon');
+  }
+  /* pathLength=1 is set on base lines; overlay lines need it too so the draw-on works */
+  var all = document.querySelectorAll('.drawon .ch');
+  for (var j = 0; j < all.length; j++) if (!all[j].hasAttribute('pathLength')) all[j].setAttribute('pathLength','1');
+
+  /* phone or laptop */
+  var phone = document.getElementById('phone'), laptop = document.getElementById('laptop');
+  var segs = document.querySelectorAll('.tg button');
+  function show(v){
+    var p = (v === 'phone');
+    phone.hidden = !p; laptop.hidden = p;
+    for (var k = 0; k < segs.length; k++) segs[k].setAttribute('aria-pressed', String(segs[k].getAttribute('data-v') === v));
+    if (!p) setStage();
+  }
+  for (var s = 0; s < segs.length; s++) segs[s].addEventListener('click', function(){ show(this.getAttribute('data-v')); window.scrollTo(0,0); });
+  var toL = document.querySelectorAll('[data-to-laptop]');
+  for (var t = 0; t < toL.length; t++) toL[t].addEventListener('click', function(){ show('laptop'); window.scrollTo(0,0); });
+
+  /* copy the report link (clipboard inside the click; select the text if refused) */
+  var cp = document.getElementById('ph-copy'), lk = document.getElementById('ph-link'), msg = document.getElementById('ph-copied');
+  if (cp) cp.addEventListener('click', function(){
+    var done = function(){ cp.textContent = 'Link copied'; msg.textContent = 'Now paste it into WhatsApp Web or an email to yourself, and open it on your laptop.'; };
+    var pick = function(){ var r = document.createRange(); r.selectNodeContents(lk); var s = getSelection(); s.removeAllRanges(); s.addRange(r); msg.textContent = 'The link is selected. Copy it, then open it on your laptop.'; };
+    try { navigator.clipboard.writeText(lk.textContent.trim()).then(done, pick); } catch (e) { pick(); }
+  });
+  /* phone swipe cards */
+  var track = document.getElementById('ph-track'), cards = track.children, dots = document.querySelectorAll('.ph-dot');
+  var prev = document.getElementById('ph-prev'), next = document.getElementById('ph-next');
+  function current(){
+    var best = 0, bd = 1e9;
+    for (var q = 0; q < cards.length; q++){ var d = Math.abs(cards[q].offsetLeft - track.offsetLeft - track.scrollLeft); if (d < bd){ bd = d; best = q; } }
+    return best;
+  }
+  function mark(n){
+    for (var q = 0; q < dots.length; q++) dots[q].setAttribute('aria-current', String(q === n));
+    prev.disabled = (n === 0); next.disabled = (n === cards.length - 1);
+  }
+  function go(n){
+    n = Math.max(0, Math.min(cards.length - 1, n));
+    track.scrollTo({left: cards[n].offsetLeft - track.offsetLeft, behavior: FINAL ? 'auto' : 'smooth'}); mark(n);
+  }
+  track.addEventListener('scroll', function(){ mark(current()); }, {passive:true});
+  for (var q = 0; q < dots.length; q++) (function(n){ dots[n].addEventListener('click', function(){ go(n); }); })(q);
+  prev.addEventListener('click', function(){ go(current() - 1); });
+  next.addEventListener('click', function(){ go(current() + 1); });
+  track.addEventListener('keydown', function(e){ if (e.key === 'ArrowRight'){ go(current()+1); e.preventDefault(); } if (e.key === 'ArrowLeft'){ go(current()-1); e.preventDefault(); } });
+
+  /* the story stage: the drawing shows the week whose step is in the middle of the screen */
+  var stage = document.getElementById('st-stage'), steps = document.querySelectorAll('.st-step'), shown = -1;
+  function setStage(){
+    if (!stage || laptop.hidden) return;
+    var mid = innerHeight * 0.5, wk = 0;
+    for (var n = 0; n < steps.length; n++){ if (steps[n].getBoundingClientRect().top < mid) wk = +steps[n].getAttribute('data-wk'); }
+    if (wk === shown) return; shown = wk;
+    stage.innerHTML = dskScene(wk, {label: wk ? 'Week ' + wk + ' in the drawing' : 'The problem at 2 a.m.'});
+    stage.setAttribute('data-wk', wk);
+    var lab = document.getElementById('st-stage-wk'); if (lab) lab.textContent = wk ? 'Week ' + wk : 'The problem';
+    for (var m = 0; m < steps.length; m++) steps[m].classList.toggle('on', +steps[m].getAttribute('data-wk') === wk);
+    if (!FINAL){ stage.classList.remove('swap'); void stage.offsetWidth; stage.classList.add('swap'); }
+  }
+  addEventListener('scroll', setStage, {passive:true});
+  addEventListener('resize', setStage);
+
+  var start = /[?&]v=phone/.test(location.search) ? 'phone' : /[?&]v=laptop/.test(location.search) ? 'laptop' : (innerWidth < 700 ? 'phone' : 'laptop');
+  show(start); mark(0);
+})();
+</script>
+
