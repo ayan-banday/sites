@@ -40,7 +40,7 @@ mark{background:none;color:var(--marker);font-weight:700}
 .sig svg{width:120px;height:auto;margin:-6px 0 0 18px}
 .small{font-size:15px;color:var(--dim)}
 .btn{display:inline-block;background:var(--marker);color:var(--ink);font:700 18px "Atkinson Hyperlegible",sans-serif;padding:13px 24px;border-radius:999px;text-decoration:none;border:0;cursor:pointer;line-height:1.2}
-.btn:focus-visible,.tg button:focus-visible,.ph-dot:focus-visible,a:focus-visible{outline:3px solid var(--paper);outline-offset:3px}
+.btn:focus-visible,.ph-dot:focus-visible,a:focus-visible{outline:3px solid var(--paper);outline-offset:3px}
 .ch{fill:none;stroke:var(--paper);stroke-width:2.4;stroke-linecap:round;stroke-linejoin:round}
 .ch.thin{stroke-width:1.6}
 .ch.dash{stroke-dasharray:6 7;stroke:var(--dim)}
@@ -52,12 +52,7 @@ svg .lab-s{font-size:15px;fill:var(--dim)}
 svg text.wf1,svg text.wf2,svg text.wf3,svg text.wf4,svg text.wf5,svg text.wf6{font-weight:700}
 .wk1{--wk:var(--tint-1)} .wk2{--wk:var(--tint-2)} .wk3{--wk:var(--tint-3)} .wk4{--wk:var(--tint-4)} .wk5{--wk:var(--tint-5)} .wk6{--wk:var(--tint-6)}
 
-/* Phone or laptop toggle */
 body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:21;background:var(--ground)}
-.tg-bar{position:sticky;top:env(safe-area-inset-top,0px);z-index:20;background:var(--ground);padding:10px 16px;display:flex;justify-content:center;border-bottom:2px dashed rgba(243,237,228,.18)}
-.tg{display:inline-flex;border:2px dashed var(--paper);border-radius:999px;padding:3px}
-.tg button{font:700 16px "Atkinson Hyperlegible",sans-serif;color:var(--paper);background:none;border:0;border-radius:999px;padding:9px 22px;min-height:44px;cursor:pointer}
-.tg button[aria-pressed="true"]{background:var(--paper);color:var(--ground)}
 
 /* draw-on: lines draw like chalk, once */
 .js .drawon .ch{stroke-dasharray:1;stroke-dashoffset:1;animation:draw 1.6s ease-out forwards}
@@ -69,10 +64,6 @@ body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset
 @media (prefers-reduced-motion: reduce){ .js .drawon .ch,.js .drawon text{animation:none;stroke-dashoffset:0;opacity:1} }
 </style>
 
-<div class="tg-bar"><div class="tg" role="group" aria-label="Choose a version">
-  <button type="button" data-v="phone" aria-pressed="false">Phone</button>
-  <button type="button" data-v="laptop" aria-pressed="false">Laptop</button>
-</div></div>
 
 <style>
 #phone{padding:14px 0 28px}
@@ -177,10 +168,10 @@ body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset
 
 <style>
 main#laptop{max-width:1140px;margin:0 auto;padding-left:max(16px, env(safe-area-inset-left,0px));padding-right:max(16px, env(safe-area-inset-right,0px));padding-block:0 64px}
-main#laptop > section{scroll-margin-top:72px;padding:56px 0;border-top:2px dashed rgba(243,237,228,.2)}
+main#laptop > section{scroll-margin-top:16px;padding:56px 0;border-top:2px dashed rgba(243,237,228,.2)}
 main#laptop h2{font-size:clamp(30px,4vw,44px)}
 .lead{color:var(--dim);font-size:19px;max-width:62ch}
-#hero{border-top:0 !important;min-height:calc(100vh - 70px);display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.05fr);gap:40px;align-items:center;padding:24px 0 40px !important}
+#hero{border-top:0 !important;min-height:100vh;display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.05fr);gap:40px;align-items:center;padding:24px 0 40px !important}
 #hero h1{font-size:clamp(38px,5.4vw,64px);margin-bottom:.3em}
 #hero .hr-sub{font-size:21px;max-width:44ch}
 #hero .hr-quiet{font-size:16px;color:var(--dim);margin-top:18px}
@@ -221,7 +212,7 @@ main#laptop h2{font-size:clamp(30px,4vw,44px)}
 .st-step .st-proof b{color:var(--paper)}
 .st-step q{font-family:Kalam,cursive;font-size:21px;quotes:"\201C" "\201D"}
 .st-mini{display:none}
-.st-pin{position:sticky;top:84px;height:calc(100vh - 110px);display:flex;flex-direction:column;justify-content:center}
+.st-pin{position:sticky;top:24px;height:calc(100vh - 48px);display:flex;flex-direction:column;justify-content:center}
 .st-pin .st-lbl{font:700 20px Kalam,cursive;color:var(--dim);margin:0 0 6px}
 #st-stage svg{width:100%;height:auto;display:block}
 #st-stage.swap svg{animation:fade-in .5s ease-out}
@@ -314,7 +305,7 @@ main#laptop h2{font-size:clamp(30px,4vw,44px)}
 .rb-skills span{font-size:16px;color:var(--dim)}
 
 .rb-pt{display:grid;grid-template-columns:minmax(0,.62fr) minmax(0,1.38fr);gap:36px;padding:44px 0;border-top:2px dashed rgba(243,237,228,.14)}
-.rb-ask{position:sticky;top:90px;align-self:start}
+.rb-ask{position:sticky;top:28px;align-self:start}
 .rb-ask .rb-n{display:inline-grid;place-items:center;width:44px;height:44px;border:2px solid var(--paper);border-radius:50%;font:700 22px Kalam,cursive;margin-bottom:10px}
 .rb-ask blockquote{margin:0;font-family:Kalam,cursive;font-size:24px;line-height:1.3;border:2px dashed var(--paper);border-radius:16px;padding:16px 18px;transform:rotate(-.6deg)}
 .rb-ask .rb-who{font-size:15px;color:var(--dim);margin-top:8px}
@@ -791,8 +782,13 @@ function dskScene(wk, opts){
   addEventListener('scroll', setStage, {passive:true});
   addEventListener('resize', setStage);
 
-  var start = /[?&]v=phone/.test(location.search) ? 'phone' : /[?&]v=laptop/.test(location.search) ? 'laptop' : (innerWidth < 700 ? 'phone' : 'laptop');
-  show(start); mark(0);
+  /* the version follows the screen: cards on a phone, the full page on a laptop or tablet.
+     A reader who taps "read it here" keeps the full page; ?v=phone or ?v=laptop forces one. */
+  var forced = /[?&]v=phone/.test(location.search) ? 'phone' : /[?&]v=laptop/.test(location.search) ? 'laptop' : null;
+  var fit = function(){ return forced || (innerWidth < 700 ? 'phone' : 'laptop'); };
+  for (var r = 0; r < toL.length; r++) toL[r].addEventListener('click', function(){ forced = 'laptop'; });
+  var last = fit(); show(last); mark(0);
+  addEventListener('resize', function(){ var v = fit(); if (v !== last){ last = v; show(v); } });
 })();
 </script>
 
