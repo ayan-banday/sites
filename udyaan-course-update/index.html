@@ -88,7 +88,6 @@ body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset
 .ph-tick{font-family:Kalam,cursive;font-size:19px}
 .ph-tick span{display:block}
 .ph-link{font:700 16px "Atkinson Hyperlegible",sans-serif;border:2px dashed var(--paper);border-radius:10px;padding:10px 12px;overflow-wrap:anywhere;user-select:all;-webkit-user-select:all}
-.ph-here{background:none;border:0;color:var(--paper);font:16px "Atkinson Hyperlegible",sans-serif;text-decoration:underline;padding:8px 0;min-height:44px;cursor:pointer;align-self:flex-start}
 .ph-card .sig{font-size:58px;align-self:flex-start}
 .ph-card .sig svg{width:120px}
 .ph-code{font:700 20px "Atkinson Hyperlegible",sans-serif;letter-spacing:.04em;border:2px dashed var(--marker);border-radius:8px;padding:2px 8px;color:var(--paper)}
@@ -150,7 +149,6 @@ body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset
       <p class="ph-link" id="ph-link">https://ayan-banday.github.io/sites/udyaan-course-update/</p>
       <button class="btn" type="button" id="ph-copy">Copy the link</button>
       <p class="small" id="ph-copied" aria-live="polite">Paste it into WhatsApp Web or an email to yourself, and open it on your laptop.</p>
-      <button class="ph-here" type="button" data-to-laptop>Or read it here on your phone</button>
       <p class="sig" aria-label="Signed, Ayan">Ayan<svg viewBox="0 0 120 18" aria-hidden="true"><path class="ch" d="M2 10 Q30 2 58 9 T118 6"/></svg></p>
     </article>
   </div>
@@ -783,10 +781,8 @@ function dskScene(wk, opts){
   addEventListener('resize', setStage);
 
   /* the version follows the screen: cards on a phone, the full page on a laptop or tablet.
-     A reader who taps "read it here" keeps the full page; ?v=phone or ?v=laptop forces one. */
-  var forced = /[?&]v=phone/.test(location.search) ? 'phone' : /[?&]v=laptop/.test(location.search) ? 'laptop' : null;
-  var fit = function(){ return forced || (innerWidth < 700 ? 'phone' : 'laptop'); };
-  for (var r = 0; r < toL.length; r++) toL[r].addEventListener('click', function(){ forced = 'laptop'; });
+     A phone never gets the full page: it has to be opened on a laptop or tablet. */
+  var fit = function(){ return innerWidth < 700 ? 'phone' : 'laptop'; };
   var last = fit(); show(last); mark(0);
   addEventListener('resize', function(){ var v = fit(); if (v !== last){ last = v; show(v); } });
 })();
