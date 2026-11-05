@@ -2,6 +2,8 @@
 
 Public pages, served by GitHub Pages at https://ayan-banday.github.io/sites/
 
+- `nvidia-talk-study-guide/`: Nvidia Talk Study Guide, a phone page with everything needed to give the Budget Is a Risk Plan talk: terms, numbers, what to say and likely questions, slide by slide.
+- `budget-is-a-risk-plan/`: Budget Is a Risk Plan, an 8-slide full-screen class talk on how Nvidia budgets, read through Howard Marks's pendulum (arrow keys or a clicker; F for full screen).
 - `udyaan-onboarding-updated/`: Udyaan Onboarding, Updated, a tear-off calendar for the team: one question per page on what students get, trophies and money, simpler feedback, teams of two, and testing in batches of 5.
 - `udyaan-course-update/`: Udyaan Course Update, for Dr. Shraddha Kanwar: one student's six weeks, how her rubric points are built into the course, and how to try it (a phone swipe-through and a laptop page).
 - `udyaan-14-days/`: Updated 14-Day Onboarding Plan for Udyaan, a tear-off wall calendar for the team: one page per phase, tap to tear.

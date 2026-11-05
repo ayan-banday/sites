@@ -1,0 +1,929 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cpath d='M0 15 6 4l3 5 2-3 5 9z' fill='%232b2722'/%3E%3C/svg%3E">
+<style>
+:root{color-scheme:light;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+body{margin:0;font:14px/1.4 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif}
+img{max-width:100%}
+[hidden]{display:none!important}
+</style>
+<title>Budget Is a Risk Plan</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Overpass:wght@400;600;700;800&family=Atkinson+Hyperlegible:wght@400;700&family=Overpass+Mono:wght@400;500&family=Caveat:wght@500;600&display=swap" rel="stylesheet">
+<style>
+  /* ===== Tokens: fill every value from the chosen direction file (references/directions/NN-name.md).
+     The values below are the Drafting direction, kept as a working example. ===== */
+  /* Palette: No. 256, Vinaceous Cinnamon + Orange + Dull Viridian Green + Black · place light (match-ash-design) */
+  :root{
+    --ground:#1B1C1C; --ground-2:#2A2B2A; --paper:#FCF2EE; --card:#FFF9F6;
+    --ink:#11241B; --muted:#4F5F57; --line:rgba(17,36,27,.14); --line-2:rgba(17,36,27,.30);
+    --tint-1:#A5E1C2; --tint-2:#FBC3A7; --tint-3:#F4E7E3; --tint-4:#ECDCD6;
+    --marker:#FBC3A7; --marker-ink:#9A4306; --red:#9A4306; --cyan:#00704C;
+    --acc:#DB6304; --acc2:#009465;
+    --font-display:'Overpass',sans-serif; --font-body:'Atkinson Hyperlegible',sans-serif;
+    --font-label:'Overpass Mono',monospace; --font-hand:'Caveat',cursive;
+    --accent-1:var(--acc); --accent-2:var(--acc2);
+    --ease-out:cubic-bezier(.22,1,.36,1); --ease-draw:cubic-bezier(.45,.05,.35,1);
+    --wrap:1180px; --gutter:clamp(20px,4vw,48px);
+    --r-sheet:3px;
+    color-scheme:light;
+  }
+  @media (prefers-color-scheme: dark){ :root:not([data-theme="light"]){color-scheme:light} }
+  :root[data-theme="dark"]{color-scheme:light}
+  /* Single deliberate theme: warm paper sheets on a near-black desk. */
+
+  *{box-sizing:border-box}
+  html{-webkit-text-size-adjust:100%}
+  body{margin:0;background:var(--paper);color:var(--ink);font:400 17px/1.6 var(--font-body);-webkit-font-smoothing:antialiased;overflow-x:clip}
+  img,svg{max-width:100%}
+  h1,h2,h3{font-family:var(--font-display);font-weight:800;letter-spacing:-.015em;line-height:1.02;margin:0;text-wrap:balance}
+  h1{font-size:clamp(48px,6.4vw,92px)}
+  h2{font-size:clamp(38px,4.6vw,64px)}
+  h3{font-size:clamp(24px,2.2vw,30px);line-height:1.1}
+  p{margin:0;text-wrap:pretty}
+  .lede{font-size:clamp(18px,1.5vw,21px);line-height:1.5;color:var(--muted);max-width:56ch}
+  .label{font:500 11.5px/1.3 var(--font-label);letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+  .hand{font-family:var(--font-hand);color:var(--red)}
+  .wrap{max-width:var(--wrap);margin:0 auto;padding-left:max(var(--gutter),env(safe-area-inset-left,0px));padding-right:max(var(--gutter),env(safe-area-inset-right,0px))}
+
+  /* Section colour blocks: one flat block per idea */
+  .band{position:relative;padding:clamp(88px,11vw,150px) 0;overflow-x:clip}
+  .band.paper{background:var(--paper)} .band.card{background:var(--card)}
+  .band.t1{background:var(--tint-1)} .band.t2{background:var(--tint-2)} .band.t3{background:var(--tint-3)}
+  /* contrast: muted and red re-tuned per tint so text stays at 4.5:1 or better */
+  
+  .band.dark{background:var(--ground);color:var(--paper)}
+  .band.dark .lede,.band.dark .label{color:rgba(240,237,229,.72)}
+  .band-head{display:grid;gap:18px;margin-bottom:clamp(40px,5vw,64px);max-width:760px}
+
+  /* Team chips: one tint per team, used everywhere that team appears */
+  .chips{display:flex;flex-wrap:wrap;gap:6px}
+  .chip{display:inline-flex;align-items:center;gap:6px;font:500 12px/1 var(--font-label);letter-spacing:.04em;padding:6px 9px;border-radius:3px;color:var(--ink);box-shadow:inset 0 0 0 1px rgba(34,32,30,.12)}
+  .chip.c-sensors{background:var(--tint-1)} .chip.c-app{background:var(--tint-2)}
+  .chip.c-data{background:var(--tint-3)} .chip.c-field{background:var(--tint-4)}
+
+  /* Marker: keep <mark> inside inline text, never as a grid/flex child */
+  mark{background:linear-gradient(var(--marker),var(--marker)) no-repeat 0 90%/0% 42%;color:inherit;padding:0 2px;
+    -webkit-box-decoration-break:clone;box-decoration-break:clone;transition:background-size .8s var(--ease-out) .35s}
+  .in mark, mark.in{background-size:100% 42%}
+  .band.dark mark{background-image:linear-gradient(var(--marker),var(--marker));color:var(--ink);border-radius:3px;padding:1px 5px;background-position:0 0;background-size:0% 100%}
+  .band.dark .in mark,.band.dark mark.in{background-size:100% 100%}
+
+  /* Reveal: only blocks below the fold start hidden; text plays once */
+  .js .rv{opacity:0;transform:translateY(12px);transition:opacity .8s var(--ease-out),transform .8s var(--ease-out);transition-delay:var(--d,0s)}
+  .js .rv.in{opacity:1;transform:none}
+
+  /* Drawing classes shared by every SVG (ISO-ish line weights) */
+  .ln{fill:none;stroke:var(--ink);stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+  .ln.thin{stroke-width:.8} .ln.hid{stroke-width:1;stroke-dasharray:6 4}
+  .ln.cl{stroke-width:.7;stroke-dasharray:16 4 3 4;opacity:.7}
+  .ln.guide{stroke-width:1;stroke-dasharray:3 5;opacity:.3}
+  .ln.red{stroke:var(--red)} .ln.cyan{stroke:var(--cyan)}
+  .fill-paper{fill:var(--paper)} .fill-card{fill:var(--card)}
+  .svg-label{font:500 11px var(--font-label);letter-spacing:.06em;fill:var(--ink)}
+  .svg-hand{font:16px var(--font-hand);fill:var(--red)}
+
+  /* Buttons */
+  .btn{font:600 14px/1 var(--font-body);padding:12px 18px;border-radius:10px;border:0;background:var(--ink);color:var(--paper);cursor:pointer;
+    transition:scale .15s ease-out;-webkit-tap-highlight-color:transparent;min-width:140px}
+  .btn:not(:disabled):active{scale:.96}
+
+  /* Phone gate: short side under 540px sees only this */
+  .gate{display:none}
+  @media (max-width:539px), (pointer:coarse) and (max-height:499px){ html:not(.no-gate) main{display:none} html:not(.no-gate) .gate{display:grid} }
+  html.phone main{display:none} html.phone .gate{display:grid}
+  .gate{min-height:100svh;place-items:center;text-align:center;padding:32px;background:var(--ground);color:var(--paper)}
+  .gate p{font:600 34px/1.05 var(--font-display);max-width:12ch;margin:18px auto 10px}
+  .gate small{font:400 15px/1.5 var(--font-body);color:rgba(240,237,229,.7)}
+
+  @media (prefers-reduced-motion: reduce){ .js .rv{opacity:1;transform:none;transition:none} mark{transition:none;background-size:100% 42%} }
+</style>
+<script>
+  /* ===== Shared helpers (every section fragment may use these) ===== */
+  document.documentElement.classList.add('js');
+  try { if (navigator.maxTouchPoints > 0 && Math.min(screen.width, screen.height) < 540) document.documentElement.classList.add('phone'); } catch (e) {}
+  const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  /* ?final=1 forces every finished state (screenshots; hidden panes throttle animation) */
+  const FINAL = reduce || /[?&]final=1/.test(location.search);
+  const NS = 'http://www.w3.org/2000/svg';
+  const $ = (s, r = document) => r.querySelector(s), $$ = (s, r = document) => [...r.querySelectorAll(s)];
+
+  /* Run fn once when el is threshold-visible. Under FINAL it runs at once. */
+  function onView(el, fn, threshold = .3) {
+    if (!el) return;
+    if (FINAL || !('IntersectionObserver' in window)) { fn(); return; }
+    const io = new IntersectionObserver(es => es.forEach(e => { if (e.isIntersecting) { io.disconnect(); fn(); } }), { threshold });
+    io.observe(el);
+  }
+  /* Hide paths so they can be pen-drawn later. */
+  function prepDraw(paths) {
+    paths.forEach(p => { const L = p.getTotalLength ? p.getTotalLength() : 0; p.style.strokeDasharray = L + ' ' + L; p.style.strokeDashoffset = FINAL ? 0 : L; p.dataset.len = L; });
+  }
+  /* House pen rule: duration = length / speed, clamped .6-2.2s; next stroke starts at 82% of the previous.
+     parallel:true starts every path at once. Returns the time (s) when the set is done enough to chain. */
+  function penDraw(paths, { delay = 0, speed = 600, overlap = .82, parallel = false, min = .6, max = 2.2 } = {}) {
+    let t = delay, end = delay;
+    paths.forEach(p => {
+      const L = +p.dataset.len || p.getTotalLength();
+      const d = Math.min(max, Math.max(min, L / speed));
+      if (!p.dataset.len) { p.style.strokeDasharray = L + ' ' + L; p.style.strokeDashoffset = L; p.dataset.len = L; }
+      if (FINAL) { p.style.strokeDashoffset = 0; return; }
+      p.getBoundingClientRect();
+      p.style.transition = `stroke-dashoffset ${d}s var(--ease-draw) ${parallel ? delay : t}s`;
+      requestAnimationFrame(() => { p.style.strokeDashoffset = 0; });
+      if (parallel) end = Math.max(end, delay + d * overlap); else { t += d * overlap; end = t; }
+    });
+    return end;
+  }
+  /* Reveal blocks marked .rv; the ones already on screen at load show at once. */
+  function initReveal() {
+    const els = $$('.rv');
+    if (FINAL || !('IntersectionObserver' in window)) { els.forEach(e => e.classList.add('in')); return; }
+    const io = new IntersectionObserver(es => es.forEach(e => { if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); } }), { rootMargin: '0px 0px -12% 0px' });
+    els.forEach(e => io.observe(e));
+  }
+  addEventListener('DOMContentLoaded', initReveal);
+
+  /* ===== The motif =====
+     Paste the motif kit (assets/motifs/kit.js) and the direction's generator (assets/motifs/<direction>.js) here,
+     or draw the client's own object by hand as a TRUCK-style object of named parts (see assets/examples/coastline.html).
+     Name every part, so sections can light one part (badges) or change one part per step (the pinned stage). */
+    /* ===== The pendulum (Howard Marks): pivot = protect, swing = bend, weight = bet =====
+     Pend.draw(svg, opts) draws one pendulum into an empty <svg>.
+     opts: w, h, L (rod length), tilt (deg; negative = fear side, positive = greed side), weight ($B, sets the bob size),
+           wLabel (text on the bob), lit ('pivot'|'swing'|'weight'), arc (fear/greed arc), ghosts ([{tilt, weight, label}]),
+           parts (hand labels for protect, bend, bet), swing (animate from this angle to tilt, damped) */
+  const Pend = (() => {
+    const R = v => Math.max(5, 2.75 * Math.sqrt(v));
+    const el = (tag, at, parent) => { const n = document.createElementNS(NS, tag); for (const k in at) n.setAttribute(k, at[k]); if (parent) parent.appendChild(n); return n; };
+    const pos = (cx, py, L, deg) => { const a = deg * Math.PI / 180; return [cx + L * Math.sin(a), py + L * Math.cos(a)]; };
+    function draw(svg, o) {
+      const w = o.w || 400, h = o.h || 400, L = o.L || 260, cx = o.cx || w / 2, py = o.py || 40;
+      svg.setAttribute('viewBox', `0 0 ${w} ${h}`);
+      const lit = o.lit || '', small = !!o.small, sw = small ? 2.4 : 2;
+      const litStroke = 'var(--acc)';
+      /* the wall the pivot is fixed to */
+      const beam = el('g', {}, svg);
+      el('path', { class: 'ln', d: `M${cx - (small ? 22 : 70)} ${py - 10}H${cx + (small ? 22 : 70)}` }, beam);
+      if (!small) for (let x = cx - 64; x <= cx + 64; x += 12) el('path', { class: 'ln thin', d: `M${x} ${py - 10}l-9 -10` }, beam);
+      /* the arc the weight swings along */
+      if (o.arc || lit === 'swing') {
+        const A = o.arcDeg || 38, [x1, y1] = pos(cx, py, L, -A), [x2, y2] = pos(cx, py, L, A);
+        el('path', { class: 'ln hid', d: `M${x1} ${y1}A${L} ${L} 0 0 0 ${x2} ${y2}`, style: lit === 'swing' ? `stroke:${litStroke};stroke-width:${small ? 3 : 2.4};stroke-dasharray:${small ? '5 4' : '7 5'}` : '' }, svg);
+        if (o.arc && !small) {
+          el('text', { class: 'svg-label', x: x1, y: y1 - 16, 'text-anchor': 'middle' }, svg).textContent = 'FEAR';
+          el('text', { class: 'svg-label', x: x2, y: y2 - 16, 'text-anchor': 'middle' }, svg).textContent = 'GREED';
+        }
+      }
+      /* ghosts: earlier weights, faint, each with its number */
+      (o.ghosts || []).forEach(g => {
+        const [gx, gy] = pos(cx, py, L, g.tilt);
+        el('path', { class: 'ln guide', d: `M${cx} ${py}L${gx} ${gy}` }, svg);
+        el('circle', { cx: gx, cy: gy, r: R(g.weight), fill: 'none', stroke: 'var(--ink)', 'stroke-width': 1.2, 'stroke-dasharray': '3 4', opacity: .55 }, svg);
+        if (g.label) { const t = el('text', { class: 'svg-label', x: gx, y: gy + R(g.weight) + 20, 'text-anchor': 'middle', opacity: .85 }, svg); t.textContent = g.label; }
+      });
+      /* the rod and weight swing together around the pivot */
+      const arm = el('g', { class: 'pend-arm' }, svg);
+      arm.style.transformOrigin = `${cx}px ${py}px`;
+      arm.style.transformBox = 'view-box';
+      el('path', { class: 'ln', d: `M${cx} ${py}V${py + L - R(o.weight || 20)}`, style: `stroke-width:${sw}` }, arm);
+      const bob = el('circle', { cx, cy: py + L, r: R(o.weight || 20), fill: lit === 'weight' ? 'var(--tint-2)' : 'var(--card)', stroke: lit === 'weight' ? litStroke : 'var(--ink)', 'stroke-width': lit === 'weight' ? (small ? 3.2 : 3) : sw }, arm);
+      let wl = null;
+      let cur = o.tilt || 0, curV = o.weight || 20;
+      const place = () => { if (!wl) return; const [bx, by] = pos(cx, py, L, cur); wl.setAttribute('x', bx); wl.setAttribute('y', R(curV) > 30 ? by + 6 : by + R(curV) + 22); };
+      if (o.wLabel) { wl = el('text', { class: 'pend-wl', 'text-anchor': 'middle' }, svg); wl.textContent = o.wLabel; }
+      /* the pivot, fixed to the wall */
+      el('circle', { cx, cy: py, r: small ? 5 : 7, fill: lit === 'pivot' ? 'var(--acc)' : 'var(--paper)', stroke: lit === 'pivot' ? litStroke : 'var(--ink)', 'stroke-width': lit === 'pivot' ? 3 : sw }, svg);
+      if (lit === 'pivot' && small) el('circle', { cx, cy: py, r: 11, fill: 'none', stroke: litStroke, 'stroke-width': 2 }, svg);
+      /* hand labels for the three parts (hero only) */
+      if (o.parts) {
+        const hand = (x, y, s, anchor) => { const t = el('text', { class: 'svg-hand pend-hand', x, y, 'text-anchor': anchor || 'start' }, svg); t.textContent = s; return t; };
+        hand(cx + 22, py + 6, 'protect: R&D, fixed');
+        const [ax, ay] = pos(cx, py, L * .62, 30);
+        const [bx2, by2] = pos(cx, py, L + 26, -24);
+        hand(bx2, by2 + 10, 'bend: costs, re-planned', 'end'); hand(bx2, by2 + 38, 'every quarter', 'end');
+        hand(cx + R(o.weight || 20) + 12, py + L + 34, 'bet: stock and money'); hand(cx + R(o.weight || 20) + 12, py + L + 62, 'promised to suppliers');
+      }
+      const set = deg => { cur = deg; arm.style.transform = `rotate(${-deg}deg)`; place(); };
+      set(o.tilt || 0);
+      const setW = v => { curV = v; bob.setAttribute('r', R(v)); place(); };
+      return { arm, bob, wl, set, setW, R, cx, py, L,
+        /* damped swing from `from` to rest at `to`, about 3 s; calm, once */
+        swing(from, to, ms = 3200) {
+          if (FINAL) { set(to); return; }
+          const t0 = performance.now(), amp = from - to;
+          const tick = now => { const t = Math.min(1, (now - t0) / ms); set(to + amp * Math.cos(t * Math.PI * 3) * Math.pow(1 - t, 2)); if (t < 1) requestAnimationFrame(tick); };
+          requestAnimationFrame(tick);
+        },
+        /* grow the weight through a list of values, relabelling as it goes */
+        grow(steps, fmt, ms = 900) {
+          if (FINAL) { const v = steps[steps.length - 1]; curV = v; bob.setAttribute('r', R(v)); if (wl) wl.textContent = fmt(v); place(); return; }
+          let i = 0;
+          const next = () => { if (i >= steps.length) return; const v = steps[i++]; bob.style.transition = `r ${ms}ms var(--ease-out)`; curV = v; bob.setAttribute('r', R(v)); if (wl) wl.textContent = fmt(v); place(); setTimeout(next, ms + 250); };
+          next();
+        } };
+    }
+    /* small glyph: which part of the risk plan a slide is about */
+    function glyph(holder) {
+      const part = holder.dataset.part, svg = document.createElementNS(NS, 'svg');
+      svg.setAttribute('aria-hidden', 'true'); svg.classList.add('nv-glyph');
+      holder.prepend(svg);
+      draw(svg, { w: 64, h: 76, L: 44, py: 14, small: true, weight: part === 'weight' ? 28 : 12, lit: part, tilt: part === 'swing' ? 22 : 0, arcDeg: 34 });
+    }
+    return { draw, glyph, R };
+  })();
+  addEventListener('DOMContentLoaded', () => $$('.nv-part').forEach(Pend.glyph));
+
+</script>
+
+<!-- Shared SVG defs: arrowheads and the graphite pencil filter. Not display:none, or markers and filters break. -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+    <marker id="arr" viewBox="0 0 10 10" refX="5" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 2L10 5L0 8Z" fill="#11241B"/></marker>
+    <marker id="arr-red" viewBox="0 0 10 10" refX="5" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 2L10 5L0 8Z" fill="#DB6304"/></marker>
+    <filter id="graphite" x="-5%" y="-5%" width="110%" height="110%">
+      <feTurbulence type="fractalNoise" baseFrequency=".9" numOctaves="2" seed="4" result="t"/>
+      <feDisplacementMap in="SourceGraphic" in2="t" scale=".9" xChannelSelector="R" yChannelSelector="G"/>
+    </filter>
+  </defs>
+</svg>
+
+<div class="gate" role="dialog" aria-label="Open on a larger screen">
+  <div>
+    <svg viewBox="0 0 120 80" width="120" aria-hidden="true"><path class="ln" style="stroke:var(--marker)" d="M20 14h80v46H20zM8 66h104"/></svg>
+    <p>Open this on your laptop or tablet</p>
+    <small>These slides are built for a laptop or projector.</small>
+  </div>
+</div>
+
+<main>
+<!-- =====================================================================
+  ARCHITECTURE SHELL: PAGED, "the paper deck"
+  Copy to work/frag-00-arch.html so it loads before every section. Sections stay as they are.
+
+  - Every top-level <section> in <main> becomes one sheet of paper resting on the direction's dark ground,
+    one sheet at a time. The sheet keeps the section's own background (its band colour).
+  - Reader controls: Next and Previous (bottom right), arrow keys, PageUp/PageDown, Space, Home/End, swipe.
+    Counter "03 / 09". Deep links: #page-3, or #<id> of anything inside a sheet (plain anchors).
+  - Builds: an element with data-step="1".."n" inside a sheet stays hidden until Next shows it, in order,
+    before the deck turns. Back steps backwards; a sheet reached by going back shows every step.
+    (A pinned stage also writes data-step: never use a pinned stage with this shell. The sheet is the stage.)
+  - Fit: a sheet taller than the screen tries tighter type, a narrower column, then head beside visual
+    (the data-cps-fit levels below). If nothing fits, it scrolls inside itself and Next reads "More".
+    Section-specific fit rules go in their own fragment (work/frag-00-fit.html, scoped html.arch-paged #id),
+    never in this file. Set --cps-split:no on a section there to rule out head beside visual.
+  - Events, dispatched on the section and bubbling:
+      cps:enter {index, total, dir}   the sheet became current      cps:leave {index, total, dir}
+      cps:step  {step, steps}         a build step changed (also sent on enter for a sheet with steps)
+    onView and .rv work unchanged: waiting sheets sit off screen, so IntersectionObserver fires when their
+    sheet arrives. Scrolling inside a sheet is forwarded as a window scroll event.
+  - window.CPS = {arch, go(n), next(), prev(), index()}  (n is 0-based)
+  - FINAL (?final=1 or reduced motion): sheets stacked vertically on the ground, every step shown, no controls.
+    The starter's phone gate still applies. Print: one sheet per page.
+  ===================================================================== -->
+<style>
+  html.arch-paged{--pg-m:clamp(10px,1.4vw,18px);--pg-bar:64px;--pg-desk:var(--ground);
+    --pg-shadow:0 0 0 1px rgba(255,255,255,.05),0 1px 2px rgba(0,0,0,.3),0 22px 48px -24px rgba(0,0,0,.75);
+    --pg-lift:0 0 0 1px rgba(255,255,255,.05),0 3px 6px rgba(0,0,0,.25),0 40px 70px -28px rgba(0,0,0,.85)}
+  /* the desk sits a shade below the ground, so a dark sheet still reads as paper on it */
+  @supports (color:color-mix(in srgb,red,blue)){html.arch-paged{--pg-desk:color-mix(in srgb,var(--ground) 68%,#000)}}
+  html.arch-paged body{background:var(--pg-desk)}
+
+  /* ---- Every sheet, deck or stacked ---- */
+  html.arch-paged main > section{display:flex;flex-direction:column;border-radius:var(--r-sheet,3px);box-shadow:var(--pg-shadow)}
+  :where(html.arch-paged main > section){background-color:var(--paper)}
+  html.arch-paged main > section > *{flex-shrink:0}
+  html.arch-paged main > section > .wrap{width:100%}
+  /* content shorter than the sheet sits in its middle; taller content starts at the top and scrolls */
+  html.arch-paged main > section::before,html.arch-paged main > section::after{content:"";flex:1 0 0px}
+  html.arch-paged main > section.band{padding-top:clamp(32px,6vh,60px) !important;padding-bottom:clamp(32px,6vh,60px) !important}
+  html.arch-paged main > section .band-head{margin-bottom:clamp(22px,3.6vh,40px)}
+
+  /* ---- Deck: one sheet at a time ---- */
+  html.pg-deck,html.pg-deck body{overscroll-behavior:none}
+  html.pg-deck main{position:fixed;inset:0;overflow:hidden;overflow:clip}
+  html.pg-deck main > section{position:absolute !important;top:var(--pg-m) !important;left:var(--pg-m) !important;
+    right:var(--pg-m) !important;bottom:var(--pg-bar) !important;width:auto !important;height:auto !important;
+    min-height:0 !important;max-height:none !important;margin:0 !important;
+    overflow-x:hidden !important;overflow-y:auto !important;overscroll-behavior:contain;
+    scrollbar-width:thin;scrollbar-color:rgba(0,0,0,.28) transparent;
+    z-index:1;visibility:hidden;translate:0 130vh} /* parked off screen: IntersectionObserver reports it unseen */
+  html.pg-deck main > section.pg-on,html.pg-deck main > section.pg-out,
+  html.pg-deck:not(.pg-ready) main > section:first-of-type{visibility:visible;translate:none}
+  html.pg-deck main > section.pg-on{z-index:2}
+  html.pg-deck main > section.pg-out{z-index:3;pointer-events:none} /* the old sheet lifts off on top */
+  /* the turn: the old sheet lifts and slides 24px while fading; the new one settles in underneath */
+  html.pg-deck main > section.pg-anim{transition:transform .7s var(--ease-out),opacity .55s var(--ease-out),box-shadow .7s var(--ease-out)}
+  html.pg-deck main > section.pg-in-f{transform:translate3d(24px,0,0)}
+  html.pg-deck main > section.pg-in-b{transform:translate3d(-24px,0,0)}
+  html.pg-deck main > section.pg-out-f{transform:translate3d(-24px,-6px,0);opacity:0;box-shadow:var(--pg-lift)}
+  html.pg-deck main > section.pg-out-b{transform:translate3d(24px,-6px,0);opacity:0;box-shadow:var(--pg-lift)}
+  /* builds: fade only, so a step never fights an element's own transform or translate */
+  html.pg-deck main > section [data-step]{opacity:0;visibility:hidden;transition:opacity .6s var(--ease-out),visibility 0s linear .6s}
+  html.pg-deck main > section [data-step].pg-shown{opacity:1;visibility:visible;transition:opacity .6s var(--ease-out),visibility 0s}
+
+  /* ---- Stacked (FINAL): the same sheets one under another, every step shown ---- */
+  html.arch-paged:not(.pg-deck) main{padding:var(--pg-m) var(--pg-m) 0}
+  html.arch-paged:not(.pg-deck) main > section{height:calc(100vh - var(--pg-m) - var(--pg-bar)) !important;
+    min-height:0 !important;max-height:none !important;margin:0 0 var(--pg-m) !important;overflow:hidden !important} /* hidden: the fit test counts the bottom padding, as in the deck */
+  html.arch-paged:not(.pg-deck) main > section.pg-tall{height:auto !important;min-height:calc(100vh - var(--pg-m) - var(--pg-bar)) !important}
+
+  /* ---- Fit levels, set by the script only on sheets that overflow (first level that fits wins) ----
+     1 tighter type and spacing · 2 plus a 1000px column · 3 head beside visual · 4 that, tighter
+     5 an 860px column · 6 a 760px column */
+  html.arch-paged main > section[data-cps-fit].band{padding-top:clamp(22px,4vh,40px) !important;padding-bottom:clamp(22px,4vh,40px) !important}
+  html.arch-paged main > section[data-cps-fit] h2{font-size:clamp(30px,3.3vw,46px)}
+  html.arch-paged main > section[data-cps-fit] .lede{font-size:17px}
+  html.arch-paged main > section[data-cps-fit] .band-head{gap:12px;margin-bottom:clamp(14px,2.6vh,28px)}
+  html.arch-paged main > section[data-cps-fit="2"]{--wrap:1000px}
+  html.arch-paged main > section[data-cps-fit="4"].band{padding-top:clamp(14px,2.4vh,24px) !important;padding-bottom:clamp(14px,2.4vh,24px) !important}
+  html.arch-paged main > section[data-cps-fit="4"] h2{font-size:clamp(28px,2.8vw,40px)}
+  html.arch-paged main > section[data-cps-fit="4"] h3{font-size:clamp(20px,1.8vw,24px)}
+  html.arch-paged main > section[data-cps-fit="5"]{--wrap:860px}
+  html.arch-paged main > section[data-cps-fit="6"]{--wrap:760px}
+  html.arch-paged main > section .wrap.cps-split{display:grid;grid-template-columns:minmax(0,5fr) minmax(0,7fr);column-gap:clamp(28px,4vw,64px);align-items:center}
+  html.arch-paged main > section .wrap.cps-split > *{margin-top:0 !important;margin-bottom:0 !important;min-width:0}
+
+  /* ---- Controls: on the ground under the sheet, never over it ---- */
+  .pg-bar{display:none}
+  html.pg-deck .pg-bar{position:fixed;left:var(--pg-m);right:var(--pg-m);bottom:0;height:var(--pg-bar);z-index:10;
+    display:flex;align-items:center;justify-content:space-between;gap:20px;color:var(--paper)}
+  .pg-title{margin:0;min-width:0;flex:1 1 auto;font:500 11.5px/1.3 var(--font-label);letter-spacing:.08em;text-transform:uppercase;
+    white-space:nowrap;overflow:hidden;text-overflow:ellipsis;opacity:.62}
+  .pg-ctl{display:flex;align-items:center;gap:14px;flex:none}
+  .pg-count{margin:0;font:500 13px/1 var(--font-label);letter-spacing:.06em;font-variant-numeric:tabular-nums;white-space:nowrap}
+  .pg-count span{opacity:.62}
+  .pg-sr{position:absolute;width:1px;height:1px;overflow:hidden;clip-path:inset(50%);white-space:nowrap}
+  .pg-dots{display:flex;gap:6px}
+  .pg-dots i{width:6px;height:6px;border-radius:50%;box-shadow:inset 0 0 0 1px rgba(255,255,255,.5);transition:background-color .3s var(--ease-out)}
+  .pg-dots i.on{background:var(--paper);box-shadow:none}
+  .pg-bar button{height:46px;border:0;border-radius:4px;cursor:pointer;display:inline-flex;align-items:center;justify-content:center;gap:10px;
+    font:600 15px/1 var(--font-body);-webkit-tap-highlight-color:transparent;
+    transition:scale .15s ease-out,opacity .2s ease-out,box-shadow .3s var(--ease-out)}
+  .pg-bar button:not(:disabled):active{scale:.96}
+  .pg-bar button:disabled{opacity:.32;cursor:default}
+  .pg-bar button:focus-visible{outline:2px solid var(--paper);outline-offset:3px}
+  .pg-bar svg{width:20px;height:20px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;transition:rotate .25s var(--ease-out)}
+  .pg-prev{width:46px;background:transparent;color:var(--paper);box-shadow:inset 0 0 0 1.5px rgba(255,255,255,.4)}
+  .pg-next{min-width:132px;padding:0 18px 0 22px;background:var(--paper);color:var(--ink)}
+  .pg-next.pg-down svg{rotate:90deg}
+  .pg-bar button.pg-nudge{box-shadow:0 0 0 4px rgba(255,255,255,.4)}
+  .pg-prev.pg-nudge{box-shadow:inset 0 0 0 1.5px rgba(255,255,255,.4),0 0 0 4px rgba(255,255,255,.4)}
+  @media (max-width:899px){.pg-dots{display:none}}
+
+  @media print{
+    html.pg-deck main{position:static;overflow:visible}
+    html.pg-deck main > section{position:relative !important;inset:auto !important;height:auto !important;visibility:visible;translate:none;
+      transform:none;opacity:1;overflow:visible !important;box-shadow:none;break-after:page}
+    html.pg-deck main > section [data-step]{opacity:1;visibility:visible}
+    html.pg-deck .pg-bar{display:none}
+  }
+</style>
+
+<nav class="pg-bar" aria-label="Pages">
+  <p class="pg-title" aria-hidden="true"></p>
+  <div class="pg-ctl">
+    <span class="pg-dots" aria-hidden="true"></span>
+    <p class="pg-count" aria-live="polite"><span class="pg-sr">Page </span><b class="pg-now">01</b><span> / </span><span class="pg-all">01</span></p>
+    <button class="pg-prev" type="button" aria-label="Previous page"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20 12H5M11 6l-6 6 6 6"/></svg></button>
+    <button class="pg-next" type="button"><span class="pg-next-label">Next</span><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 12h15M13 6l6 6-6 6"/></svg></button>
+  </div>
+</nav>
+
+<script>
+(() => {
+  const root = document.documentElement, deck = !FINAL;
+  root.classList.add('arch-paged');
+  if (deck) root.classList.add('pg-deck');
+
+  /* Deep link before the first paint: show sheet N instead of sheet 1 */
+  const want = /^#page-(\d+)$/.exec(location.hash);
+  if (deck && want && +want[1] > 1) {
+    const st = document.createElement('style');
+    st.textContent = `html.pg-deck:not(.pg-ready) main>section:first-of-type{visibility:hidden;translate:0 130vh}
+      html.pg-deck:not(.pg-ready) main>section:nth-of-type(${+want[1]}){visibility:visible;translate:none}`;
+    document.head.appendChild(st);
+  }
+
+  /* Reveal: the starter's observer skips the bottom 12% of the screen, where a sheet's lower edge sits.
+     On a deck the whole screen counts; waiting sheets are off screen, so blocks reveal when their sheet arrives. */
+  if (deck && typeof initReveal === 'function') {
+    removeEventListener('DOMContentLoaded', initReveal);
+    addEventListener('DOMContentLoaded', () => {
+      const els = $$('.rv');
+      if (!('IntersectionObserver' in window)) { els.forEach(e => e.classList.add('in')); return; }
+      const io = new IntersectionObserver(es => es.forEach(e => { if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); } }));
+      els.forEach(e => io.observe(e));
+    });
+  }
+
+  addEventListener('DOMContentLoaded', () => {
+    const main = $('main'), bar = $('.pg-bar');
+    const sheets = main ? $$(':scope > section', main) : [], N = sheets.length;
+    if (!N || !bar) return;
+    const ev = (el, name, detail) => el.dispatchEvent(new CustomEvent(name, { bubbles: true, detail }));
+    const stepOf = e => +e.dataset.step || 0;
+    const steps = sheets.map(s => $$('[data-step]', s).reduce((m, e) => Math.max(m, stepOf(e)), 0));
+    const titleOf = s => (s.dataset.title || ($('h2', s) || $('h1', s) || {}).textContent || s.getAttribute('aria-label') || '').replace(/\s+/g, ' ').trim();
+    const pad = n => String(n).padStart(2, '0');
+    const more = s => s.scrollTop + s.clientHeight < s.scrollHeight - 8;
+    const nextBtn = $('.pg-next', bar), prevBtn = $('.pg-prev', bar), nextLabel = $('.pg-next-label', bar);
+    const nowEl = $('.pg-now', bar), titleEl = $('.pg-title', bar), dots = $('.pg-dots', bar);
+    $('.pg-all', bar).textContent = pad(N);
+    dots.innerHTML = sheets.map(() => '<i></i>').join('');
+    let cur = -1, step = 0, leaving = null, timer = 0, update = () => {};
+
+    /* ---- Fit: first level that fits wins; otherwise the sheet scrolls (deck) or grows (stacked) ---- */
+    const SPLIT = [3, 4];
+    const kids = w => w ? [...w.children].filter(k => !/^(STYLE|SCRIPT|TEMPLATE)$/.test(k.tagName) && getComputedStyle(k).position !== 'absolute') : [];
+    /* head beside visual is skipped when the visual places HTML text by % (it would wrap and collide),
+       or when a fit rule sets --cps-split: no on the section */
+    const splitOk = (s, vis) => getComputedStyle(s).getPropertyValue('--cps-split').trim() !== 'no' &&
+      ![...vis.querySelectorAll('*')].some(n => !(n instanceof SVGElement) && getComputedStyle(n).position === 'absolute' && n.textContent.trim().length > 12);
+    function fitAll() {
+      const land = innerWidth / innerHeight > 1.15;
+      sheets.forEach(s => {
+        const w = s.querySelector(':scope > .wrap'), k = kids(w), canSplit = land && k.length === 2 && splitOk(s, k[1]);
+        const set = lv => { if (lv) s.dataset.cpsFit = lv; else delete s.dataset.cpsFit; if (w) w.classList.toggle('cps-split', SPLIT.includes(lv)); };
+        const fits = () => s.scrollHeight - s.clientHeight <= 2;
+        s.classList.remove('pg-tall'); set(0);
+        if (fits()) return;
+        for (const lv of [1, 2, 3, 4, 5, 6]) { if (SPLIT.includes(lv) && !canSplit) continue; set(lv); if (fits()) return; }
+        set(0); if (!deck) s.classList.add('pg-tall');
+      });
+      if (cur >= 0) update();
+    }
+
+    if (!deck) {   /* stacked: every step shown by the CSS; tell modules each sheet is in its finished state */
+      fitAll();
+      sheets.forEach((s, i) => { ev(s, 'cps:enter', { index: i, total: N, dir: 1 }); if (steps[i]) ev(s, 'cps:step', { step: steps[i], steps: steps[i] }); });
+    } else {
+      const show = (s, n) => $$('[data-step]', s).forEach(e => e.classList.toggle('pg-shown', stepOf(e) <= n));
+      const park = s => { s.classList.remove('pg-on', 'pg-out', 'pg-anim', 'pg-in-f', 'pg-in-b', 'pg-out-f', 'pg-out-b'); s.inert = true; s.setAttribute('aria-hidden', 'true'); };
+      const settle = () => { clearTimeout(timer); if (leaving) { park(leaving); leaving = null; } if (cur >= 0) sheets[cur].classList.remove('pg-anim'); };
+      const nudge = b => { if (b.classList.contains('pg-nudge')) return; b.classList.add('pg-nudge'); setTimeout(() => b.classList.remove('pg-nudge'), 900); };
+
+      update = () => {
+        const s = sheets[cur], built = step >= steps[cur], down = built && more(s);
+        nowEl.textContent = pad(cur + 1);
+        [...dots.children].forEach((d, i) => d.classList.toggle('on', i === cur));
+        titleEl.textContent = titleOf(s);
+        prevBtn.disabled = cur === 0 && step === 0 && s.scrollTop <= 8;
+        const end = cur === N - 1 && built && !down;
+        nextBtn.disabled = end;
+        nextLabel.textContent = end ? 'End' : down ? 'More' : 'Next';
+        nextBtn.classList.toggle('pg-down', down);
+      };
+
+      function go(n, { dir, built = false, instant = false, target = null } = {}) {
+        n = Math.max(0, Math.min(N - 1, n));
+        if (n === cur) return;
+        if (dir === undefined) dir = n > cur ? 1 : -1;
+        settle();
+        const from = cur >= 0 ? sheets[cur] : null, to = sheets[n];
+        if (from) ev(from, 'cps:leave', { index: cur, total: N, dir });
+        step = built ? steps[n] : 0; show(to, step);
+        to.inert = false; to.removeAttribute('aria-hidden');
+        if (from && !instant) {
+          to.classList.add('pg-on', dir > 0 ? 'pg-in-f' : 'pg-in-b');
+          from.classList.remove('pg-on'); from.classList.add('pg-out'); from.inert = true;
+          to.scrollTop = 0;
+          void to.offsetWidth;                     /* commit the start position, then let both sheets move */
+          to.classList.add('pg-anim'); from.classList.add('pg-anim');
+          to.classList.remove('pg-in-f', 'pg-in-b');
+          from.classList.add(dir > 0 ? 'pg-out-f' : 'pg-out-b');
+          leaving = from; timer = setTimeout(settle, 780);
+        } else {
+          sheets.forEach(s => { if (s !== to) park(s); });
+          to.classList.add('pg-on');
+        }
+        cur = n; to.scrollTop = 0;
+        if (target && target !== to) to.scrollTop = Math.max(0, target.getBoundingClientRect().top - to.getBoundingClientRect().top - 24);
+        ev(to, 'cps:enter', { index: n, total: N, dir });
+        if (steps[n]) ev(to, 'cps:step', { step, steps: steps[n] });
+        update();
+        if (from) try { history.replaceState(null, '', '#page-' + (n + 1)); } catch (e) {}
+        dispatchEvent(new Event('scroll'));       /* scroll-listening helpers re-measure the new sheet */
+      }
+      function setStep(n) {
+        const s = sheets[cur]; step = n; show(s, n);
+        ev(s, 'cps:step', { step: n, steps: steps[cur] });
+        const fresh = $$('[data-step]', s).filter(e => stepOf(e) === n);
+        if (fresh.length) {   /* a new step below the fold scrolls into view inside the sheet */
+          const b = Math.max(...fresh.map(e => e.getBoundingClientRect().bottom)), r = s.getBoundingClientRect();
+          if (b > r.bottom - 16) s.scrollBy({ top: b - r.bottom + 32, behavior: 'smooth' });
+        }
+        update();
+      }
+      function next(scrollFirst = true) {
+        const s = sheets[cur];
+        if (step < steps[cur]) return setStep(step + 1);
+        if (scrollFirst && more(s)) return s.scrollBy({ top: s.clientHeight * .8, behavior: 'smooth' });
+        if (cur < N - 1) go(cur + 1, { dir: 1 }); else nudge(nextBtn);
+      }
+      function prev(scrollFirst = true) {
+        const s = sheets[cur];
+        if (scrollFirst && s.scrollTop > 8) return s.scrollBy({ top: -s.clientHeight * .8, behavior: 'smooth' });
+        if (step > 0) return setStep(step - 1);
+        if (cur > 0) go(cur - 1, { dir: -1, built: true }); else nudge(prevBtn);
+      }
+      function fromHash() {
+        let h = location.hash.slice(1); try { h = decodeURIComponent(h); } catch (e) {}
+        if (!h) return null;
+        const m = /^page-(\d+)$/.exec(h);
+        if (m) return { i: Math.max(0, Math.min(N - 1, +m[1] - 1)), el: null };
+        const el = document.getElementById(h), i = el ? sheets.findIndex(s => s.contains(el)) : -1;
+        return i < 0 ? null : { i, el };
+      }
+
+      /* Start */
+      sheets.forEach(park);
+      const t0 = fromHash();
+      go(t0 ? t0.i : 0, { instant: true, target: t0 && t0.el });
+      root.classList.add('pg-ready');
+      fitAll();
+
+      nextBtn.addEventListener('click', () => next());
+      prevBtn.addEventListener('click', () => prev());
+      addEventListener('hashchange', () => { const t = fromHash(); if (t && t.i !== cur) go(t.i, { target: t.el }); });
+      addEventListener('keydown', e => {
+        if (e.defaultPrevented || e.altKey || e.ctrlKey || e.metaKey) return;
+        const t = e.target, k = e.key;
+        if (t.closest && t.closest('input, textarea, select, [contenteditable]:not([contenteditable="false"])')) return;
+        if ((k === ' ' || k === 'Enter') && t.closest && t.closest('button, a[href], summary')) return;
+        const s = sheets[cur];
+        let f = null;
+        if (k === 'ArrowRight' || k === 'PageDown' || (k === ' ' && !e.shiftKey)) f = () => next();
+        else if (k === 'ArrowLeft' || k === 'PageUp' || (k === ' ' && e.shiftKey)) f = () => prev();
+        else if (k === 'ArrowDown') f = () => more(s) ? s.scrollBy({ top: 64 }) : next();
+        else if (k === 'ArrowUp') f = () => s.scrollTop > 0 ? s.scrollBy({ top: -64 }) : prev();
+        else if (k === 'Home') f = () => go(0);
+        else if (k === 'End') f = () => go(N - 1, { built: true });
+        if (f) { e.preventDefault(); f(); }
+      });
+      /* swipe sideways turns the page; swiping up and down scrolls a tall sheet as usual */
+      let tx = null, ty = 0, tt = 0;
+      main.addEventListener('touchstart', e => { if (e.touches.length !== 1) { tx = null; return; } tx = e.touches[0].clientX; ty = e.touches[0].clientY; tt = Date.now(); }, { passive: true });
+      main.addEventListener('touchend', e => {
+        if (tx === null) return;
+        const p = e.changedTouches[0], dx = p.clientX - tx, dy = p.clientY - ty; tx = null;
+        if (Math.abs(dx) > 50 && Math.abs(dx) > Math.abs(dy) * 1.4 && Date.now() - tt < 900) dx < 0 ? next(false) : prev(false);
+      }, { passive: true });
+      /* the wheel never turns pages; at a sheet's end it points at the button that does */
+      main.addEventListener('wheel', e => {
+        if (Math.abs(e.deltaY) < 4) return;
+        const s = sheets[cur];
+        if (e.deltaY > 0 ? !more(s) : s.scrollTop <= 0) nudge(e.deltaY > 0 ? nextBtn : prevBtn);
+      }, { passive: true });
+      let raf = 0;
+      sheets.forEach(s => s.addEventListener('scroll', () => {
+        if (raf) return;
+        raf = requestAnimationFrame(() => { raf = 0; update(); dispatchEvent(new Event('scroll')); });
+      }, { passive: true }));
+      window.CPS = { arch: 'paged', go: n => go(n), next: () => next(), prev: () => prev(), index: () => cur };
+    }
+
+    let rt = 0;
+    addEventListener('resize', () => { clearTimeout(rt); rt = setTimeout(fitAll, 150); });
+    if (document.fonts && document.fonts.ready) document.fonts.ready.then(fitAll);
+    addEventListener('load', fitAll);
+  });
+})();
+</script>
+
+<style>
+  /* Shared slide layout for every sheet (prefix nv-) */
+  main > section{background:var(--paper)}
+  .nv-grid{display:grid;grid-template-columns:minmax(0,5fr) minmax(0,6fr);column-gap:clamp(32px,5vw,72px);align-items:center}
+  .nv-copy{display:grid;gap:20px;align-content:center}
+  .nv-copy h2,.nv-copy h1{font-size:clamp(36px,4.2vw,60px);line-height:1.04}
+  .nv-copy .lede{color:var(--ink);font-size:clamp(19px,1.7vw,24px);line-height:1.45;max-width:30ch}
+  .nv-src{font:400 12.5px/1.45 var(--font-label);color:var(--muted);max-width:52ch}
+  .nv-part{display:flex;align-items:center;gap:10px;font:500 13px/1 var(--font-label);letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+  .nv-part b{color:var(--ink);font-weight:500}
+  .nv-glyph{width:44px;height:52px;flex:none}
+  .nv-vis svg{display:block;width:100%;height:auto;max-height:68vh;overflow:visible}
+  #marks-svg{overflow:visible}
+  .svg-label{font:500 13px var(--font-label);letter-spacing:.06em;fill:var(--ink)}
+  .svg-hand{font:600 24px var(--font-hand);fill:var(--red)}
+  .pend-wl{font:500 14px var(--font-label);fill:var(--ink)}
+  .nv-num{font:700 15px var(--font-label);fill:var(--ink)}
+  .nv-axis{font:500 13px var(--font-label);fill:var(--muted)}
+  mark{background-image:linear-gradient(var(--marker),var(--marker))}
+  @media (max-aspect-ratio:1/1){ .nv-grid{grid-template-columns:1fr;row-gap:28px} }
+</style>
+
+<style>
+  /* Presenting: no bottom bar, each slide fills the whole screen (Ash, Nov 5).
+     Arrow keys, Space, PageUp/PageDown and a presentation clicker still turn pages; F toggles browser full screen. */
+  html.arch-paged{--pg-m:0px;--pg-bar:0px}
+  html.pg-deck .pg-bar{display:none !important}
+  html.arch-paged main > section{border-radius:0 !important;box-shadow:none !important}
+  html.pg-deck main > section.pg-out-f,html.pg-deck main > section.pg-out-b{box-shadow:none}
+  /* scale with the screen, so a projector shows big type */
+  :root{--wrap:min(1720px,88vw)}
+  .nv-copy h1,.nv-copy h2{font-size:clamp(36px,4.3vw,88px)}
+  .marks-head h2{font-size:clamp(34px,3.9vw,80px)}
+  .nv-copy .lede,.marks-head .lede{font-size:clamp(19px,1.75vw,36px)}
+  .nv-src{font-size:clamp(12.5px,.85vw,17px);max-width:60ch}
+  .nv-part{font-size:clamp(13px,.9vw,18px)}
+  .nv-glyph{width:clamp(44px,3vw,64px);height:clamp(52px,3.6vw,76px)}
+  .label{font-size:clamp(11.5px,.85vw,17px)}
+  .var-t{font-size:clamp(17px,1.6vw,32px)}
+  .var-t thead th{font-size:clamp(13px,.85vw,17px)}
+  .var-key{font-size:clamp(15px,1vw,20px)}
+  .marks-q p{font-size:clamp(18px,1.6vw,32px)}
+  .marks-q cite{font-size:clamp(12.5px,.8vw,16px)}
+  .hid-more{font-size:clamp(17px,1.4vw,28px)}
+  .close-ask{font-size:clamp(24px,2.4vw,48px)}
+  .nv-vis svg{max-height:72vh}
+  #marks-svg{max-height:48vh}
+</style>
+<script>
+addEventListener('keydown', e => {
+  if (e.key !== 'f' && e.key !== 'F') return;
+  if (e.altKey || e.ctrlKey || e.metaKey) return;
+  try { document.fullscreenElement ? document.exitFullscreen() : document.documentElement.requestFullscreen(); } catch (err) {}
+});
+</script>
+
+<section id="hero" class="band" data-title="A budget is a risk plan">
+  <div class="wrap nv-grid">
+    <div class="nv-copy">
+      <p class="label">Unit 2: budgets and variance, on Nvidia</p>
+      <h1>What is a budget for, when nobody knows next year?</h1>
+      <p class="lede">Deciding what to protect, what can bend and what to bet. <mark class="hero-mk">A budget is a risk plan.</mark></p>
+      <p class="nv-src">Fear and greed: the market's mood. Howard Marks, an investor who writes about risk, says it swings like a pendulum.</p>
+    </div>
+    <div class="nv-vis"><svg id="hero-svg" role="img" aria-label="A pendulum. The pivot is fixed to the wall: what to protect. The arm swings: what can bend. The weight is the bet. It swings between fear and greed."></svg></div>
+  </div>
+</section>
+<script>
+(() => {
+  const svg = $('#hero-svg');
+  const p = Pend.draw(svg, { w: 540, h: 520, L: 290, py: 60, cx: 250, weight: 70, arc: true, parts: true, tilt: 0 });
+  const sec = $('#hero');
+  let done = false;
+  const go = () => { if (done) return; done = true; p.swing(34, 0); setTimeout(() => $('.hero-mk').classList.add('in'), FINAL ? 0 : 1200); };
+  sec.addEventListener('cps:enter', go);
+  onView(sec, go, .2);
+})();
+</script>
+
+<section id="rd" class="band" data-title="How Nvidia budgets">
+  <div class="wrap nv-grid">
+    <div class="nv-copy">
+      <p class="nv-part" data-part="pivot"><span>The pivot: <b>protect</b></span></p>
+      <h2>How does Nvidia budget?</h2>
+      <p class="lede">It protects R&amp;D in good years and bad. In FY23 sales were flat, and R&amp;D still rose 39%.</p>
+      <p class="nv-src">Source: Nvidia annual reports (10-K), FY22 to FY26. FY26 ended in January 2026.</p>
+    </div>
+    <div class="nv-vis"><svg id="rd-svg" role="img" aria-label="Nvidia R&amp;D spending by year in billions of dollars: FY22 5.3, FY23 7.3, FY24 8.7, FY25 12.9, FY26 18.5. Sales: 27, 27, 61, 130, 216."></svg></div>
+  </div>
+</section>
+<script>
+(() => {
+  const svg = $('#rd-svg'), W = 560, H = 440, base = 330, top = 70, max = 18.5;
+  svg.setAttribute('viewBox', `0 0 ${W} ${H}`);
+  const data = [['FY22', 5.3, 27], ['FY23', 7.3, 27], ['FY24', 8.7, 61], ['FY25', 12.9, 130], ['FY26', 18.5, 216]];
+  const mk = (t, a) => { const n = document.createElementNS(NS, t); for (const k in a) n.setAttribute(k, a[k]); svg.appendChild(n); return n; };
+  mk('text', { class: 'nv-axis', x: 0, y: 24 }).textContent = 'R&D, $ BILLIONS';
+  mk('path', { class: 'ln thin', d: `M0 ${base}H${W}` });
+  const bw = 66, gap = (W - bw * 5) / 5, bars = [];
+  data.forEach(([y, rd, sales], i) => {
+    const x = gap / 2 + i * (bw + gap), h = (rd / max) * (base - top), hot = y === 'FY23';
+    const r = mk('rect', { x, y: base - h, width: bw, height: h, rx: 2, fill: hot ? 'var(--acc)' : 'var(--tint-1)', stroke: 'var(--ink)', 'stroke-width': 1.2 });
+    r.style.transformOrigin = `${x}px ${base}px`; r.style.transformBox = 'view-box'; bars.push(r);
+    mk('text', { class: 'nv-num', x: x + bw / 2, y: base - h - 10, 'text-anchor': 'middle' }).textContent = rd.toFixed(1);
+    mk('text', { class: 'svg-label', x: x + bw / 2, y: base + 24, 'text-anchor': 'middle' }).textContent = y;
+    mk('text', { class: 'nv-axis', x: x + bw / 2, y: base + 46, 'text-anchor': 'middle' }).textContent = `sales ${sales}`;
+  });
+  mk('text', { class: 'nv-axis', x: 0, y: base + 76 }).textContent = 'SALES, $ BILLIONS, UNDER EACH YEAR';
+  const fx = gap / 2 + 1 * (bw + gap) + bw / 2;
+  mk('text', { class: 'svg-hand', x: 4, y: 150 }).textContent = 'sales flat, R&D up 39%';
+  mk('path', { class: 'ln red', d: `M${fx - 30} 160q22 6 28 28`, 'marker-end': 'url(#arr-red)' });
+  const sec = $('#rd');
+  if (!FINAL) bars.forEach(b => { b.style.transform = 'scaleY(0)'; });
+  let done = false;
+  const go = () => { if (done) return; done = true; bars.forEach((b, i) => { b.style.transition = `transform .9s var(--ease-out) ${i * .12}s`; requestAnimationFrame(() => { b.style.transform = 'none'; }); }); };
+  sec.addEventListener('cps:enter', go); onView(sec, go, .2);
+})();
+</script>
+
+<section id="var" class="band" data-title="Plan versus actual">
+  <div class="wrap nv-grid">
+    <div class="nv-copy">
+      <p class="nv-part" data-part="swing"><span>The swing: <b>bend</b></span></p>
+      <h2>How close does Nvidia land to its own plan?</h2>
+      <p class="lede">Within about 1% on costs. Nvidia sets its plan one quarter at a time, so it never drifts far.</p>
+      <p class="nv-src">Plan: the outlook Nvidia gives investors at the start of each quarter. Costs: operating expenses. Source: Nvidia CFO commentary, Q1 and Q2 FY27.</p>
+    </div>
+    <div class="nv-vis">
+      <table class="var-t" aria-label="Plan versus actual, Q1 and Q2 FY27">
+        <thead><tr><th></th><th>Plan</th><th>Actual</th><th>Variance</th></tr></thead>
+        <tbody>
+          <tr class="var-g"><th colspan="4">Costs</th></tr>
+          <tr><td>Q1 FY27</td><td>$7.70B</td><td>$7.62B</td><td><span class="var-f">$79M F</span></td></tr>
+          <tr><td>Q2 FY27</td><td>$8.50B</td><td>$8.41B</td><td><span class="var-f">$92M F</span></td></tr>
+          <tr class="var-g"><th colspan="4">Sales</th></tr>
+          <tr><td>Q1 FY27</td><td>$78.0B</td><td>$81.6B</td><td><span class="var-f">$3.6B F</span></td></tr>
+          <tr><td>Q2 FY27</td><td>$91.0B</td><td>$96.2B</td><td><span class="var-f">$5.2B F</span></td></tr>
+        </tbody>
+      </table>
+      <p class="var-key"><span class="var-f">F</span> favourable: costs under plan, or sales over plan</p>
+    </div>
+  </div>
+</section>
+<style>
+  .var-t{width:100%;border-collapse:collapse;font:400 clamp(17px,1.6vw,22px)/1.3 var(--font-body);font-variant-numeric:tabular-nums}
+  .var-t th,.var-t td{padding:12px 14px;text-align:right;border-bottom:1px solid var(--line)}
+  .var-t th:first-child,.var-t td:first-child{text-align:left}
+  .var-t thead th{font:500 13px/1 var(--font-label);letter-spacing:.08em;text-transform:uppercase;color:var(--muted);border-bottom:1.5px solid var(--ink)}
+  .var-t tr.var-g th{text-align:left;font:800 15px/1 var(--font-display);letter-spacing:.04em;text-transform:uppercase;padding-top:22px;border-bottom:1.5px solid var(--ink)}
+  .var-t td:last-child{font-weight:700}
+  .var-f{display:inline-block;background:var(--tint-1);padding:3px 8px;border-radius:3px;color:var(--ink)}
+  .var-key{margin-top:18px;font:400 15px/1.4 var(--font-body);color:var(--muted)}
+  .var-key .var-f{font-weight:700;margin-right:6px}
+</style>
+
+<section id="miss" class="band" data-title="Where the budget missed">
+  <div class="wrap nv-grid">
+    <div class="nv-copy">
+      <p class="nv-part" data-part="weight"><span>The weight: <b>bet</b></span></p>
+      <h2>Where did the budget miss?</h2>
+      <p class="lede">In inventory and orders. In FY23, $2.17B of chips on hand and chips already ordered was written off: the demand never came.</p>
+      <p class="nv-src">Source: Nvidia annual reports (10-K), inventory provisions, FY22 to FY26.</p>
+    </div>
+    <div class="nv-vis"><svg id="miss-svg" role="img" aria-label="Inventory written off by Nvidia, in billions of dollars: FY22 0.35, FY23 2.17, FY24 0.77, FY25 1.6, FY26 4.0."></svg></div>
+  </div>
+</section>
+<script>
+(() => {
+  const svg = $('#miss-svg'), W = 560, H = 440, base = 330, top = 90, max = 4.0;
+  svg.setAttribute('viewBox', `0 0 ${W} ${H}`);
+  const data = [['FY22', .35], ['FY23', 2.17], ['FY24', .77], ['FY25', 1.6], ['FY26', 4.0]];
+  const mk = (t, a) => { const n = document.createElementNS(NS, t); for (const k in a) n.setAttribute(k, a[k]); svg.appendChild(n); return n; };
+  mk('text', { class: 'nv-axis', x: 0, y: 24 }).textContent = 'INVENTORY WRITTEN OFF, $ BILLIONS';
+  mk('path', { class: 'ln thin', d: `M0 ${base}H${W}` });
+  const bw = 66, gap = (W - bw * 5) / 5, bars = [], X = i => gap / 2 + i * (bw + gap);
+  data.forEach(([y, v], i) => {
+    const x = X(i), h = (v / max) * (base - top), hot = y === 'FY23' || y === 'FY26';
+    const r = mk('rect', { x, y: base - h, width: bw, height: h, rx: 2, fill: hot ? 'var(--tint-2)' : 'var(--card)', stroke: hot ? 'var(--acc)' : 'var(--ink)', 'stroke-width': hot ? 2.4 : 1.2 });
+    r.style.transformOrigin = `${x}px ${base}px`; r.style.transformBox = 'view-box'; bars.push(r);
+    mk('text', { class: 'nv-num', x: x + bw / 2, y: base - h - 10, 'text-anchor': 'middle' }).textContent = ['0.35', '2.17', '0.77', '1.6', '4.0'][i];
+    mk('text', { class: 'svg-label', x: x + bw / 2, y: base + 24, 'text-anchor': 'middle' }).textContent = y;
+  });
+  mk('text', { class: 'svg-hand', x: X(1) - 6, y: base + 66 }).textContent = 'FY23: China demand fell short';
+  mk('text', { class: 'svg-hand', x: X(4) + bw, y: base + 98, 'text-anchor': 'end' }).textContent = 'FY26: H20, a chip made for China';
+  const sec = $('#miss');
+  if (!FINAL) bars.forEach(b => { b.style.transform = 'scaleY(0)'; });
+  let done = false;
+  const go = () => { if (done) return; done = true; bars.forEach((b, i) => { b.style.transition = `transform .9s var(--ease-out) ${i * .12}s`; requestAnimationFrame(() => { b.style.transform = 'none'; }); }); };
+  sec.addEventListener('cps:enter', go); onView(sec, go, .2);
+})();
+</script>
+
+<section id="marks" class="band" data-title="Howard Marks on risk">
+  <div class="wrap">
+    <div class="marks-head">
+      <h2>How does Howard Marks judge risk?</h2>
+      <p class="lede">By the loss that can't be undone. Nvidia can ride out a bad quarter. The next slides ask about its promises.</p>
+    </div>
+    <div class="marks-stage">
+      <blockquote class="marks-q marks-l"><p>"You can't predict. You can prepare."</p><cite>memo title, 2001</cite></blockquote>
+      <svg id="marks-svg" role="img" aria-label="The pendulum between fear and greed, with one Marks quote at each end and one at the bottom."></svg>
+      <blockquote class="marks-q marks-r"><p>"The riskiest thing in the world is the widespread belief that there's no risk."</p><cite>Risk Revisited, 2014</cite></blockquote>
+      <blockquote class="marks-q marks-b"><p>"We can ride out volatility, but we never get a chance to undo a permanent loss."</p><cite>Risk Revisited, 2014</cite></blockquote>
+    </div>
+    <p class="nv-src marks-src">Howard Marks co-founded Oaktree Capital and has written memos to its clients since 1990.</p>
+  </div>
+</section>
+<style>
+  .marks-head{display:grid;gap:12px;max-width:900px;margin-bottom:8px}
+  .marks-head h2{font-size:clamp(34px,3.8vw,54px)}
+  .marks-head .lede{color:var(--ink);font-size:clamp(19px,1.7vw,24px);max-width:none}
+  .marks-stage{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.15fr) minmax(0,1fr);grid-template-areas:"l s r" "b b b";align-items:center;column-gap:24px}
+  #marks-svg{grid-area:s;width:100%;height:auto;max-height:46vh;display:block}
+  .marks-l{grid-area:l;text-align:right} .marks-r{grid-area:r} .marks-b{grid-area:b;text-align:center;justify-self:center;max-width:46ch;margin-top:-6px}
+  .marks-q{margin:0}
+  .marks-q p{font:700 clamp(18px,1.6vw,23px)/1.3 var(--font-body);color:var(--ink)}
+  .marks-b p{color:var(--red)}
+  .marks-q cite{display:block;margin-top:6px;font:400 12.5px/1.3 var(--font-label);font-style:normal;color:var(--muted);letter-spacing:.04em}
+  .marks-src{margin-top:10px}
+</style>
+<script>
+(() => {
+  const p = Pend.draw($('#marks-svg'), { w: 420, h: 330, L: 240, py: 40, weight: 40, arc: true, arcDeg: 40, tilt: 0 });
+  const sec = $('#marks');
+  let done = false;
+  const go = () => { if (done) return; done = true; p.swing(-40, 0, 3600); };
+  sec.addEventListener('cps:enter', go); onView(sec, go, .2);
+})();
+</script>
+
+<section id="loop" class="band" data-title="The money loop">
+  <div class="wrap nv-grid">
+    <div class="nv-copy">
+      <p class="nv-part" data-part="weight"><span>The weight: <b>bet</b></span></p>
+      <h2>Is the money loop managed risk?</h2>
+      <p class="lede">Yes, where it is small and in plain sight. Up to $10B into Anthropic is about 4.6% of one year's sales.</p>
+      <p class="nv-src">Source: Anthropic, Microsoft and Nvidia announcement, Nov 18 2025. Sales: Nvidia FY26 10-K.</p>
+    </div>
+    <div class="nv-vis"><svg id="loop-svg" role="img" aria-label="The loop: Nvidia invests up to 10 billion dollars in Anthropic. Anthropic buys 30 billion dollars of Microsoft Azure compute. Azure runs on Nvidia chips, so money returns to Nvidia."></svg></div>
+  </div>
+</section>
+<script>
+(() => {
+  const svg = $('#loop-svg'), W = 600, H = 470;
+  svg.setAttribute('viewBox', `0 0 ${W} ${H}`);
+  const mk = (t, a, txt) => { const n = document.createElementNS(NS, t); for (const k in a) n.setAttribute(k, a[k]); if (txt) n.textContent = txt; svg.appendChild(n); return n; };
+  const node = (x, y, name, fill) => {
+    mk('rect', { x: x - 88, y: y - 30, width: 176, height: 60, rx: 3, fill, stroke: 'var(--ink)', 'stroke-width': 1.8 });
+    mk('text', { x, y: y + 7, 'text-anchor': 'middle', style: 'font:800 21px var(--font-display);fill:var(--ink)' }, name);
+  };
+  const N = [280, 70], A = [450, 330], M = [110, 330];
+  const paths = [
+    mk('path', { class: 'ln red', d: `M${N[0] + 70} ${N[1] + 32}Q${A[0] + 20} ${N[1] + 80} ${A[0]} ${A[1] - 36}`, 'marker-end': 'url(#arr-red)', style: 'stroke-width:2.6' }),
+    mk('path', { class: 'ln', d: `M${A[0] - 86} ${A[1] + 12}Q${280} ${A[1] + 70} ${M[0] + 88} ${M[1] + 12}`, 'marker-end': 'url(#arr)' }),
+    mk('path', { class: 'ln', d: `M${M[0]} ${M[1] - 36}Q${M[0] - 20} ${N[1] + 80} ${N[0] - 88} ${N[1] + 22}`, 'marker-end': 'url(#arr)' })
+  ];
+  node(N[0], N[1], 'Nvidia', 'var(--tint-1)');
+  node(A[0], A[1], 'Anthropic', 'var(--card)');
+  node(M[0], M[1], 'Microsoft Azure', 'var(--card)');
+  mk('text', { class: 'nv-num', x: 470, y: 150 }, 'up to $10B');
+  mk('text', { class: 'nv-axis', x: 470, y: 170 }, 'stake');
+  mk('text', { class: 'nv-num', x: 280, y: 418, 'text-anchor': 'middle' }, '$30B of compute');
+  mk('text', { class: 'nv-num', x: 20, y: 150 }, 'runs on');
+  mk('text', { class: 'nv-axis', x: 20, y: 170 }, 'Nvidia chips');
+  mk('text', { class: 'svg-hand', x: 280, y: 214, 'text-anchor': 'middle' }, 'Marks: money "round-tripped"');
+  mk('text', { class: 'svg-hand', x: 280, y: 242, 'text-anchor': 'middle' }, 'goes out, comes back');
+  prepDraw(paths);
+  const sec = $('#loop');
+  let done = false;
+  const go = () => { if (done) return; done = true; penDraw(paths, { delay: .3, speed: 380 }); };
+  sec.addEventListener('cps:enter', go); onView(sec, go, .2);
+})();
+</script>
+
+<section id="hid" class="band" data-title="Where the risk hides">
+  <div class="wrap nv-grid">
+    <div class="nv-copy">
+      <p class="nv-part" data-part="weight"><span>The weight: <b>bet</b></span></p>
+      <h2>Where is the risk hidden?</h2>
+      <p class="lede">In promises outside the cost lines. Nvidia has promised suppliers $279B, against about $99B of cash and marketable securities. If demand drops, the bill still comes.</p>
+      <p class="hid-more">Plus a guarantee of up to $105B: Nvidia stands behind an OpenAI company's data centre lease.</p>
+      <p class="nv-src">Source: Nvidia 10-Ks FY23 and FY26, 10-Q Q2 FY27. Counting cloud deals, leases and stakes too: $366B.</p>
+    </div>
+    <div class="nv-vis"><svg id="hid-svg" role="img" aria-label="The pendulum swung toward greed. Its weight, money promised to suppliers, grew from 4.9 billion dollars in FY23 to 95 billion in FY26 to 279 billion in Q2 FY27."></svg></div>
+  </div>
+</section>
+<style>
+  .hid-more{font:700 clamp(17px,1.4vw,20px)/1.4 var(--font-body);color:var(--red);max-width:34ch}
+</style>
+<script>
+(() => {
+  const ghosts = [{ tilt: -22, weight: 4.9, label: 'FY23 $4.9B' }, { tilt: 4, weight: 95.2, label: 'FY26 $95B' }];
+  const p = Pend.draw($('#hid-svg'), { w: 560, h: 470, L: 290, py: 40, cx: 230, weight: 279, wLabel: '$279B', lit: 'weight', arc: true, arcDeg: 46, tilt: 28, ghosts });
+  const sec = $('#hid');
+  if (!FINAL) { p.setW(4.9); p.wl.textContent = '$4.9B'; }
+  let done = false;
+  const go = () => { if (done) return; done = true; setTimeout(() => p.grow([30.8, 95.2, 279], v => v < 10 ? `$${v}B` : `$${Math.round(v)}B`), FINAL ? 0 : 500); };
+  sec.addEventListener('cps:enter', go); onView(sec, go, .2);
+})();
+</script>
+
+<section id="close" class="band" data-title="What a founder takes">
+  <div class="wrap nv-grid">
+    <div class="nv-copy">
+      <h2>What should a founder take from Nvidia?</h2>
+      <p class="lede">A budget is a risk plan only for the lines it holds. <mark class="close-mk">Budget the promises too.</mark></p>
+      <p class="close-ask">Which line in your budget could cause a loss you can't get back?</p>
+    </div>
+    <div class="nv-vis">
+      <svg id="close-svg" role="img" aria-label="The pendulum swinging back from greed toward the middle."></svg>
+      <p class="nv-src close-src">"whenever the pendulum is near either extreme, it is inevitable that it will move back toward the midpoint sooner or later." Howard Marks, On the Couch, 2016</p>
+    </div>
+  </div>
+</section>
+<style>
+  .close-ask{font:800 clamp(24px,2.4vw,34px)/1.2 var(--font-display);color:var(--ink);border-left:4px solid var(--acc);padding:6px 0 6px 18px;max-width:22ch;margin-top:8px}
+  .close-src{margin-top:8px;max-width:46ch}
+</style>
+<script>
+(() => {
+  const ghosts = [{ tilt: 28, weight: 279, label: '$279B still owed' }];
+  const p = Pend.draw($('#close-svg'), { w: 520, h: 420, L: 260, py: 40, cx: 250, weight: 60, arc: true, arcDeg: 46, tilt: 6, ghosts });
+  const sec = $('#close');
+  let done = false;
+  const go = () => { if (done) return; done = true; p.swing(28, 6, 3800); setTimeout(() => $('.close-mk').classList.add('in'), FINAL ? 0 : 900); };
+  sec.addEventListener('cps:enter', go); onView(sec, go, .2);
+})();
+</script>
+
+</main>
+

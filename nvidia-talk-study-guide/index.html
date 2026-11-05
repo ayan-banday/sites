@@ -1,0 +1,146 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cpath d='M0 15 6 4l3 5 2-3 5 9z' fill='%232b2722'/%3E%3C/svg%3E">
+<style>
+:root{color-scheme:light;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+body{margin:0;font:14px/1.4 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif}
+img{max-width:100%}
+[hidden]{display:none!important}
+</style>
+<title>Nvidia Talk Study Guide</title>
+<link href="https://fonts.googleapis.com/css2?family=Overpass:wght@700;800&family=Atkinson+Hyperlegible:wght@400;700&family=Overpass+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  /* Palette: Ink and clay (preset 2) · place dark (match-ash-design) */
+  :root{
+    --bg:#171615; --bg2:#211F1D; --bg3:#2B2826;
+    --tx:#EDE6DF; --mu:#A89F96; --ln:rgba(237,230,223,0.12);
+    --p1:#E2B6A4; --p2:#D9A8B5; --p3:#D8CAB7; --acc:#D2603F;
+    color-scheme:dark;
+  }
+  @media (prefers-color-scheme: light){ :root:not([data-theme="dark"]){color-scheme:dark} }
+  :root[data-theme="light"]{color-scheme:dark}
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--tx);font:400 17px/1.65 'Atkinson Hyperlegible',sans-serif}
+  main{max-width:720px;margin:0 auto;padding:48px 16px 96px}
+  h1,h2,h3{font-family:'Overpass',sans-serif;font-weight:800;line-height:1.15;margin:0}
+  h1{font-size:clamp(30px,6vw,44px);margin-bottom:12px}
+  h2{font-size:clamp(23px,4vw,30px);margin:56px 0 6px;padding-top:24px;border-top:1px solid var(--ln)}
+  h3{font-size:17px;margin:22px 0 4px;color:var(--p1)}
+  p{margin:0 0 12px} ul{margin:0 0 12px;padding-left:22px} li{margin:4px 0}
+  .label{font:500 12.5px/1.4 'Overpass Mono',monospace;letter-spacing:.08em;text-transform:uppercase;color:var(--mu)}
+  .say{background:var(--bg2);border-left:3px solid var(--acc);padding:12px 16px;margin:14px 0;border-radius:3px}
+  .say b{color:var(--p1)}
+  .keyline{background:linear-gradient(transparent 42%,rgba(226,182,164,0.3) 42%);font-weight:700;padding:1px 3px;box-decoration-break:clone;-webkit-box-decoration-break:clone}
+  dl{margin:0} dt{font-weight:700;color:var(--p3);margin-top:12px} dd{margin:2px 0 0;color:var(--tx)}
+  .q{margin:12px 0} .q b{display:block;color:var(--p2)}
+  a{color:var(--p1)}
+  table{border-collapse:collapse;width:100%;font-variant-numeric:tabular-nums;margin:8px 0 14px}
+  td,th{padding:6px 8px;border-bottom:1px solid var(--ln);text-align:right} td:first-child,th:first-child{text-align:left}
+  th{font:500 12px 'Overpass Mono',monospace;color:var(--mu);text-transform:uppercase;letter-spacing:.06em}
+</style>
+<main>
+<p class="label">Study guide for the 10-minute talk</p>
+<h1>What do I need to understand to give the Nvidia talk?</h1>
+<p>One section per slide: what the slide says, the words you need, where each number comes from, what to say, and what the professor may ask. Read it top to bottom once; it takes about 20 minutes.</p>
+<p><span class="keyline">The whole talk in one line: a budget is a risk plan. Protect what matters, let costs bend, and size your bets so a bad swing can't break you.</span></p>
+<p>Slides: <a href="../budget-is-a-risk-plan/">Budget Is a Risk Plan</a>. Arrow keys or a clicker turn the pages; F goes full screen.</p>
+
+<h2>Words to know first</h2>
+<dl>
+  <dt>Budget</dt><dd>A plan for money: what you expect to earn, spend and commit, set before the period starts.</dd>
+  <dt>Rolling budget</dt><dd>A budget redone every period (here, every quarter) instead of once a year. It keeps the plan close to reality.</dd>
+  <dt>Guidance</dt><dd>The outlook Nvidia gives investors at the start of each quarter: expected sales, margin and costs. Its internal budget is private, so guidance is the closest public view of its plan.</dd>
+  <dt>Variance, F and A</dt><dd>Actual minus plan. <b>F</b> (favourable) helps profit: costs under plan or sales over plan. <b>A</b> (adverse) hurts profit. Same as Unit 2.</dd>
+  <dt>Operating expenses (opex)</dt><dd>Day-to-day costs of running the company: R&amp;D plus sales, general and admin (SG&amp;A).</dd>
+  <dt>Inventory written off (provision)</dt><dd>Chips valued below what they cost, because nobody will buy them at full price. The loss hits profit.</dd>
+  <dt>Purchase commitment</dt><dd>Money already promised to suppliers for goods not yet delivered. It isn't a cost yet, and it sits in the notes, not on the cost lines.</dd>
+  <dt>Guarantee</dt><dd>A promise to pay if someone else can't.</dd>
+  <dt>Marketable securities</dt><dd>Investments that can be sold quickly for cash, like bonds and listed shares.</dd>
+  <dt>Circular financing (round-tripping)</dt><dd>A seller invests in a customer, and the customer uses that money to buy from the seller. Sales look strong, but some of the money started with the seller.</dd>
+  <dt>Volatility versus permanent loss</dt><dd>Volatility is prices going up and down. A permanent loss is money you never get back. Marks says only the second is real risk.</dd>
+  <dt>FY (fiscal year)</dt><dd>Nvidia's year ends in late January. FY26 ran from February 2025 to January 2026. Q2 FY27 ended July 2026.</dd>
+</dl>
+
+<h2>1. What is a budget for, when nobody knows next year?</h2>
+<p>Answer on the slide: deciding what to protect, what can bend and what to bet. A budget is a risk plan.</p>
+<p>The pendulum is the map for the whole talk:</p>
+<ul>
+  <li><b>Pivot, fixed to the wall: protect.</b> For Nvidia, R&amp;D.</li>
+  <li><b>The swing: bend.</b> Day-to-day costs, re-planned every quarter.</li>
+  <li><b>The weight: bet.</b> Inventory and money promised to suppliers. The heavier it gets, the harder a swing back hits.</li>
+  <li><b>Fear and greed:</b> the market's mood. Howard Marks, an investor who writes about risk, says it swings like a pendulum and always comes back toward the middle.</li>
+</ul>
+<div class="say"><b>Say:</b> "Nobody knows next year's sales. So a budget can't be a forecast. It's a decision about risk: what we never cut, what we adjust, and what we're willing to bet."</div>
+
+<h2>2. How does Nvidia budget? (protect)</h2>
+<table><tr><th>Year</th><th>R&amp;D $B</th><th>Sales $B</th></tr>
+<tr><td>FY22</td><td>5.3</td><td>27</td></tr><tr><td>FY23</td><td>7.3</td><td>27</td></tr><tr><td>FY24</td><td>8.7</td><td>61</td></tr><tr><td>FY25</td><td>12.9</td><td>130</td></tr><tr><td>FY26</td><td>18.5</td><td>216</td></tr></table>
+<p>In FY23 sales were flat (a chip glut), yet R&amp;D rose 39%. R&amp;D jumped from 19.6% to 27.2% of sales that year. Nvidia didn't cut the pivot when times were bad. When demand came back in FY24, it had the products ready, and sales more than doubled.</p>
+<div class="say"><b>Say:</b> "In the worst year, Nvidia spent more on R&amp;D, not less. That's what protecting the pivot looks like."</div>
+<h3>If asked</h3>
+<p class="q"><b>"5.3 to 7.3 is 38%, not 39%?"</b> The bars are rounded. The exact figures are $5,268M to $7,339M, which is 39.3%.</p>
+<p class="q"><b>"Isn't R&amp;D falling as a share of sales?"</b> Yes, from 9.9% to 8.6% in FY26, because sales grew faster. In dollars it still rose 43%.</p>
+
+<h2>3. How close does Nvidia land to its own plan? (bend)</h2>
+<table><tr><th></th><th>Plan</th><th>Actual</th><th>Variance</th></tr>
+<tr><td>Costs Q1 FY27</td><td>$7.70B</td><td>$7.62B</td><td>$79M F</td></tr>
+<tr><td>Costs Q2 FY27</td><td>$8.50B</td><td>$8.41B</td><td>$92M F</td></tr>
+<tr><td>Sales Q1 FY27</td><td>$78.0B</td><td>$81.6B</td><td>$3.6B F</td></tr>
+<tr><td>Sales Q2 FY27</td><td>$91.0B</td><td>$96.2B</td><td>$5.2B F</td></tr></table>
+<p>How to work one out: $7.70B plan minus $7.62B actual is about $80M under plan (the filing's exact figure gives $79M). Spending less than planned helps profit, so it's F. Costs land about 1% under plan. Sales beat plan by about 5 to 6%.</p>
+<div class="say"><b>Say:</b> "Nvidia sets its plan one quarter at a time, which is a rolling budget. Costs are the part it controls, and it lands within 1%. Sales are the part it can't control, and that's where the bigger gaps are."</div>
+<h3>If asked</h3>
+<p class="q"><b>"Is guidance the same as a budget?"</b> No. Guidance is what Nvidia tells investors. The internal budget is private. Guidance is the closest public view of the plan.</p>
+<p class="q"><b>"A sales beat is good. Why call it a variance?"</b> Any gap from plan is a variance. A big favourable sales variance means demand was under-planned. That can mean missed sales if supply runs short, which is why Nvidia buys capacity early (slide 7).</p>
+
+<h2>4. Where did the budget miss? (bet)</h2>
+<p>Inventory written off, $B: FY22 0.35, FY23 2.17, FY24 0.77, FY25 1.6, FY26 4.0.</p>
+<ul>
+  <li><b>FY23, $2.17B:</b> $1.04B of chips on hand plus $1.13B of chips already ordered. Nvidia had bought for demand, especially in China, that never came.</li>
+  <li><b>FY26, $4.0B:</b> H20, a cut-down chip made for China to fit US export rules. When the rules tightened, Nvidia took a $4.5B charge for extra inventory and orders. The filing doesn't split it, so the chart shows the $4.0B inventory part.</li>
+</ul>
+<p><span class="keyline">The misses didn't come from the costs it controls. They came from the bet: buying ahead.</span></p>
+<div class="say"><b>Say:</b> "The budget's cost lines were fine. The losses came from buying ahead. In Unit 2 terms, it's like a big usage variance on stock bought for sales that didn't happen."</div>
+
+<h2>5. How does Howard Marks judge risk?</h2>
+<p>Marks co-founded Oaktree Capital and started out in junk bonds: the riskiest company debt there is. He has written memos to clients since about 1990. Three ideas carry the talk:</p>
+<ul>
+  <li><b>Risk is a permanent loss, not volatility.</b> "We can ride out volatility, but we never get a chance to undo a permanent loss." A bad quarter passes. A promise you can't pay doesn't.</li>
+  <li><b>You can't predict; you can prepare.</b> The title of his 2001 memo. That's what a rolling budget does.</li>
+  <li><b>The riskiest moment feels safest.</b> "The riskiest thing in the world is the widespread belief that there's no risk." That's the greed end of the pendulum.</li>
+</ul>
+<p>He also tells the story of a six-foot man who drowned crossing a stream that was five feet deep on average. Averages don't keep you alive; surviving the worst moment does.</p>
+<div class="say"><b>Say:</b> "Marks doesn't ask 'will sales go up?'. He asks 'what loss could I never undo?'. The next two slides ask that about Nvidia."</div>
+
+<h2>6. Is the money loop managed risk?</h2>
+<p>The loop (Nov 18, 2025 announcement): Nvidia invests up to $10B in Anthropic. Anthropic commits to $30B of Microsoft Azure computing. Azure runs on Nvidia chips. Some of Nvidia's money comes back to Nvidia as sales.</p>
+<p>Why it's managed: $10B is about 4.6% of one year's sales ($216B), it's announced publicly, and it's an equity stake, not a loan.</p>
+<p>Marks on these deals (Dec 2025): "money appears to be round-tripped between AI players." He also quotes a colleague: the "right" way to play this is "through equity, not debt." Nvidia's stake is equity.</p>
+<h3>If asked</h3>
+<p class="q"><b>"Isn't this like Lucent in 2000?"</b> Lucent lent customers money to buy its gear; when they failed, it lost the loans. Nvidia's memo to analysts says it doesn't depend on vendor financing to grow sales. Critics such as Jim Chanos say the comparison "holds some merit". The stake is small and public; the bigger exposure is on the next slide.</p>
+
+<h2>7. Where is the risk hidden?</h2>
+<p>Money promised to suppliers: FY23 $4.9B, FY25 $30.8B, FY26 $95.2B, Q2 FY27 <b>$279B</b> (mostly memory chips). Cash and marketable securities: about <b>$99B</b>. Counting cloud deals, leases not started yet, and stakes in other companies, the promises total $366B.</p>
+<p>Plus a guarantee of up to $105B: Nvidia stands behind a data-centre campus leased to an OpenAI company, starting from about FY2029.</p>
+<p>None of this is on the cost lines. Purchase commitments sit in the notes until the goods arrive. In FY23 the promises were $4.9B and a demand drop cost $2.17B. They are now about 57 times bigger.</p>
+<div class="say"><b>Say:</b> "The budget lines look calm. The weight is outside them: $279B of promises against $99B of cash. If demand drops, the bill still comes."</div>
+<h3>If asked</h3>
+<p class="q"><b>"Can't Nvidia pay from future profits?"</b> Yes, if demand holds. It made about $103B of operating cash in FY26. The risk is the swing back: Marks says the pendulum always returns toward the middle.</p>
+
+<h2>8. What should a founder take from Nvidia?</h2>
+<p><span class="keyline">A budget is a risk plan only for the lines it holds. Budget the promises too.</span></p>
+<p>The honest verdict: the idea "budget = risk plan" holds for Nvidia's budget lines (protected R&amp;D, quarter-by-quarter costs). It only partly holds for the money loop, because the biggest bets sit outside the budget.</p>
+<p>End by asking the class: "Which line in your budget could cause a loss you can't get back?" Wait for an answer. Good answers: a long lease, a big stock order, a loan with a personal guarantee.</p>
+
+<h2>Timing for 10 minutes</h2>
+<ul>
+  <li>Slide 1: 1 minute. Slides 2 to 4: 1.5 minutes each.</li>
+  <li>Slide 5: 1 minute. Slides 6 and 7: 1.5 minutes each.</li>
+  <li>Slide 8: 30 seconds, then the question.</li>
+</ul>
+<p class="label">Sources: Nvidia 10-Ks FY22 to FY26, 10-Q and CFO commentary Q1 and Q2 FY27; Anthropic announcement Nov 18 2025; Oaktree memos by Howard Marks (2001, 2014, 2016, Dec 2025).</p>
+</main>
+
