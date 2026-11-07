@@ -1119,5 +1119,60 @@ addEventListener('keydown', e => {
 })();
 </script>
 
+<!-- Phone (Ash, Nov 7): the same deck works on a phone. No gate: one column, the answer and the picture,
+     sources and quotes left for the laptop. Swipe sideways, or tap the right or left edge, to turn pages. -->
+<script>
+  document.documentElement.classList.add('no-gate');
+  document.documentElement.classList.remove('phone');
+</script>
+<style>
+  @media (max-width:640px), (max-aspect-ratio:3/4){
+    :root{--gutter:20px;--wrap:100%}
+    html.arch-paged main > section.band{padding-top:28px !important;padding-bottom:28px !important}
+    .nv-grid,.rr-grid{grid-template-columns:1fr !important;row-gap:18px}
+    .nv-copy{gap:12px}
+    .nv-copy h1,.nv-copy h2,.rule-head h2,
+    html.arch-paged main > section[data-cps-fit] h2{font-size:clamp(28px,8vw,40px);line-height:1.06}
+    .nv-copy .lede,.rule-head .lede,html.arch-paged main > section[data-cps-fit] .lede{font-size:17px;line-height:1.45;max-width:none}
+    .nv-src,.nv-copy .nv-lens,.close-quotes,.label,.rule-side .nv-lens{display:none}
+    .nv-part{font-size:11.5px} .nv-glyph{width:32px;height:38px}
+    .hid-more{font-size:16px}
+    .close-ask{font-size:22px;max-width:none}
+    .nv-vis svg,#rr-svg{max-height:42vh}
+    #close-svg{max-height:30vh}
+    /* two investors: picture beside name, stacked */
+    .rule-stage{grid-template-columns:1fr !important;row-gap:22px}
+    .rule-side{grid-template-columns:84px 1fr;column-gap:16px}
+    .rule-side svg{max-height:110px}
+    .rule-who b{font-size:22px}
+    .rule-what{font-size:15px}
+    /* plan versus actual */
+    .var-t{font-size:14px} .var-t th,.var-t td{padding:7px 6px}
+    .var-key{font-size:13px}
+    /* roulette: the replay button sits under the picture */
+    .rr-again{position:static;margin-top:10px}
+    /* the next question ends the page instead of floating over it */
+    .nv-next{position:static;display:block;margin:18px var(--gutter) 0;text-align:left;font-size:20px;line-height:1.15;max-width:none}
+    .nv-next span{display:block;margin-bottom:4px;font-size:10.5px}
+    .nv-next span::after{content:", swipe \2192"}
+    /* picture labels grow so they read at phone size */
+    .nv-vis .svg-label{font-size:17px} .nv-vis .nv-axis{font-size:17px} .nv-vis .nv-num{font-size:19px}
+    .nv-vis .svg-hand{font-size:28px} .nv-vis .pend-wl{font-size:18px}
+    #rr-svg .svg-hand{font-size:29px} #rr-svg .svg-label{font-size:22px} #rr-svg .nv-num{font-size:25px} #rr-svg .nv-axis{font-size:20px}
+    #rr-svg{max-height:44vh}
+    html.arch-paged main > section.band{padding-top:20px !important;padding-bottom:20px !important}
+    .nv-vis svg,#rr-svg{max-height:36vh}
+  }
+</style>
+<script>
+  /* tap the right edge for the next page, the left edge for the one before (phones only) */
+  addEventListener('click', e => {
+    if (!window.CPS || !matchMedia('(max-width:640px), (max-aspect-ratio:3/4)').matches) return;
+    if (e.target.closest('button, a, input')) return;
+    const x = e.clientX / innerWidth;
+    if (x > .7) CPS.next(); else if (x < .3) CPS.prev();
+  });
+</script>
+
 </main>
 
