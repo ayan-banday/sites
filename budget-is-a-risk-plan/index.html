@@ -237,7 +237,39 @@ img{max-width:100%}
     }
     return { draw, glyph, R };
   })();
-  addEventListener('DOMContentLoaded', () => $$('.nv-part').forEach(Pend.glyph));
+  addEventListener('DOMContentLoaded', () => $$('.nv-part:not([data-part="naval"])').forEach(Pend.glyph));
+
+  /* ===== The revolver cylinder (Naval Ravikant): how much to bet =====
+     Rev.draw(parent, {cx, cy, r, loaded}) draws a six-chamber cylinder into an <svg> or <g>.
+     loaded = chamber index (0-5) holding the bullet. Chamber j sits at angle -90 + 60j (0 = top, the firing spot).
+     turn(n) rotates the cylinder so chamber n is at the top. */
+  const Rev = (() => {
+    const el = (tag, at, parent) => { const n = document.createElementNS(NS, tag); for (const k in at) n.setAttribute(k, at[k]); if (parent) parent.appendChild(n); return n; };
+    function draw(parent, o) {
+      const cx = o.cx, cy = o.cy, r = o.r || 56, cr = r * .25, cd = r * .58, small = !!o.small;
+      const g = el('g', {}, parent);
+      if (!small) el('path', { class: 'ln', d: `M${cx - 9} ${cy - r - 16}L${cx} ${cy - r - 4}L${cx + 9} ${cy - r - 16}`, style: 'stroke-width:2' }, g);
+      const drum = el('g', {}, g);
+      drum.style.transformOrigin = `${cx}px ${cy}px`; drum.style.transformBox = 'view-box';
+      el('circle', { cx, cy, r, fill: 'var(--card)', stroke: 'var(--ink)', 'stroke-width': small ? 2.2 : 2 }, drum);
+      const ch = [];
+      for (let j = 0; j < 6; j++) {
+        const a = (-90 + 60 * j) * Math.PI / 180, x = cx + cd * Math.cos(a), y = cy + cd * Math.sin(a), hot = j === o.loaded;
+        ch.push(el('circle', { cx: x, cy: y, r: cr, fill: hot ? 'var(--acc)' : 'var(--paper)', stroke: hot ? 'var(--red)' : 'var(--ink)', 'stroke-width': small ? 1.8 : 1.6 }, drum));
+      }
+      el('circle', { cx, cy, r: cr * .45, fill: 'var(--ink)' }, drum);
+      const turn = (n, ms = 380) => { drum.style.transition = FINAL || !ms ? 'none' : `transform ${ms}ms var(--ease-out)`; drum.style.transform = `rotate(${-60 * n}deg)`; };
+      return { g, drum, ch, turn };
+    }
+    function glyph(holder) {
+      const svg = document.createElementNS(NS, 'svg');
+      svg.setAttribute('aria-hidden', 'true'); svg.setAttribute('viewBox', '0 0 64 76'); svg.classList.add('nv-glyph');
+      holder.prepend(svg);
+      draw(svg, { cx: 32, cy: 40, r: 24, loaded: 0, small: true });
+    }
+    return { draw, glyph };
+  })();
+  addEventListener('DOMContentLoaded', () => $$('.nv-part[data-part="naval"]').forEach(Rev.glyph));
 
 </script>
 
@@ -614,6 +646,14 @@ img{max-width:100%}
   .pend-wl{font:500 14px var(--font-label);fill:var(--ink)}
   .nv-num{font:700 15px var(--font-label);fill:var(--ink)}
   .nv-axis{font:500 13px var(--font-label);fill:var(--muted)}
+  /* v2: the question each slide answers, and the next slide's question (the cascade) */
+  .nv-q{font:700 clamp(17px,1.4vw,28px)/1.3 var(--font-body);color:var(--cyan);margin-bottom:-6px}
+  .nv-next{position:absolute;right:clamp(24px,4vw,64px);bottom:clamp(20px,3.4vh,40px);display:flex;align-items:baseline;gap:12px;
+    font:600 clamp(20px,1.6vw,34px)/1.1 var(--font-hand);color:var(--red);max-width:46ch;text-align:right}
+  .nv-next span{font:500 clamp(11px,.8vw,15px)/1 var(--font-label);letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+  .nv-lens{margin:0;font:400 clamp(15px,1.15vw,24px)/1.4 var(--font-body);color:var(--ink);border-left:3px solid var(--acc);padding:2px 0 2px 14px;max-width:40ch}
+  .nv-lens cite{display:block;margin-top:4px;font:400 clamp(11.5px,.8vw,15px)/1.3 var(--font-label);font-style:normal;color:var(--muted);letter-spacing:.04em}
+  .nv-lens.marks{border-left-color:var(--acc2)}
   mark{background-image:linear-gradient(var(--marker),var(--marker))}
   @media (max-aspect-ratio:1/1){ .nv-grid{grid-template-columns:1fr;row-gap:28px} }
 </style>
@@ -652,16 +692,17 @@ addEventListener('keydown', e => {
 });
 </script>
 
-<section id="hero" class="band" data-title="A budget is a risk plan">
+<section id="hero" class="band" data-title="Budgeting is risk management">
   <div class="wrap nv-grid">
     <div class="nv-copy">
-      <p class="label">Unit 2: budgets and variance, on Nvidia</p>
-      <h1>What is a budget for, when nobody knows next year?</h1>
-      <p class="lede">Deciding what to protect, what can bend and what to bet. <mark class="hero-mk">A budget is a risk plan.</mark></p>
-      <p class="nv-src">Fear and greed: the market's mood. Howard Marks, an investor who writes about risk, says it swings like a pendulum.</p>
+      <p class="label">Managerial Accounting, Unit 2: budgets, read on Nvidia</p>
+      <h1>Budgeting is risk management</h1>
+      <p class="nv-q">What is a budget actually for?</p>
+      <p class="lede">Nobody knows next year's sales. A budget decides which losses a company can live with, and which it must never take. <mark class="hero-mk">Every line is a risk decision.</mark></p>
     </div>
     <div class="nv-vis"><svg id="hero-svg" role="img" aria-label="A pendulum. The pivot is fixed to the wall: what to protect. The arm swings: what can bend. The weight is the bet. It swings between fear and greed."></svg></div>
   </div>
+  <p class="nv-next"><span>Next</span>Who says risk works this way?</p>
 </section>
 <script>
 (() => {
@@ -675,16 +716,73 @@ addEventListener('keydown', e => {
 })();
 </script>
 
-<section id="rd" class="band" data-title="How Nvidia budgets">
+<section id="rule" class="band" data-title="Two investors, one rule">
+  <div class="wrap">
+    <div class="rule-head">
+      <h2>Two investors, one rule about risk</h2>
+      <p class="nv-q">Who says risk works this way?</p>
+      <p class="lede">Both say the loss to fear is <mark class="rule-mk">the one you can't come back from.</mark> Marks tells a company when to be careful. Naval tells it how much to bet.</p>
+    </div>
+    <div class="rule-stage">
+      <div class="rule-side">
+        <svg id="rule-marks" role="img" aria-label="Howard Marks's pendulum swinging between fear and greed."></svg>
+        <p class="rule-who"><b>Howard Marks</b> Oaktree Capital</p>
+        <p class="rule-what">When: the market's mood swings between fear and greed</p>
+        <blockquote class="nv-lens marks"><p>"We can ride out volatility, but we never get a chance to undo a permanent loss."</p><cite>Risk Revisited, 2014</cite></blockquote>
+      </div>
+      <div class="rule-side">
+        <svg id="rule-naval" role="img" aria-label="A six-chamber revolver cylinder with one bullet: Naval Ravikant on how much to bet."></svg>
+        <p class="rule-who"><b>Naval Ravikant</b> AngelList</p>
+        <p class="rule-what">How much: never so much that one loss ends the game</p>
+        <blockquote class="nv-lens"><p>"The one thing you have to avoid is the risk of ruin."</p><cite>How to Get Rich, nav.al</cite></blockquote>
+      </div>
+    </div>
+  </div>
+  <p class="nv-next"><span>Next</span>So what does a company refuse to put at risk?</p>
+</section>
+<style>
+  .rule-head{display:grid;gap:16px;max-width:1000px;margin-bottom:clamp(18px,3vh,36px)}
+  .rule-head h2{font-size:clamp(34px,3.9vw,80px)}
+  .rule-head .lede{color:var(--ink);font-size:clamp(19px,1.7vw,34px);max-width:52ch}
+  .rule-stage{display:grid;grid-template-columns:1fr 1fr;column-gap:clamp(32px,6vw,120px)}
+  .rule-side{display:grid;grid-template-columns:clamp(110px,12vw,220px) 1fr;grid-template-rows:auto auto 1fr;column-gap:24px;row-gap:8px;align-items:start}
+  .rule-side svg{grid-row:1/4;width:100%;height:auto;max-height:30vh;overflow:visible}
+  .rule-who{font:500 clamp(12px,.85vw,16px)/1.3 var(--font-label);letter-spacing:.06em;text-transform:uppercase;color:var(--muted)}
+  .rule-who b{display:block;font:800 clamp(22px,1.9vw,38px)/1.1 var(--font-display);letter-spacing:-.01em;text-transform:none;color:var(--ink)}
+  .rule-what{font:700 clamp(16px,1.25vw,26px)/1.3 var(--font-body);color:var(--ink);max-width:28ch}
+  .rule-side .nv-lens{align-self:start;margin-top:6px}
+  @media (max-aspect-ratio:1/1){ .rule-stage{grid-template-columns:1fr;row-gap:32px} }
+</style>
+<script>
+(() => {
+  const p = Pend.draw($('#rule-marks'), { w: 220, h: 260, L: 170, py: 30, weight: 30, arc: true, arcDeg: 38, tilt: 0 });
+  const nv = $('#rule-naval'); nv.setAttribute('viewBox', '0 0 220 260');
+  const r = Rev.draw(nv, { cx: 110, cy: 140, r: 78, loaded: 3 });
+  const sec = $('#rule');
+  let done = false;
+  const go = () => {
+    if (done) return; done = true;
+    p.swing(-38, 0, 3600);
+    if (!FINAL) { r.turn(0, 0); setTimeout(() => r.turn(9, 2600), 400); } else r.turn(3, 0);
+    setTimeout(() => $('.rule-mk').classList.add('in'), FINAL ? 0 : 900);
+  };
+  sec.addEventListener('cps:enter', go); onView(sec, go, .2);
+})();
+</script>
+
+<section id="rd" class="band" data-title="Nvidia protects its R&amp;D">
   <div class="wrap nv-grid">
     <div class="nv-copy">
       <p class="nv-part" data-part="pivot"><span>The pivot: <b>protect</b></span></p>
-      <h2>How does Nvidia budget?</h2>
-      <p class="lede">It protects R&amp;D in good years and bad. In FY23 sales were flat, and R&amp;D still rose 39%.</p>
+      <h2>Nvidia protects its R&amp;D, even in a bad year</h2>
+      <p class="nv-q">So what does a company refuse to put at risk?</p>
+      <p class="lede">Its future. In FY23 Nvidia's sales went nowhere, and it spent 39% more on R&amp;D anyway. The bad year was when it bet hardest on the next one.</p>
+      <blockquote class="nv-lens"><p>"Much more likely that the upside is unlimited, and the downside is limited."</p><cite>Naval Ravikant, nav.al. R&amp;D is that bet: the budget caps the cost, the upside has no cap.</cite></blockquote>
       <p class="nv-src">Source: Nvidia annual reports (10-K), FY22 to FY26. FY26 ended in January 2026.</p>
     </div>
     <div class="nv-vis"><svg id="rd-svg" role="img" aria-label="Nvidia R&amp;D spending by year in billions of dollars: FY22 5.3, FY23 7.3, FY24 8.7, FY25 12.9, FY26 18.5. Sales: 27, 27, 61, 130, 216."></svg></div>
   </div>
+  <p class="nv-next"><span>Next</span>If R&amp;D can't move, what can?</p>
 </section>
 <script>
 (() => {
@@ -715,12 +813,13 @@ addEventListener('keydown', e => {
 })();
 </script>
 
-<section id="var" class="band" data-title="Plan versus actual">
+<section id="var" class="band" data-title="Nvidia re-plans costs every quarter">
   <div class="wrap nv-grid">
     <div class="nv-copy">
       <p class="nv-part" data-part="swing"><span>The swing: <b>bend</b></span></p>
-      <h2>How close does Nvidia land to its own plan?</h2>
-      <p class="lede">Within about 1% on costs. Nvidia sets its plan one quarter at a time, so it never drifts far.</p>
+      <h2>Nvidia re-plans its costs every quarter</h2>
+      <p class="nv-q">If R&amp;D can't move, what can?</p>
+      <p class="lede">Day-to-day costs. A plan that only looks three months ahead gives a surprise no time to grow. In the last two quarters, costs landed within about 1% of plan.</p>
       <p class="nv-src">Plan: the outlook Nvidia gives investors at the start of each quarter. Costs: operating expenses. Source: Nvidia CFO commentary, Q1 and Q2 FY27.</p>
     </div>
     <div class="nv-vis">
@@ -738,6 +837,7 @@ addEventListener('keydown', e => {
       <p class="var-key"><span class="var-f">F</span> favourable: costs under plan, or sales over plan</p>
     </div>
   </div>
+  <p class="nv-next"><span>Next</span>Then where can a budget like this still break?</p>
 </section>
 <style>
   .var-t{width:100%;border-collapse:collapse;font:400 clamp(17px,1.6vw,22px)/1.3 var(--font-body);font-variant-numeric:tabular-nums}
@@ -751,16 +851,19 @@ addEventListener('keydown', e => {
   .var-key .var-f{font-weight:700;margin-right:6px}
 </style>
 
-<section id="miss" class="band" data-title="Where the budget missed">
+<section id="miss" class="band" data-title="The budget broke on inventory">
   <div class="wrap nv-grid">
     <div class="nv-copy">
       <p class="nv-part" data-part="weight"><span>The weight: <b>bet</b></span></p>
-      <h2>Where did the budget miss?</h2>
-      <p class="lede">In inventory and orders. In FY23, $2.17B of chips on hand and chips already ordered was written off: the demand never came.</p>
+      <h2>The budget broke on inventory, not costs</h2>
+      <p class="nv-q">Then where can a budget like this still break?</p>
+      <p class="lede">In bets placed at the top of the swing. Nvidia ordered chips for demand that never came, and wrote off $2.17B in FY23. The cost lines were fine; the bet wasn't.</p>
+      <blockquote class="nv-lens marks"><p>"You can't predict. You can prepare."</p><cite>Howard Marks, memo title, 2001</cite></blockquote>
       <p class="nv-src">Source: Nvidia annual reports (10-K), inventory provisions, FY22 to FY26.</p>
     </div>
     <div class="nv-vis"><svg id="miss-svg" role="img" aria-label="Inventory written off by Nvidia, in billions of dollars: FY22 0.35, FY23 2.17, FY24 0.77, FY25 1.6, FY26 4.0."></svg></div>
   </div>
+  <p class="nv-next"><span>Next</span>So how big should any one bet be?</p>
 </section>
 <script>
 (() => {
@@ -788,54 +891,131 @@ addEventListener('keydown', e => {
 })();
 </script>
 
-<section id="marks" class="band" data-title="Howard Marks on risk">
-  <div class="wrap">
-    <div class="marks-head">
-      <h2>How does Howard Marks judge risk?</h2>
-      <p class="lede">By the loss that can't be undone. Nvidia can ride out a bad quarter. The next slides ask about its promises.</p>
+<section id="rr" class="band" data-title="Size every bet to survive losing it">
+  <div class="wrap nv-grid rr-grid">
+    <div class="nv-copy">
+      <p class="nv-part" data-part="naval"><span>Naval: <b>how much</b></span></p>
+      <h2>Size every bet to survive losing it</h2>
+      <p class="nv-q">So how big should any one bet be?</p>
+      <p class="lede">Six people each play Russian roulette once: five get rich. One person plays six times: never. <mark class="rr-mk">A company is the one player, every quarter,</mark> so the average can't save it.</p>
+      <blockquote class="nv-lens"><p>"What is true for 100 people on average isn't the same as one person averaging that same thing 100 times."</p><cite>Naval Ravikant, "Kelly Criterion: Avoid Ruin", nav.al</cite></blockquote>
     </div>
-    <div class="marks-stage">
-      <blockquote class="marks-q marks-l"><p>"You can't predict. You can prepare."</p><cite>memo title, 2001</cite></blockquote>
-      <svg id="marks-svg" role="img" aria-label="The pendulum between fear and greed, with one Marks quote at each end and one at the bottom."></svg>
-      <blockquote class="marks-q marks-r"><p>"The riskiest thing in the world is the widespread belief that there's no risk."</p><cite>Risk Revisited, 2014</cite></blockquote>
-      <blockquote class="marks-q marks-b"><p>"We can ride out volatility, but we never get a chance to undo a permanent loss."</p><cite>Risk Revisited, 2014</cite></blockquote>
+    <div class="nv-vis rr-vis">
+      <svg id="rr-svg" role="img" aria-label="Top: six players pull the trigger once each. Five win one billion dollars, one is out. Bottom: one player pulls six times with the same gun. The bullet comes on pull four and the player is worth zero; pulls five and six never happen."></svg>
+      <button class="rr-again" type="button">Play again</button>
     </div>
-    <p class="nv-src marks-src">Howard Marks co-founded Oaktree Capital and has written memos to its clients since 1990.</p>
   </div>
+  <p class="nv-next"><span>Next</span>Are Nvidia's own bets that small?</p>
 </section>
 <style>
-  .marks-head{display:grid;gap:12px;max-width:900px;margin-bottom:8px}
-  .marks-head h2{font-size:clamp(34px,3.8vw,54px)}
-  .marks-head .lede{color:var(--ink);font-size:clamp(19px,1.7vw,24px);max-width:none}
-  .marks-stage{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.15fr) minmax(0,1fr);grid-template-areas:"l s r" "b b b";align-items:center;column-gap:24px}
-  #marks-svg{grid-area:s;width:100%;height:auto;max-height:46vh;display:block}
-  .marks-l{grid-area:l;text-align:right} .marks-r{grid-area:r} .marks-b{grid-area:b;text-align:center;justify-self:center;max-width:46ch;margin-top:-6px}
-  .marks-q{margin:0}
-  .marks-q p{font:700 clamp(18px,1.6vw,23px)/1.3 var(--font-body);color:var(--ink)}
-  .marks-b p{color:var(--red)}
-  .marks-q cite{display:block;margin-top:6px;font:400 12.5px/1.3 var(--font-label);font-style:normal;color:var(--muted);letter-spacing:.04em}
-  .marks-src{margin-top:10px}
+  .rr-grid{grid-template-columns:minmax(0,4fr) minmax(0,6fr)}
+  .rr-vis{position:relative}
+  #rr-svg{max-height:74vh}
+  .rr-out{opacity:.28;transition:opacity .4s var(--ease-out)}
+  .rr-res{opacity:0;transition:opacity .35s var(--ease-out)} .rr-res.in{opacity:1}
+  .rr-again{position:absolute;left:0;bottom:-8px;font:500 clamp(11px,.8vw,14px)/1 var(--font-label);letter-spacing:.06em;text-transform:uppercase;
+    padding:9px 12px;border:1px solid var(--line-2);border-radius:3px;background:var(--card);color:var(--ink);cursor:pointer}
+  .rr-again:active{scale:.96}
+  .rr-big{font:800 22px var(--font-display);fill:var(--ink)}
 </style>
 <script>
 (() => {
-  const p = Pend.draw($('#marks-svg'), { w: 420, h: 330, L: 240, py: 40, weight: 40, arc: true, arcDeg: 40, tilt: 0 });
-  const sec = $('#marks');
+  const svg = $('#rr-svg'), W = 660, H = 600;
+  svg.setAttribute('viewBox', `0 0 ${W} ${H}`);
+  const mk = (t, a, txt, parent = svg) => { const n = document.createElementNS(NS, t); for (const k in a) n.setAttribute(k, a[k]); if (txt != null) n.textContent = txt; parent.appendChild(n); return n; };
+  const person = (x, y, s = 1) => {
+    const g = mk('g', {});
+    mk('circle', { cx: x, cy: y, r: 15 * s, fill: 'var(--card)', stroke: 'var(--ink)', 'stroke-width': 1.8 }, null, g);
+    mk('path', { class: 'ln', d: `M${x - 28 * s} ${y + 58 * s}Q${x - 26 * s} ${y + 22 * s} ${x} ${y + 22 * s}Q${x + 26 * s} ${y + 22 * s} ${x + 28 * s} ${y + 58 * s}` }, null, g);
+    return g;
+  };
+
+  /* Row A: six players, one pull each (player 4 is unlucky) */
+  mk('text', { class: 'svg-label', x: 0, y: 22 }, 'SIX PLAYERS, ONE PULL EACH');
+  const A = [];
+  for (let i = 0; i < 6; i++) {
+    const x = 50 + i * 108, out = i === 3, g = person(x, 66);
+    const res = mk('text', { class: 'nv-num rr-res', x, y: 166, 'text-anchor': 'middle', style: out ? 'fill:var(--red)' : '' }, out ? 'out' : '$1B');
+    A.push({ g, res, out });
+  }
+  mk('text', { class: 'svg-hand rr-res', id: 'rr-avgA', x: W / 2, y: 206, 'text-anchor': 'middle' }, 'on average, playing looks smart: five of six get rich');
+  mk('path', { class: 'ln guide', d: `M0 236H${W}` });
+
+  /* Row B: one player, six pulls, the same gun */
+  mk('text', { class: 'svg-label', x: 0, y: 276 }, 'ONE PLAYER, SIX PULLS, THE SAME GUN');
+  const solo = person(56, 350, 1.15);
+  const rev = Rev.draw(svg, { cx: 210, cy: 390, r: 66, loaded: 4 });
+  const tally = [];
+  for (let k = 1; k <= 6; k++) {
+    const x = 320 + (k - 1) * 64;
+    const c = mk('circle', { cx: x, cy: 390, r: 17, fill: 'none', stroke: 'var(--ink)', 'stroke-width': 1.4, 'stroke-dasharray': '3 4' });
+    mk('text', { class: 'nv-axis', x, y: 436, 'text-anchor': 'middle' }, String(k));
+    tally.push(c);
+  }
+  mk('text', { class: 'nv-axis', x: 320 - 17, y: 350 }, 'PULLS');
+  const zero = mk('text', { class: 'rr-big rr-res', x: 56, y: 470, 'text-anchor': 'middle', style: 'fill:var(--red)' }, 'worth zero');
+  const never = mk('text', { class: 'svg-hand rr-res', x: 320 + 4.5 * 64, y: 476, 'text-anchor': 'middle' }, 'never gets to pull 5');
+  const avgB = mk('text', { class: 'svg-hand rr-res', x: W / 2, y: 560, 'text-anchor': 'middle' }, 'for the one player, the average never arrives');
+
+  const clean = () => {
+    A.forEach(a => { a.res.classList.remove('in'); a.g.classList.remove('rr-out'); });
+    $('#rr-avgA').classList.remove('in');
+    solo.classList.remove('rr-out'); [zero, never, avgB].forEach(n => n.classList.remove('in'));
+    tally.forEach(c => { c.setAttribute('fill', 'none'); c.setAttribute('stroke-dasharray', '3 4'); c.setAttribute('stroke', 'var(--ink)'); });
+    rev.turn(0, 0);
+  };
+  const pullMark = (k, hit) => {
+    const c = tally[k - 1];
+    c.setAttribute('stroke-dasharray', '');
+    c.setAttribute('fill', hit ? 'var(--acc)' : 'var(--tint-3)');
+    if (hit) c.setAttribute('stroke', 'var(--red)');
+  };
+  const finish = () => {
+    A.forEach(a => { a.res.classList.add('in'); if (a.out) a.g.classList.add('rr-out'); });
+    $('#rr-avgA').classList.add('in');
+    for (let k = 1; k <= 4; k++) pullMark(k, k === 4);
+    rev.turn(4, 0);
+    solo.classList.add('rr-out'); [zero, never, avgB].forEach(n => n.classList.add('in'));
+    $('.rr-mk').classList.add('in');
+  };
+  let timers = [];
+  const at = (ms, fn) => timers.push(setTimeout(fn, ms));
+  const play = () => {
+    timers.forEach(clearTimeout); timers = [];
+    if (FINAL) { finish(); return; }
+    clean();
+    let t = 400;
+    A.forEach(a => { at(t, () => { a.res.classList.add('in'); if (a.out) a.g.classList.add('rr-out'); }); t += 420; });
+    at(t, () => $('#rr-avgA').classList.add('in')); t += 1400;
+    for (let k = 1; k <= 4; k++) {
+      at(t, () => rev.turn(k, 420)); t += 520;
+      at(t, () => pullMark(k, k === 4)); t += k === 4 ? 300 : 520;
+    }
+    at(t, () => { solo.classList.add('rr-out'); zero.classList.add('in'); }); t += 700;
+    at(t, () => never.classList.add('in')); t += 800;
+    at(t, () => { avgB.classList.add('in'); $('.rr-mk').classList.add('in'); });
+  };
+  $('.rr-again').addEventListener('click', e => { e.stopPropagation(); play(); });
+  const sec = $('#rr');
+  if (!FINAL) clean();
   let done = false;
-  const go = () => { if (done) return; done = true; p.swing(-40, 0, 3600); };
+  const go = () => { if (done) return; done = true; play(); };
   sec.addEventListener('cps:enter', go); onView(sec, go, .2);
 })();
 </script>
 
-<section id="loop" class="band" data-title="The money loop">
+<section id="loop" class="band" data-title="The Anthropic bet is sized to survive">
   <div class="wrap nv-grid">
     <div class="nv-copy">
-      <p class="nv-part" data-part="weight"><span>The weight: <b>bet</b></span></p>
-      <h2>Is the money loop managed risk?</h2>
-      <p class="lede">Yes, where it is small and in plain sight. Up to $10B into Anthropic is about 4.6% of one year's sales.</p>
-      <p class="nv-src">Source: Anthropic, Microsoft and Nvidia announcement, Nov 18 2025. Sales: Nvidia FY26 10-K.</p>
+      <p class="nv-part" data-part="naval"><span>Naval: <b>how much</b></span></p>
+      <h2>The Anthropic bet is sized to survive</h2>
+      <p class="nv-q">Are Nvidia's own bets that small?</p>
+      <p class="lede">This one is. Nvidia's stake in Anthropic, up to $10B, is about two and a half weeks of its sales. <mark class="loop-mk">If it went to zero, Nvidia keeps playing.</mark></p>
+      <p class="nv-src">Up to $10B against FY26 sales of $216B: 4.6%. Source: Anthropic, Microsoft and Nvidia announcement, Nov 18 2025; Nvidia FY26 10-K.</p>
     </div>
     <div class="nv-vis"><svg id="loop-svg" role="img" aria-label="The loop: Nvidia invests up to 10 billion dollars in Anthropic. Anthropic buys 30 billion dollars of Microsoft Azure compute. Azure runs on Nvidia chips, so money returns to Nvidia."></svg></div>
   </div>
+  <p class="nv-next"><span>Next</span>And the bets that never show up as a cost?</p>
 </section>
 <script>
 (() => {
@@ -860,67 +1040,90 @@ addEventListener('keydown', e => {
   mk('text', { class: 'nv-num', x: 280, y: 418, 'text-anchor': 'middle' }, '$30B of compute');
   mk('text', { class: 'nv-num', x: 20, y: 150 }, 'runs on');
   mk('text', { class: 'nv-axis', x: 20, y: 170 }, 'Nvidia chips');
-  mk('text', { class: 'svg-hand', x: 280, y: 214, 'text-anchor': 'middle' }, 'Marks: money "round-tripped"');
-  mk('text', { class: 'svg-hand', x: 280, y: 242, 'text-anchor': 'middle' }, 'goes out, comes back');
+  mk('text', { class: 'svg-hand', x: 280, y: 214, 'text-anchor': 'middle' }, 'money goes out, comes back');
+  mk('text', { class: 'svg-hand', x: 280, y: 242, 'text-anchor': 'middle' }, 'a small bet, in plain sight');
   prepDraw(paths);
   const sec = $('#loop');
   let done = false;
-  const go = () => { if (done) return; done = true; penDraw(paths, { delay: .3, speed: 380 }); };
+  const go = () => { if (done) return; done = true; penDraw(paths, { delay: .3, speed: 380 }); setTimeout(() => $('.loop-mk').classList.add('in'), FINAL ? 0 : 1600); };
   sec.addEventListener('cps:enter', go); onView(sec, go, .2);
 })();
 </script>
 
-<section id="hid" class="band" data-title="Where the risk hides">
+<section id="hid" class="band" data-title="The $279B in promises is not sized">
   <div class="wrap nv-grid">
     <div class="nv-copy">
-      <p class="nv-part" data-part="weight"><span>The weight: <b>bet</b></span></p>
-      <h2>Where is the risk hidden?</h2>
-      <p class="lede">In promises outside the cost lines. Nvidia has promised suppliers $279B, against about $99B of cash and marketable securities. If demand drops, the bill still comes.</p>
-      <p class="hid-more">Plus a guarantee of up to $105B: Nvidia stands behind an OpenAI company's data centre lease.</p>
-      <p class="nv-src">Source: Nvidia 10-Ks FY23 and FY26, 10-Q Q2 FY27. Counting cloud deals, leases and stakes too: $366B.</p>
+      <p class="nv-part" data-part="weight"><span>Marks and Naval: <b>when and how much</b></span></p>
+      <h2>The $279B in promises is not sized to survive</h2>
+      <p class="nv-q">And the bets that never show up as a cost?</p>
+      <p class="lede">Nvidia has promised its suppliers 2.8 times the cash it holds, right when Marks sees money "round-tripped" between AI players: the pendulum near greed. <mark class="hid-mk">Nvidia is playing roulette now.</mark></p>
+      <p class="hid-more">If demand holds, sales pay the bill. If the swing turns, the bill still comes.</p>
+      <p class="nv-src">$279B promised to suppliers against about $99B of cash and marketable securities, plus a guarantee of up to $105B on an OpenAI company's data centre lease. Source: Nvidia 10-Ks FY23 and FY26, 10-Q Q2 FY27; Howard Marks, "Is It a Bubble?", Dec 2025.</p>
     </div>
     <div class="nv-vis"><svg id="hid-svg" role="img" aria-label="The pendulum swung toward greed. Its weight, money promised to suppliers, grew from 4.9 billion dollars in FY23 to 95 billion in FY26 to 279 billion in Q2 FY27."></svg></div>
   </div>
+  <p class="nv-next"><span>Next</span>So what is a budget, really?</p>
 </section>
 <style>
-  .hid-more{font:700 clamp(17px,1.4vw,20px)/1.4 var(--font-body);color:var(--red);max-width:34ch}
+  .hid-more{font:700 clamp(17px,1.4vw,28px)/1.4 var(--font-body);color:var(--red);max-width:34ch}
 </style>
 <script>
 (() => {
   const ghosts = [{ tilt: -22, weight: 4.9, label: 'FY23 $4.9B' }, { tilt: 4, weight: 95.2, label: 'FY26 $95B' }];
   const p = Pend.draw($('#hid-svg'), { w: 560, h: 470, L: 290, py: 40, cx: 230, weight: 279, wLabel: '$279B', lit: 'weight', arc: true, arcDeg: 46, tilt: 28, ghosts });
+  const svg = $('#hid-svg');
+  const note = document.createElementNS(NS, 'text');
+  note.setAttribute('class', 'svg-hand'); note.setAttribute('x', 556); note.setAttribute('y', 414); note.setAttribute('text-anchor', 'end');
+  note.textContent = '2.8 times the cash on hand';
+  svg.appendChild(note);
   const sec = $('#hid');
-  if (!FINAL) { p.setW(4.9); p.wl.textContent = '$4.9B'; }
+  if (!FINAL) { p.setW(4.9); p.wl.textContent = '$4.9B'; note.style.opacity = 0; }
   let done = false;
-  const go = () => { if (done) return; done = true; setTimeout(() => p.grow([30.8, 95.2, 279], v => v < 10 ? `$${v}B` : `$${Math.round(v)}B`), FINAL ? 0 : 500); };
+  const go = () => {
+    if (done) return; done = true;
+    setTimeout(() => p.grow([30.8, 95.2, 279], v => v < 10 ? `$${v}B` : `$${Math.round(v)}B`), FINAL ? 0 : 500);
+    setTimeout(() => { note.style.transition = 'opacity .6s'; note.style.opacity = 1; $('.hid-mk').classList.add('in'); }, FINAL ? 0 : 3600);
+  };
   sec.addEventListener('cps:enter', go); onView(sec, go, .2);
 })();
 </script>
 
-<section id="close" class="band" data-title="What a founder takes">
+<section id="close" class="band" data-title="Budgeting is risk management">
   <div class="wrap nv-grid">
     <div class="nv-copy">
-      <h2>What should a founder take from Nvidia?</h2>
-      <p class="lede">A budget is a risk plan only for the lines it holds. <mark class="close-mk">Budget the promises too.</mark></p>
-      <p class="close-ask">Which line in your budget could cause a loss you can't get back?</p>
+      <h2>A budget decides which losses a company can survive</h2>
+      <p class="nv-q">So what is a budget, really?</p>
+      <p class="lede">Risk management: every line is a bet. Marks says when to be careful; Naval says how much to bet. <mark class="close-mk">Budget the promises too.</mark></p>
+      <p class="close-ask">Which line in a budget could cause a loss that can't be undone?</p>
     </div>
-    <div class="nv-vis">
-      <svg id="close-svg" role="img" aria-label="The pendulum swinging back from greed toward the middle."></svg>
-      <p class="nv-src close-src">"whenever the pendulum is near either extreme, it is inevitable that it will move back toward the midpoint sooner or later." Howard Marks, On the Couch, 2016</p>
+    <div class="nv-vis close-vis">
+      <svg id="close-svg" role="img" aria-label="The pendulum swinging back from greed toward the middle, beside the revolver cylinder at rest."></svg>
+      <div class="close-quotes">
+        <blockquote class="nv-lens marks"><p>"whenever the pendulum is near either extreme, it is inevitable that it will move back toward the midpoint sooner or later."</p><cite>Howard Marks, On the Couch, 2016</cite></blockquote>
+        <blockquote class="nv-lens"><p>"Don't risk everything."</p><cite>Naval Ravikant, nav.al</cite></blockquote>
+      </div>
     </div>
   </div>
 </section>
 <style>
-  .close-ask{font:800 clamp(24px,2.4vw,34px)/1.2 var(--font-display);color:var(--ink);border-left:4px solid var(--acc);padding:6px 0 6px 18px;max-width:22ch;margin-top:8px}
-  .close-src{margin-top:8px;max-width:46ch}
+  .close-ask{font:800 clamp(24px,2.4vw,48px)/1.2 var(--font-display);color:var(--ink);border-left:4px solid var(--acc);padding:6px 0 6px 18px;max-width:22ch;margin-top:8px}
+  .close-quotes{display:grid;grid-template-columns:1.4fr 1fr;gap:28px;margin-top:10px}
+  #close-svg{max-height:52vh}
 </style>
 <script>
 (() => {
+  const svg = $('#close-svg');
   const ghosts = [{ tilt: 28, weight: 279, label: '$279B still owed' }];
-  const p = Pend.draw($('#close-svg'), { w: 520, h: 420, L: 260, py: 40, cx: 250, weight: 60, arc: true, arcDeg: 46, tilt: 6, ghosts });
+  const p = Pend.draw(svg, { w: 760, h: 420, L: 260, py: 40, cx: 250, weight: 60, arc: true, arcDeg: 46, tilt: 6, ghosts });
+  const r = Rev.draw(svg, { cx: 630, cy: 250, r: 74, loaded: 3 });
   const sec = $('#close');
   let done = false;
-  const go = () => { if (done) return; done = true; p.swing(28, 6, 3800); setTimeout(() => $('.close-mk').classList.add('in'), FINAL ? 0 : 900); };
+  const go = () => {
+    if (done) return; done = true;
+    p.swing(28, 6, 3800);
+    if (!FINAL) { r.turn(3, 0); setTimeout(() => r.turn(6, 2400), 300); } else r.turn(6, 0);
+    setTimeout(() => $('.close-mk').classList.add('in'), FINAL ? 0 : 900);
+  };
   sec.addEventListener('cps:enter', go); onView(sec, go, .2);
 })();
 </script>
