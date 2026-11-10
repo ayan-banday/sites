@@ -65,6 +65,8 @@ function buildMovie(offstage){
   requestAnimationFrame(()=>{
     enqueue(()=>paintSky(document.getElementById('csky'),53));
     enqueue(()=>starImg());
+    enqueue(()=>{const c=document.createElement('canvas');return paint(c,300,300,`<g transform="translate(150 160) rotate(-14)">${cow(0,60,.95,'hap xd sparkles',{pose:'fly',cape:'fly'})}</g>`,200,200).then(()=>document.querySelectorAll('image[data-cow]').forEach(i=>i.setAttribute('href',c.toDataURL())))});
+    document.querySelectorAll('.fly .trail').forEach(t=>t.style.setProperty('--len',Math.ceil(t.getTotalLength())));
     document.querySelectorAll('[data-paint]').forEach(el=>enqueue(()=>PAINT.get(el)()));
     setupStory();
   });
@@ -94,12 +96,12 @@ function chapterEl(ch,ci){
   const wrap=document.createElement('div');wrap.className='wrap';const page=document.createElement('div');page.className='page';wrap.appendChild(page);sec.appendChild(wrap);
   // the top band: drawn, with the two stars
   const band=document.createElement('div');band.className='band';const bc=document.createElement('canvas');band.appendChild(bc);
-  bc.dataset.paint=1;PAINT.set(bc,()=>paint(bc,1120,150,panelSVG(1120,150,900+ci,ch.band(1120,150)),band.clientWidth*DPR(),band.clientHeight*DPR()));
+  bc.dataset.paint=1;band.style.setProperty('--W',1120);PAINT.set(bc,()=>paint(bc,1120,190,panelSVG(1120,190,900+ci,ch.band(1120,190)),band.clientWidth*DPR(),band.clientHeight*DPR()));
   const sw=document.createElement('div');sw.className=ch.orbit?'orbit':'';sw.style.cssText='position:absolute;inset:0';
   const prev=ci?CHAPTERS[ci-1].stars:.76;
   [-1,1].forEach(s=>{const i=document.createElement('img');i.className='bstar';i.alt='';i.dataset.s=s;i.style.transform=`translateX(${s*prev*50}cqw) translateY(${s*-12}%)`;sw.appendChild(i)});
   band.appendChild(sw);if(ch.bandFx)band.insertAdjacentHTML('beforeend',ch.bandFx);
-  band.appendChild(textEl({k:'ttl',x:200,y:22,w:720,html:`${ch.num?`<small>CHAPTER ${ch.num}</small>`:'<small>THE END</small>'}${ch.title}`},1120,150));
+  band.appendChild(textEl({k:'ttl',x:200,y:16,w:720,html:`${ch.num?`<small>CHAPTER ${ch.num}</small>`:'<small>THE END</small>'}${ch.title}`},1120,190));
   page.appendChild(band);
   ch.rows.forEach(r=>{const row=document.createElement('div');row.className='row';row.style.gridTemplateColumns=r.map(i=>ch.panels[i].W+'fr').join(' ');
     r.forEach(i=>row.appendChild(panelEl(ch,ch.panels[i],ci*10+i)));page.appendChild(row)});
@@ -130,7 +132,7 @@ function setupStory(){
       e.target.querySelectorAll('img.bstar').forEach(i=>{const s=+i.dataset.s;i.style.transform=`translateX(${s*ch.stars*50}cqw) translateY(${s*(ch.tilt??-12)}%)`;i.style.opacity=ch.dim||1})}
   }),{threshold:.35});
   document.querySelectorAll('.band,.panel,.chapter').forEach(el=>io.observe(el));
-  if(Q.has('all')){story.forEach(el=>{el.classList.remove('hid');runCue(el,true)});next=story.length;CHAPTERS.forEach(c=>c._teaser&&c._teaser.classList.remove('hid'));return}
+  if(Q.has('all')){CHAPTERS.forEach(ch=>ch._band.querySelectorAll('img.bstar').forEach(i=>{const s=+i.dataset.s;i.style.transform=`translateX(${s*ch.stars*50}cqw) translateY(${s*(ch.tilt??-12)}%)`;i.style.opacity=ch.dim||1}));story.forEach(el=>{el.classList.remove('hid');runCue(el,true)});next=story.length;CHAPTERS.forEach(c=>c._teaser&&c._teaser.classList.remove('hid'));return}
   mark();
 }
 function mark(){story.forEach((el,i)=>el.classList.toggle('nexth',i===next))}
@@ -161,11 +163,12 @@ function wake(){if(A.on)return;A.on=true;document.getElementById('knob').hidden=
 document.getElementById('begin').addEventListener('click',()=>{wake();const f=CHAPTERS[0];document.getElementById(f.id).scrollIntoView({behavior:matchMedia('(prefers-reduced-motion:reduce)').matches?'auto':'smooth'})});
 
 /* cues fire when their panel appears */
-function runCue(el,silent){const p=el._p;if(!p||!p.cue)return;if(silent&&p.cue!=='flight')return;CUES[p.cue](el)}
+function runCue(el,silent){const p=el._p;if(!p||!p.cue)return;if(silent){if(p.cue==='flight')el.classList.add('flying','done');if(p.art2)el.classList.add('cape');return}CUES[p.cue](el)}
 const CUES={
   risk:()=>song('risk'),
   cloud:()=>song('cloud'),
   gasp:()=>sfx('gasp',.45,900),
+  glow:el=>setTimeout(()=>el.classList.add('cape'),1300),
   snap:()=>{for(const k in A.tr)if(k!=='rain')fadeTo(k,0,120);if(!A.on)A.want='rain';sfx('snap',.7,150);sfx('thunder',.5,1700);setTimeout(()=>{fadeTo('rain',1,2500);label('rain')},1900)},
   thunder:()=>sfx('thunder',.35,600),
   door:()=>{sfx('creak',.6,300);fadeTo('rain',0,3500);setTimeout(()=>song('reckless',4000),900)},
