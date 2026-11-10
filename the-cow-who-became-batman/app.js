@@ -43,6 +43,7 @@ function phone(){
 /* ================= LAPTOP: the lock ================= */
 const pad=n=>String(n).padStart(2,'0');
 function lock(){
+  document.documentElement.classList.add('wide');
   const el=document.getElementById('lock');el.hidden=false;
   requestAnimationFrame(()=>paintSky(document.getElementById('lsky'),53));
   const tick=()=>{const left=OPENS-Date.now();
@@ -74,7 +75,7 @@ function buildMovie(offstage){
     setupStory();
   });
 }
-function openMovie(){buildMovie(false);document.getElementById('movie').classList.remove('offstage');scrollTo(0,0);
+function openMovie(){document.documentElement.classList.add('reader');buildMovie(false);document.getElementById('movie').classList.remove('offstage');scrollTo(0,0);
   requestAnimationFrame(()=>paintSky(document.getElementById('csky'),53))}
 
 /* the two band stars are one small bitmap, shared */
@@ -98,7 +99,7 @@ function chapterEl(ch,ci){
   g.dataset.paint=1;PAINT.set(g,()=>{const w=sec.clientWidth,h=sec.clientHeight;return paint(g,640,640*h/w,ch.ground(640,640*h/w),w*.5,h*.5,'none')});
   const wrap=document.createElement('div');wrap.className='wrap';const page=document.createElement('div');page.className='page';wrap.appendChild(page);sec.appendChild(wrap);
   // the top band: drawn, with the two stars
-  const band=document.createElement('div');band.className='band';const bc=document.createElement('canvas');band.appendChild(bc);
+  const band=document.createElement('div');band.className='band hid';band._ch=ch;const bc=document.createElement('canvas');band.appendChild(bc);
   bc.dataset.paint=1;band.style.setProperty('--W',1120);PAINT.set(bc,()=>paint(bc,1120,190,panelSVG(1120,190,900+ci,ch.band(1120,190)),band.clientWidth*DPR(),band.clientHeight*DPR()));
   const sw=document.createElement('div');sw.className=ch.orbit?'orbit':'';sw.style.cssText='position:absolute;inset:0';
   const prev=ci?CHAPTERS[ci-1].stars:.76;
@@ -106,10 +107,8 @@ function chapterEl(ch,ci){
   const kn=document.createElement('div');kn.className='bknob';kn.innerHTML=`<span>${ch.song}<br>sung by Gauri</span>`;makeDial(kn);band.appendChild(sw);band.appendChild(kn);if(ch.bandFx)band.insertAdjacentHTML('beforeend',ch.bandFx);
   band.appendChild(textEl({k:'ttl',x:200,y:16,w:720,html:`${ch.num?`<small>CHAPTER ${ch.num}</small>`:'<small>THE END</small>'}${ch.title}`},1120,190));
   page.appendChild(band);
-  ch.rows.forEach(r=>{const row=document.createElement('div');row.className='row';row.style.gridTemplateColumns=r.map(i=>ch.panels[i].W+'fr').join(' ');
+  ch.rows.forEach(r=>{const row=document.createElement('div');row.className='row';row.style.gridTemplateColumns=r.map(i=>ch.panels[i].W+'fr').join(' ');row.style.setProperty('--rr',(Math.max(...r.map(i=>ch.panels[i].H))/r.reduce((s,i)=>s+ch.panels[i].W,0)).toFixed(4));
     r.forEach(i=>row.appendChild(panelEl(ch,ch.panels[i],ci*10+i)));page.appendChild(row)});
-  if(ci<CHAPTERS.length-1){const n=CHAPTERS[ci+1];const tz=document.createElement('div');tz.className='teaser hid';tz.innerHTML=`<svg width="90" height="34" viewBox="0 0 90 34" aria-hidden="true">${(()=>{R=rng(ci+70);return `<path d="${wob([[8,18],[82,18]],1.4)}" stroke="${GOLD}" stroke-width="2.4" fill="none" stroke-linecap="round" stroke-dasharray="3 6"/><path d="${wob([[70,8],[84,18],[70,28]],1)}" stroke="${GOLD}" stroke-width="2.6" fill="none" stroke-linecap="round" stroke-linejoin="round"/>`})()}</svg><span>next: <b>${n.title}</b></span>`;
-    tz.addEventListener('click',e=>{e.stopPropagation();document.getElementById(n.id).scrollIntoView({behavior:'smooth'})});wrap.appendChild(tz);ch._teaser=tz}
   ch._sec=sec;ch._band=band;
   return sec;
 }
@@ -120,80 +119,124 @@ function panelEl(ch,p,seed){
   if(p.art2){const c2=document.createElement('canvas');c2.className='layer2';el.appendChild(c2);c2.dataset.paint=1;PAINT.set(c2,()=>paint(c2,p.W,p.H,p.art2(p.W,p.H),el.clientWidth*DPR(),el.clientWidth*p.H/p.W*DPR()))}
   if(p.over)el.insertAdjacentHTML('beforeend',p.over(p.W,p.H));
   (p.t||[]).forEach(t=>el.appendChild(textEl(t,p.W,p.H)));
-  el.insertAdjacentHTML('beforeend',`<div class="hint">${TOUCH?'tap':'click'} for the next panel ›</div>`);
   el.setAttribute('role','img');el.setAttribute('aria-label',(p.t||[]).filter(t=>t.k!=='ash').map(t=>t.html.replace(/<[^>]+>/g,' ')).join(' '));
   el._p=p;el._ch=ch;return el;
 }
 
-/* ---------- reveal one panel at a time ---------- */
-let story=[],next=0,lockT=0,prog=0;
+/* ---------- one tap, one card: no scrolling, the page moves itself ---------- */
+let story=[],next=0,readyAt=0,qT=0,cur=null,started=false;
+const PORTRAIT=matchMedia('(orientation:portrait) and (pointer:coarse)');
+function reading(){return built&&!PHONE&&!PORTRAIT.matches&&!document.getElementById('movie').classList.contains('offstage')}
+function moveStars(ch){ch._band.querySelectorAll('img.bstar').forEach(i=>{const s=+i.dataset.s;i.style.transform=`translateX(${s*ch.stars*50}cqw) translateY(${s*(ch.tilt??-12)}%)`;i.style.opacity=ch.dim||1})}
 function setupStory(){
-  story=[...document.querySelectorAll('#chapters .panel')];
-  const io=new IntersectionObserver(es=>es.forEach(e=>{
-    e.target.classList.toggle('vis',e.isIntersecting);
-    if(e.isIntersecting&&e.target.classList.contains('band')){const ch=CHAPTERS.find(c=>c._band===e.target);
-      e.target.querySelectorAll('img.bstar').forEach(i=>{const s=+i.dataset.s;i.style.transform=`translateX(${s*ch.stars*50}cqw) translateY(${s*(ch.tilt??-12)}%)`;i.style.opacity=ch.dim||1})}
-  }),{threshold:.35});
+  story=[...document.querySelectorAll('#chapters .band,#chapters .panel')];
+  const io=new IntersectionObserver(es=>es.forEach(e=>e.target.classList.toggle('vis',e.isIntersecting)),{threshold:.35});
   document.querySelectorAll('.band,.panel,.chapter').forEach(el=>io.observe(el));
-  if(Q.has('all')){CHAPTERS.forEach(ch=>ch._band.querySelectorAll('img.bstar').forEach(i=>{const s=+i.dataset.s;i.style.transform=`translateX(${s*ch.stars*50}cqw) translateY(${s*(ch.tilt??-12)}%)`;i.style.opacity=ch.dim||1}));story.forEach(el=>{el.classList.remove('hid');runCue(el,true)});next=story.length;CHAPTERS.forEach(c=>c._teaser&&c._teaser.classList.remove('hid'));return}
-  mark();
+  if(Q.has('all')){document.documentElement.classList.remove('reader');CHAPTERS.forEach(moveStars);story.forEach(el=>{el.classList.remove('hid');runCue(el,true)});next=story.length;started=true}
 }
-function mark(){story.forEach((el,i)=>el.classList.toggle('nexth',i===next))}
-function reveal(fromScroll){
-  if(next>=story.length)return;const el=story[next++];el.classList.remove('hid');
-  if(!fromScroll){const r=el.getBoundingClientRect();clearTimeout(prog);prog=setTimeout(()=>prog=0,2400);if(r.bottom>innerHeight-20||r.top<0)el.scrollIntoView({behavior:'smooth',block:r.height>innerHeight*.8?'start':'center'})}
-  runCue(el);mark();
-  const ch=el._ch;const last=ch.panels[ch.rows.flat().slice(-1)[0]];if(el._p===last&&ch._teaser)setTimeout(()=>ch._teaser.classList.remove('hid'),2400);
+/* how long a card stays before the next tap counts: longer for more words and the big moments */
+function rest(el){
+  if(el.classList.contains('band'))return 2400;
+  const p=el._p,n=(p.t||[]).filter(t=>t.k!=='ash').map(t=>t.html.replace(/<[^>]+>/g,'')).join(' ').length;
+  return Math.max({snap:3600,door:4000,cape:5200,flight:4600}[p.cue]||0,Math.min(4200,1300+n*30));
 }
-document.addEventListener('click',e=>{if(!built||document.getElementById('movie').classList.contains('offstage'))return;if(e.target.closest('.bknob,#cover,.teaser'))return;wake();reveal()});
-addEventListener('keydown',e=>{if(!built||document.activeElement.classList?.contains('bdial'))return;if((e.key===' '||e.key==='ArrowRight')&&next<story.length&&document.getElementById('cover').getBoundingClientRect().bottom<innerHeight*.5){e.preventDefault();wake();reveal()}});
-addEventListener('scrollend',()=>{if(prog){clearTimeout(prog);prog=setTimeout(()=>prog=0,700)}});
-addEventListener('scroll',()=>{if(prog||!story.length||next>=story.length||Date.now()<lockT)return;const r=story[next].getBoundingClientRect();if(r.top<innerHeight*.7){lockT=Date.now()+900;wake();reveal(true)}},{passive:true});
+/* where the page should sit so the new card is in view: a band opens its chapter at the top; a panel shows its whole row */
+function target(el){
+  const y=scrollY,H=innerHeight,max=document.documentElement.scrollHeight-H;
+  if(el.classList.contains('band'))return Math.min(max,el._ch._sec.getBoundingClientRect().top+y);
+  const r=el.parentElement.getBoundingClientRect();
+  if(r.top>=12&&r.bottom<=H-16)return y;
+  return Math.max(0,Math.min(max,r.bottom+y-H+32,r.top+y-24));
+}
+let tw=0;
+function glide(to,ms=1100){cancelAnimationFrame(tw);const from=scrollY,d=to-from;if(Math.abs(d)<2)return;
+  if(matchMedia('(prefers-reduced-motion:reduce)').matches){scrollTo(0,to);return}
+  const t0=performance.now(),f=now=>{const k=Math.min(1,(now-t0)/ms),e=k<.5?4*k*k*k:1-Math.pow(-2*k+2,3)/2;scrollTo(0,from+d*e);if(k<1)tw=requestAnimationFrame(f)};tw=requestAnimationFrame(f)}
+function reveal(){
+  if(next>=story.length)return;const el=story[next++];cur=el;el.classList.remove('hid');
+  readyAt=performance.now()+rest(el);glide(target(el));
+  if(el.classList.contains('band')){const ch=el._ch;setTimeout(()=>moveStars(ch),500);if(ch.cue)CUES[ch.cue](el)}else runCue(el);
+}
+/* an early tap is kept, not lost: the next card comes as soon as this one has had its moment */
+function advance(){
+  if(next>=story.length){replay();return}
+  const wait=readyAt-performance.now();
+  if(wait>0){clearTimeout(qT);qT=setTimeout(reveal,wait);return}
+  reveal();
+}
+function begin(){if(started)return;started=true;wake();goFull().then(()=>setTimeout(reveal,350))}
+document.addEventListener('click',e=>{if(!reading()||e.target.closest('.bknob'))return;if(!started){begin();return}wake();advance()});
+addEventListener('keydown',e=>{if(!reading()||document.activeElement.classList?.contains('bdial'))return;
+  if([' ','ArrowDown','ArrowRight','PageDown','Enter'].includes(e.key)){if(e.key==='Enter'&&e.target.closest('button'))return;e.preventDefault();if(!started)begin();else advance()}
+  else if(['ArrowUp','ArrowLeft','PageUp','Home','End'].includes(e.key))e.preventDefault()});
+/* no free scrolling: a wheel flick or a swipe up counts as one tap */
+let wq=0;addEventListener('wheel',e=>{if(!reading())return;e.preventDefault();const now=performance.now();if(started&&now-wq>450&&e.deltaY>8)advance();wq=now},{passive:false});
+let ty=null,tx=0;
+addEventListener('touchstart',e=>{ty=e.touches[0].clientY;tx=e.touches[0].clientX},{passive:true});
+addEventListener('touchmove',e=>{if(reading()&&!e.target.closest('.bdial'))e.preventDefault()},{passive:false});
+addEventListener('touchend',e=>{if(!reading()||ty===null||!started)return;const t=e.changedTouches[0],dy=t.clientY-ty,dx=t.clientX-tx;ty=null;if(dy<-40&&Math.abs(dy)>Math.abs(dx)){wake();advance()}},{passive:true});
+/* after the last card, a tap sends the cow round again */
+function replay(){const el=cur;if(!el||el._p?.cue!=='flight'||!el.classList.contains('done')||performance.now()<readyAt)return;
+  el.classList.remove('flying','done');void el.offsetWidth;readyAt=performance.now()+4600;CUES.flight(el)}
 
-/* ================= sound: her songs, barely there ================= */
+/* ================= sound: her songs, in the background ================= */
 const SONGS={risk:['songs/risk-it-all.mp3','Risk It All'],cloud:['songs/cloud-9.mp3','Cloud 9'],reckless:['songs/reckless.mp3','Reckless'],rain:['sfx/rain.mp3','rain']};
+const CHORUS=46; // Cloud 9 lifts here: the cape lands on it
 const A={vol:.55,tr:{},on:false,want:'risk'};
 /* Sound goes through a Web Audio gain node: iPads ignore an audio element's volume, but obey a gain node */
 let ACX=null;
 function wire(c){if(ACX&&!c.node){try{const s=ACX.createMediaElementSource(c.el);c.node=ACX.createGain();c.node.gain.value=0;s.connect(c.node).connect(ACX.destination)}catch(e){}}}
 function setLevel(c,v){v=Math.max(0,Math.min(1,v));if(c.node){c.node.gain.value=v;c.el.volume=1}else c.el.volume=v}
-function track(k){if(!A.tr[k]){const el=new Audio(SONGS[k][0]);el.loop=true;el.preload='auto';A.tr[k]={el,g:0,t:0,ms:1500,mul:1};wire(A.tr[k])}return A.tr[k]}
+/* a song never jumps back to its start: near the end it fades away, then comes back in from the top */
+function track(k){if(!A.tr[k]){const el=new Audio(SONGS[k][0]);el.preload='auto';const c=A.tr[k]={el,g:0,t:0,ms:1500,mul:1,lm:1,lmT:1};wire(c);
+  if(k==='rain')el.loop=true;else{
+    el.addEventListener('timeupdate',()=>{if(c.lmT&&el.duration&&el.duration-el.currentTime<3.2){c.lmT=0;kick()}});
+    el.addEventListener('ended',()=>{try{el.currentTime=0}catch(e){}if(c.t>0)el.play().catch(()=>{});c.lmT=1;kick()})}}
+  return A.tr[k]}
 const FX={};
 function fx(n){if(!FX[n]){const c={el:new Audio(`sfx/${n}.mp3`)};c.el.preload='auto';FX[n]=c;wire(c)}return FX[n]}
 let last=0,raf=0;
-function step(ts){const dt=last?ts-last:16;last=ts;let busy=false;
-  for(const k in A.tr){const c=A.tr[k];if(c.g!==c.t){const d=dt/c.ms;c.g=c.t>c.g?Math.min(c.t,c.g+d):Math.max(c.t,c.g-d);busy=true}
-    setLevel(c,c.g*A.vol*c.mul);if(c.g===0&&c.t===0&&!c.el.paused)c.el.pause()}
+function kick(){if(!raf)raf=requestAnimationFrame(step)}
+/* equal-power fades: while one song leaves and the next arrives, the room stays just as full */
+function step(ts){const dt=last?Math.min(ts-last,100):16;last=ts;let busy=false;
+  for(const k in A.tr){const c=A.tr[k];
+    if(c.g!==c.t){const d=dt/c.ms;c.g=c.t>c.g?Math.min(c.t,c.g+d):Math.max(c.t,c.g-d);busy=true}
+    if(c.lm!==c.lmT){const d=dt/2600;c.lm=c.lmT>c.lm?Math.min(c.lmT,c.lm+d):Math.max(c.lmT,c.lm-d);busy=true}
+    setLevel(c,Math.sin(c.g*Math.PI/2)*A.vol*c.mul*c.lm);if(c.g===0&&c.t===0&&!c.el.paused)c.el.pause()}
   raf=busy?requestAnimationFrame(step):0;if(!busy)last=0}
-function fadeTo(k,t,ms){const c=track(k);c.t=t;c.ms=ms;if(t>0&&c.el.paused&&A.on){c.el.play().catch(()=>{})}if(!raf)raf=requestAnimationFrame(step)}
-function song(k,ms=2500){A.want=k;if(!A.on)return;for(const o in A.tr)if(o!==k&&o!=='rain')fadeTo(o,0,1500);if(k)fadeTo(k,1,ms);label(k)}
+function fadeTo(k,t,ms){const c=track(k);c.t=t;c.ms=ms;if(t>0&&c.el.paused&&A.on){c.el.play().catch(()=>{})}kick()}
+/* change songs: both play together for a few seconds; `from` starts the new one at a chosen spot */
+function song(k,ms=5000,from){A.want=k;if(!A.on)return;for(const o in A.tr)if(o!==k&&o!=='rain')fadeTo(o,0,ms);
+  if(k){const c=track(k);if(from!=null&&c.g===0){try{c.el.currentTime=from}catch(e){}}fadeTo(k,1,ms)}}
 function label(){}
 function sfx(n,rel=.55,delay=0){if(!A.on)return;setTimeout(()=>{const c=fx(n);setLevel(c,A.vol*rel*1.6);try{c.el.currentTime=0}catch(e){}c.el.play().catch(()=>{})},delay)}
 function wake(){if(A.on)return;A.on=true;
   // inside her first tap: start the mixer and unlock every sound, so later cues can play on an iPad
   try{const C=window.AudioContext||window.webkitAudioContext;if(C){ACX=new C();ACX.resume&&ACX.resume()}}catch(e){}
   ['risk','cloud','reckless','rain'].forEach(k=>{const c=track(k);wire(c);if(k!==A.want){setLevel(c,0);c.el.play().then(()=>{if(c.t===0)c.el.pause()}).catch(()=>{})}});
-  ['gasp','snap','thunder','creak'].forEach(n=>{const c=fx(n);wire(c);setLevel(c,0);c.el.play().then(()=>c.el.pause()).catch(()=>{})});const k=A.want;A.want=null;if(k==='rain'){fadeTo('rain',1,1500);label('rain')}else song(k)}
-/* full screen needs a click: "begin" (or any click on the countdown) hides the browser's bars */
+  ['gasp','snap','thunder','sparkle'].forEach(n=>{const c=fx(n);wire(c);setLevel(c,0);c.el.play().then(()=>c.el.pause()).catch(()=>{})});const k=A.want;A.want=null;if(k==='rain')fadeTo('rain',1,1500);else song(k,3000)}
+/* full screen needs a click: "let's begin" (or any click on the countdown) hides the browser's bars */
 function goFull(){const d=document.documentElement;if(document.fullscreenElement||document.webkitFullscreenElement)return Promise.resolve();
   try{const r=d.requestFullscreen?d.requestFullscreen({navigationUI:'hide'}):d.webkitRequestFullscreen&&d.webkitRequestFullscreen();return Promise.resolve(r).catch(()=>{})}catch(e){return Promise.resolve()}}
 document.getElementById('lock').addEventListener('click',()=>goFull());
-document.getElementById('begin').addEventListener('click',()=>{wake();clearTimeout(prog);prog=setTimeout(()=>prog=0,2200);const f=CHAPTERS[0];
-  goFull().then(()=>setTimeout(()=>document.getElementById(f.id).scrollIntoView({behavior:matchMedia('(prefers-reduced-motion:reduce)').matches?'auto':'smooth'}),350))});
 
-/* cues fire when their panel appears */
+/* cues fire when their card appears */
 function runCue(el,silent){const p=el._p;if(!p||!p.cue)return;if(silent){if(p.cue==='flight')el.classList.add('flying','done');if(p.art2)el.classList.add('cape');return}CUES[p.cue](el)}
 const CUES={
   risk:()=>song('risk'),
-  cloud:()=>song('cloud'),
+  cloud:()=>song('cloud',5000,0),
   gasp:()=>sfx('gasp',.45,900),
   glow:el=>setTimeout(()=>el.classList.add('cape'),1300),
-  snap:()=>{for(const k in A.tr)if(k!=='rain')fadeTo(k,0,120);if(!A.on)A.want='rain';sfx('snap',.7,150);sfx('thunder',.5,1700);setTimeout(()=>{fadeTo('rain',1,2500);label('rain')},1900)},
+  // the string snaps: the music stops with the snap, then thunder, then the rain comes in under it
+  snap:()=>{for(const k in A.tr)if(k!=='rain')fadeTo(k,0,350);if(!A.on)A.want='rain';sfx('snap',.55);sfx('thunder',.4,1300);setTimeout(()=>fadeTo('rain',1,3000),1100)},
   thunder:()=>sfx('thunder',.35,600),
-  door:()=>{sfx('creak',.6,300);fadeTo('rain',0,3500);setTimeout(()=>song('reckless',4000),900)},
-  ending:()=>song('cloud',3000),
-  cape:el=>{for(const k in A.tr)fadeTo(k,0,1400);setTimeout(()=>{el.classList.add('cape');if(A.on)setTimeout(()=>fadeTo('cloud',1,3500),1800)},4200)},
-  flight:el=>{setTimeout(()=>el.classList.add('flying'),700);const m=el.querySelector('animateMotion');if(m)setTimeout(()=>{try{m.beginElement()}catch(e){}},700);setTimeout(()=>el.classList.add('done'),8600)}
+  // the door: the rain thins out slowly while Reckless rises under it
+  door:()=>{fadeTo('rain',0,8000);setTimeout(()=>song('reckless',6000,0),500)},
+  ending:()=>song('cloud',5000,0),
+  // a short hush, then the cape lands on the lift in Cloud 9
+  cape:el=>{for(const k in A.tr)fadeTo(k,0,1200);setTimeout(()=>{el.classList.add('cape');sfx('sparkle',.5);if(A.on){const c=track('cloud');try{c.el.currentTime=CHORUS}catch(e){}fadeTo('cloud',1,2500)}},2600)},
+  // "Happy 19th," as she takes off; "Batman." stamps in as the 19 is finished
+  flight:el=>{const m=el.querySelector('animateMotion');setTimeout(()=>{el.classList.add('flying');if(m){try{m.beginElement()}catch(e){}}},400);setTimeout(()=>{el.classList.add('done');sfx('sparkle',.45)},4000)}
 };
 
 /* ---------- the volume: a hand-drawn knob inside each chapter's top band ---------- */
@@ -209,9 +252,9 @@ function makeDial(host){const d=document.createElementNS('http://www.w3.org/2000
   d.addEventListener('keydown',e=>{if(e.key==='ArrowUp'||e.key==='ArrowRight'){e.preventDefault();setVol(A.vol+.05)}if(e.key==='ArrowDown'||e.key==='ArrowLeft'){e.preventDefault();setVol(A.vol-.05)}});}
 function setVol(v){A.vol=Math.max(0,Math.min(1,v));if(!raf)raf=requestAnimationFrame(step);dials.forEach(d=>{d.querySelector('.ptr').setAttribute('transform',`rotate(${-135+A.vol*270})`);d.setAttribute('aria-valuenow',Math.round(A.vol*100))})}
 
-let rz;addEventListener('resize',()=>{clearTimeout(rz);rz=setTimeout(()=>{['psky1','psky2','lsky','csky'].forEach((id,i)=>{const c=document.getElementById(id);if(c&&c.offsetParent!==null)paintSky(c,[19,11,53,53][i],i<2?0:.76)})},300)});
+let rz;addEventListener('resize',()=>{clearTimeout(rz);rz=setTimeout(()=>{['psky1','psky2','lsky','csky'].forEach((id,i)=>{const c=document.getElementById(id);if(c&&c.offsetParent!==null)paintSky(c,[19,11,53,53][i],i<2?0:.76)});if(cur&&!Q.has('all'))scrollTo(0,target(cur))},300)});
 
 /* ---------- go ---------- */
 if(PHONE)phone();
 else if(!PREVIEW&&Date.now()<OPENS)lock();
-else openMovie();
+else{document.documentElement.classList.add('wide');openMovie()}

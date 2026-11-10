@@ -103,12 +103,12 @@ const CHAPTERS=[
  ]},
 
 /* ================= CHAPTER 3 ================= */
-{id:'ch3',num:3,title:'They Get Too Close',song:'Cloud 9',pal:PAL.c3,mk:'gold',stars:.05,tilt:0,
+{id:'ch3',num:3,title:'They Get Too Close',song:'Cloud 9',cue:'cloud',pal:PAL.c3,mk:'gold',stars:.05,tilt:0,
  band:band('glow',PAL.c3,ST.voice,{base:'#d4568c'}),ground:ground(PAL.c3,303),
  bandFx:'<div class="pulse" style="position:absolute;left:50%;top:50%;width:16cqw;height:16cqw;margin:-8cqw 0 0 -8cqw;top:70%;border-radius:50%;background:radial-gradient(#fff6dc 0,#fcb31599 30%,#fcb31500 70%)"></div>',
  rows:[[0,1],[2,3]],
  panels:[
-  {W:660,H:430,bg:['notes'],cue:'cloud',
+  {W:660,H:430,bg:['notes'],
    art:(W,H)=>{R=rng(311);let a='';
      [[70,392,74,-6],[120,402,84,4],[30,404,70,8],[200,396,90,-3],[260,404,78,6],[150,380,70,-12],[90,368,66,10],[250,374,80,-8],[330,400,86,3],[380,384,74,-10],[420,404,80,5],[560,398,80,-4],[600,380,52,8],[330,372,70,12]].forEach(([x,y,w,r],i)=>a+=vnote(x,y,w,r,i%3==0?'#ffe3a8':i%3==1?CREAM:'#fad3e1'));
      a+=nerd(506,416,.86,'dot talk speed');
@@ -215,11 +215,11 @@ const CHAPTERS=[
  ]},
 
 /* ================= ENDING ================= */
-{id:'end',num:0,title:'Orbit',song:'Cloud 9',pal:PAL.end,mk:'gold',stars:.12,tilt:0,orbit:true,
+{id:'end',num:0,title:'Orbit',song:'Cloud 9',cue:'ending',pal:PAL.end,mk:'gold',stars:.12,tilt:0,orbit:true,
  band:band('stars',PAL.end,ST.star),ground:ground(PAL.end,606),
  rows:[[0],[1],[2],[3]],
  panels:[
-  {W:1120,H:520,bg:['stars'],cue:'ending',
+  {W:1120,H:520,bg:['stars'],
    art:(W,H)=>{let a=`<path d="${wob([[0,520],[0,440],[200,420],[420,398],[560,392],[700,398],[900,420],[1120,440],[1120,520]],3,true)}" fill="#14060f"/>`;
      return a+cow(500,402,.48,'o^ smile')+nerd(620,404,.45,'^up smile',{arms:'down'})},
    over:()=>'<div class="orbit" style="inset:auto;left:50%;top:34%;width:0;height:0"><img class="bstar" alt="" style="left:-11cqw;top:-3.5cqw;margin:0;width:7cqw;height:7cqw"><img class="bstar" alt="" style="left:4cqw;top:-3.5cqw;margin:0;width:7cqw;height:7cqw"></div>',
@@ -236,8 +236,9 @@ const CHAPTERS=[
   {W:1120,H:620,bg:['stars'],cue:'flight',
    art:(W,H)=>nerd(300,600,1.0,'^up O',{arms:'down'}),
    over:()=>{const rel=FLY.replace(/(-?\d+\.?\d*),(-?\d+\.?\d*)/g,(m,x,y)=>`${(+x-300).toFixed(1)},${(+y-170).toFixed(1)}`);
-     return `<svg class="fly" viewBox="0 0 1120 620" aria-hidden="true"><path class="trail" d="${FLY}" fill="none" stroke="#fcb315" stroke-width="7" stroke-linecap="round" stroke-linejoin="round" opacity=".9"/><g transform="translate(300 170)"><image data-cow="1" x="-110" y="-130" width="220" height="220"/><animateMotion dur="8s" begin="indefinite" fill="freeze" calcMode="spline" keyPoints="0;1" keyTimes="0;1" keySplines=".45 .05 .4 1" path="${rel}"/></g></svg>`},
-   t:[{k:'big',x:420,y:440,w:660,fs:58,html:'Happy 19th,<br><span style="color:#fdf4e3">Batman.</span>'}]}
+     R=rng(919);let bs='';for(let i=0;i<10;i++){const a=i/10*Math.PI*2+.3;bs+=sparkle(750+Math.cos(a)*(260+R()*60),500+Math.sin(a)*(95+R()*30),9+R()*9,i%2?'#fdf4e3':'#fcb315').replace(' filter="url(#wob)"',` style="animation-delay:${(i*.05).toFixed(2)}s"`)}
+     return `<svg class="fly" viewBox="0 0 1120 620" aria-hidden="true"><path class="trail" d="${FLY}" fill="none" stroke="#fcb315" stroke-width="7" stroke-linecap="round" stroke-linejoin="round" opacity=".9"/><g class="burst">${bs}</g><g transform="translate(300 170)"><image data-cow="1" x="-110" y="-130" width="220" height="220"/><animateMotion dur="3.6s" begin="indefinite" fill="freeze" calcMode="spline" keyPoints="0;1" keyTimes="0;1" keySplines=".45 .05 .4 1" path="${rel}"/></g></svg>`},
+   t:[{k:'big',x:420,y:440,w:660,fs:58,html:'<span class="w1">Happy 19th,</span><br><span class="w2" style="color:#fdf4e3">Batman.</span>'}]}
  ]}
 ];
 /* the rain that falls over Chapter 4: a light tile, moved by transform only */
