@@ -1,8 +1,8 @@
 /* One link, two screens, a timer. Phone: the funnel. Laptop: a countdown until 00:00 IST on Nov 11, then the movie. */
 const Q=new URLSearchParams(location.search);
 const OPENS=Date.UTC(2026,10,10,18,30,0); // 2026-11-11 00:00 IST
-const PREVIEW=Q.has('preview');
-const PHONE=matchMedia('(max-width:760px),(pointer:coarse)').matches;
+const PREVIEW=Q.has('preview')||window.FORCE_MOVIE===true;
+const PHONE=window.FORCE_MOVIE!==true&&matchMedia('(max-width:760px),(pointer:coarse)').matches;
 const DPR=()=>Math.min(window.devicePixelRatio||1,1.5);
 document.documentElement.classList.add('js');
 initKit();letteringCSS();
@@ -123,7 +123,7 @@ function panelEl(ch,p,seed){
 }
 
 /* ---------- reveal one panel at a time ---------- */
-let story=[],next=0,lockT=0;
+let story=[],next=0,lockT=0,prog=0;
 function setupStory(){
   story=[...document.querySelectorAll('#chapters .panel')];
   const io=new IntersectionObserver(es=>es.forEach(e=>{
@@ -138,16 +138,17 @@ function setupStory(){
 function mark(){story.forEach((el,i)=>el.classList.toggle('nexth',i===next))}
 function reveal(fromScroll){
   if(next>=story.length)return;const el=story[next++];el.classList.remove('hid');
-  if(!fromScroll){const r=el.getBoundingClientRect();if(r.bottom>innerHeight-20||r.top<0)el.scrollIntoView({behavior:'smooth',block:r.height>innerHeight*.8?'start':'center'})}
+  if(!fromScroll){const r=el.getBoundingClientRect();clearTimeout(prog);prog=setTimeout(()=>prog=0,1600);if(r.bottom>innerHeight-20||r.top<0)el.scrollIntoView({behavior:'smooth',block:r.height>innerHeight*.8?'start':'center'})}
   runCue(el);mark();
   const ch=el._ch;const last=ch.panels[ch.rows.flat().slice(-1)[0]];if(el._p===last&&ch._teaser)setTimeout(()=>ch._teaser.classList.remove('hid'),2400);
 }
 document.addEventListener('click',e=>{if(!built||document.getElementById('movie').classList.contains('offstage'))return;if(e.target.closest('#knob,#cover,.teaser'))return;wake();reveal()});
 addEventListener('keydown',e=>{if(!built||document.activeElement.id==='dial')return;if((e.key===' '||e.key==='ArrowRight')&&next<story.length&&document.getElementById('cover').getBoundingClientRect().bottom<innerHeight*.5){e.preventDefault();wake();reveal()}});
-addEventListener('scroll',()=>{if(!story.length||next>=story.length||Date.now()<lockT)return;const r=story[next].getBoundingClientRect();if(r.top<innerHeight*.7){lockT=Date.now()+900;wake();reveal(true)}},{passive:true});
+addEventListener('scrollend',()=>{if(prog){clearTimeout(prog);prog=setTimeout(()=>prog=0,300)}});
+addEventListener('scroll',()=>{if(prog||!story.length||next>=story.length||Date.now()<lockT)return;const r=story[next].getBoundingClientRect();if(r.top<innerHeight*.7){lockT=Date.now()+900;wake();reveal(true)}},{passive:true});
 
 /* ================= sound: her songs, barely there ================= */
-const SONGS={risk:['songs/risk-it-all.m4a','Risk It All'],cloud:['songs/cloud-9.m4a','Cloud 9'],reckless:['songs/reckless.m4a','Reckless'],rain:['sfx/rain.mp3','rain']};
+const SONGS={risk:['songs/risk-it-all.mp3','Risk It All'],cloud:['songs/cloud-9.mp3','Cloud 9'],reckless:['songs/reckless.mp3','Reckless'],rain:['sfx/rain.mp3','rain']};
 const A={vol:.15,tr:{},on:false,want:'risk'};
 function track(k){if(!A.tr[k]){const el=new Audio(SONGS[k][0]);el.loop=true;el.preload='auto';A.tr[k]={el,g:0,t:0,ms:1500,mul:k==='rain'?.5:1}}return A.tr[k]}
 let last=0,raf=0;
@@ -160,7 +161,7 @@ function song(k,ms=2500){A.want=k;if(!A.on)return;for(const o in A.tr)if(o!==k&&
 function label(k){if(!k)return;document.getElementById('song').textContent=k==='rain'?'rain':`${SONGS[k][1]} · sung by Gauri`}
 function sfx(n,rel=.55,delay=0){if(!A.on)return;setTimeout(()=>{const a=new Audio(`sfx/${n}.mp3`);a.volume=Math.min(1,A.vol*rel*2.2);a.play().catch(()=>{})},delay)}
 function wake(){if(A.on)return;A.on=true;document.getElementById('knob').hidden=false;const k=A.want;A.want=null;if(k==='rain'){fadeTo('rain',1,1500);label('rain')}else song(k)}
-document.getElementById('begin').addEventListener('click',()=>{wake();const f=CHAPTERS[0];document.getElementById(f.id).scrollIntoView({behavior:matchMedia('(prefers-reduced-motion:reduce)').matches?'auto':'smooth'})});
+document.getElementById('begin').addEventListener('click',()=>{wake();clearTimeout(prog);prog=setTimeout(()=>prog=0,1600);const f=CHAPTERS[0];document.getElementById(f.id).scrollIntoView({behavior:matchMedia('(prefers-reduced-motion:reduce)').matches?'auto':'smooth'})});
 
 /* cues fire when their panel appears */
 function runCue(el,silent){const p=el._p;if(!p||!p.cue)return;if(silent){if(p.cue==='flight')el.classList.add('flying','done');if(p.art2)el.classList.add('cape');return}CUES[p.cue](el)}
