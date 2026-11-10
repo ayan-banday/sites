@@ -29,7 +29,7 @@ function ground(pal,seed){return (W,H)=>{R=rng(seed);let a=`<rect width="${W}" h
   for(let i=0;i<Math.round(W*H/2500);i++)a+=`<circle cx="${(R()*W)|0}" cy="${(R()*H)|0}" r="${(.5+R()*1.2).toFixed(1)}" fill="${GOLD}" opacity=".5"/>`;
   return a}}
 /* a chapter band: its own drawn strip of sky with a little stamp at each end */
-function band(type,pal,stamp,o={}){return (W,H)=>bg(type,W,H,700+stamp.length%97,pal,o)+[90,W-90].map((x,i)=>`<g transform="translate(${x} ${H/2}) rotate(${i?8:-8})"><path d="${blob(0,0,44,44,20,.04)}" fill="${CREAM}" stroke="${INK}" stroke-width="3" filter="url(#wob)"/><path d="${blob(0,0,37,37,18,.05)}" fill="none" stroke="${INK}" stroke-width="1.4" stroke-dasharray="4 4"/>${stamp}</g>`).join('')}
+function band(type,pal,stamp,o={}){return (W,H)=>bg(type,W,H,700+stamp.length%97,pal,o)+[90].map((x,i)=>`<g transform="translate(${x} ${H/2}) rotate(${i?8:-8})"><path d="${blob(0,0,44,44,20,.04)}" fill="${CREAM}" stroke="${INK}" stroke-width="3" filter="url(#wob)"/><path d="${blob(0,0,37,37,18,.05)}" fill="none" stroke="${INK}" stroke-width="1.4" stroke-dasharray="4 4"/>${stamp}</g>`).join('')}
 const ST={
   note:P.sticky(-20,-18,40,36,-6),
   phone:P.phone(0,0,.85,-10),
@@ -42,7 +42,7 @@ const FLY='M300,170 C300,60 420,40 470,90 C490,110 510,100 530,90 L530,330 C560,
 
 const CHAPTERS=[
 /* ================= CHAPTER 1 ================= */
-{id:'ch1',num:1,title:'A Cow Gets Named',pal:PAL.c1,mk:'salmon',stars:.62,tilt:-14,
+{id:'ch1',num:1,title:'A Cow Gets Named',song:'Risk It All',pal:PAL.c1,mk:'salmon',stars:.62,tilt:-14,
  band:(W,H)=>band('pencil',PAL.c1,ST.note,{base:'#6b2a5e'})(W,H)+[[250,40,-12],[330,120,8],[470,30,5],[640,135,-7],[790,46,10],[880,118,-4]].map(([x,y,r],i)=>i%2?`<g transform="translate(${x} ${y}) rotate(${r})">${sbub(-26,-14,52,28,-22,22,i%4?'#ffe3a8':CREAM,2)}</g>`:P.sticky(x-18,y-16,36,32,r,i%4?'#f7cbd9':'#ffd86b')).join(''),ground:ground(PAL.c1,101),
  rows:[[0,1],[2,3]],
  panels:[
@@ -75,7 +75,7 @@ const CHAPTERS=[
  ]},
 
 /* ================= CHAPTER 2 ================= */
-{id:'ch2',num:2,title:'She Calls Anyway',pal:PAL.c2,mk:'orange',stars:.42,tilt:-10,
+{id:'ch2',num:2,title:'She Calls Anyway',song:'Risk It All',pal:PAL.c2,mk:'orange',stars:.42,tilt:-10,
  band:band('burst',PAL.c2,ST.phone,{base:'#f2b35c',fx:560,fy:150}),ground:ground(PAL.c2,202),
  rows:[[0,1],[2,3]],
  panels:[
@@ -103,7 +103,7 @@ const CHAPTERS=[
  ]},
 
 /* ================= CHAPTER 3 ================= */
-{id:'ch3',num:3,title:'They Get Too Close',pal:PAL.c3,mk:'gold',stars:.05,tilt:0,
+{id:'ch3',num:3,title:'They Get Too Close',song:'Cloud 9',pal:PAL.c3,mk:'gold',stars:.05,tilt:0,
  band:band('glow',PAL.c3,ST.voice,{base:'#d4568c'}),ground:ground(PAL.c3,303),
  bandFx:'<div class="pulse" style="position:absolute;left:50%;top:50%;width:16cqw;height:16cqw;margin:-8cqw 0 0 -8cqw;top:70%;border-radius:50%;background:radial-gradient(#fff6dc 0,#fcb31599 30%,#fcb31500 70%)"></div>',
  rows:[[0,1],[2,3]],
@@ -152,7 +152,7 @@ const CHAPTERS=[
  ]},
 
 /* ================= CHAPTER 4 ================= */
-{id:'ch4',num:4,title:'They Drift Far',pal:PAL.c4,mk:'lilac',stars:.84,tilt:-6,dim:.5,
+{id:'ch4',num:4,title:'They Drift Far',song:'rain, then Reckless',pal:PAL.c4,mk:'lilac',stars:.84,tilt:-6,dim:.5,
  band:band('rain',PAL.c4,ST.drop,{base:'#1c1b1e'}),ground:ground(PAL.c4,404),
  rows:[[0,1],[2],[3]],
  panels:[
@@ -188,7 +188,7 @@ const CHAPTERS=[
  ]},
 
 /* ================= CHAPTER 5 ================= */
-{id:'ch5',num:5,title:'They Break It Right',pal:PAL.c5,mk:'ember',stars:.26,tilt:-8,
+{id:'ch5',num:5,title:'They Break It Right',song:'Reckless',pal:PAL.c5,mk:'ember',stars:.26,tilt:-8,
  band:band('embers',PAL.c5,ST.hammer,{base:'#5a1c1c'}),ground:ground(PAL.c5,505),
  rows:[[0,1],[2,3]],
  panels:[
@@ -215,7 +215,7 @@ const CHAPTERS=[
  ]},
 
 /* ================= ENDING ================= */
-{id:'end',num:0,title:'Orbit',pal:PAL.end,mk:'gold',stars:.12,tilt:0,orbit:true,
+{id:'end',num:0,title:'Orbit',song:'Cloud 9',pal:PAL.end,mk:'gold',stars:.12,tilt:0,orbit:true,
  band:band('stars',PAL.end,ST.star),ground:ground(PAL.end,606),
  rows:[[0],[1],[2],[3]],
  panels:[

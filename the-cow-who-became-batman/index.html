@@ -113,13 +113,11 @@ html.phone body{overflow-y:auto;scroll-snap-type:y mandatory}
 .fly .trail{stroke-dasharray:var(--len);stroke-dashoffset:var(--len)}
 .flying .fly .trail{transition:stroke-dashoffset 8s cubic-bezier(.45,.05,.4,1);stroke-dashoffset:0}
 
-/* ---------- the hand-drawn volume knob ---------- */
-#knob{position:fixed;right:calc(18px + env(safe-area-inset-right,0px));bottom:calc(18px + env(safe-area-inset-bottom,0px));display:flex;align-items:center;gap:10px;z-index:5;background:rgba(29,10,28,.86);padding:8px 16px 8px 8px;border-radius:40px}
-#dial{width:62px;height:62px;cursor:grab;touch-action:none}
-#dial:focus-visible{outline:3px dashed var(--gold);outline-offset:2px;border-radius:50%}
-#knob .kl{font-family:var(--f-hand);font-size:17px;line-height:1.1;color:var(--cream);display:flex;align-items:center;gap:8px}
-#knob .kl small{display:block;font-size:14px;color:var(--mist)}
-#knob svg.ic{width:26px;height:26px;flex:none}
+/* ---------- the volume knob, drawn into each chapter's band ---------- */
+.bknob{position:absolute;right:3.2%;top:50%;transform:translateY(-50%);display:flex;align-items:center;gap:1cqw;flex-direction:row-reverse}
+.bdial{width:9cqw;height:9cqw;cursor:grab;touch-action:none;filter:drop-shadow(3px 4px 0 rgba(43,13,42,.5))}
+.bdial:focus-visible{outline:3px dashed var(--gold);outline-offset:2px;border-radius:50%}
+.bknob span{font-family:var(--f-hand);font-size:max(13px,1.6cqw);line-height:1.1;color:var(--cream);text-align:right;text-shadow:2px 2px 0 var(--ink)}
 @media (prefers-reduced-motion:reduce){.panel,.bstar,.teaser,.big,.layer2{transition:none!important}.orbit,.raink,.pulse{animation:none!important}}
 @media (max-width:860px){.row{grid-template-columns:1fr!important}}
 </style>
@@ -133,7 +131,7 @@ html.phone body{overflow-y:auto;scroll-snap-type:y mandatory}
   </section>
   <section class="scr" aria-label="Open it on a laptop">
     <canvas class="bg" id="psky2"></canvas>
-    <div class="in"><canvas class="lap" id="plap"></canvas><p>This one’s a movie.<br><b>Open this same link on your laptop.</b><svg class="icon spk" viewBox="0 0 40 40" aria-hidden="true"></svg></p></div>
+    <div class="in"><canvas class="lap" id="plap"></canvas><p>This one’s a movie.<br><b>Open this same link on your iPad.</b><svg class="icon spk" viewBox="0 0 40 40" aria-hidden="true"></svg></p></div>
   </section>
 </div>
 
@@ -160,10 +158,6 @@ html.phone body{overflow-y:auto;scroll-snap-type:y mandatory}
   <div id="chapters"></div>
 </main>
 
-<div id="knob" hidden>
-  <svg id="dial" viewBox="-36 -36 72 72" role="slider" tabindex="0" aria-label="Music volume" aria-valuemin="0" aria-valuemax="100" aria-valuenow="15"></svg>
-  <div class="kl"><svg class="ic spk" viewBox="0 0 40 40" aria-hidden="true"></svg><div><span id="song">Risk It All · sung by Gauri</span><small id="vol">volume 15%</small></div></div>
-</div>
 
 <script src="kit.js"></script>
 <script src="story.js"></script>

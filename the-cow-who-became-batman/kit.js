@@ -357,7 +357,7 @@ function paint(canvas,vw,vh,inner,cssW,cssH,par='xMidYMid meet'){
   const svg=`<svg xmlns="http://www.w3.org/2000/svg" width="${pw}" height="${ph}" viewBox="0 0 ${vw} ${vh}" preserveAspectRatio="${par}">${DEFS}${inner}</svg>`;
   const url=URL.createObjectURL(new Blob([svg],{type:'image/svg+xml'}));
   const img=new Image();img.src=url;
-  return img.decode().then(()=>{canvas.width=pw;canvas.height=ph;canvas.getContext('2d').drawImage(img,0,0,pw,ph);URL.revokeObjectURL(url);return canvas});
+  return img.decode().catch(()=>new Promise(r=>{if(img.complete&&img.naturalWidth)r();else{img.onload=r;img.onerror=r}})).then(()=>{canvas.width=pw;canvas.height=ph;canvas.getContext('2d').drawImage(img,0,0,pw,ph);URL.revokeObjectURL(url);return canvas});
 }
 /* data-URI shapes for the HTML lettering: paper boxes, bubbles and marker highlights */
 function svgURI(vw,vh,inner,par='none'){return `url("data:image/svg+xml,${encodeURIComponent(`<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 ${vw} ${vh}' preserveAspectRatio='${par}'>${inner}</svg>`)}")`}
