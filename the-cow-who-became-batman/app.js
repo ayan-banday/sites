@@ -20,8 +20,9 @@ function skyArt(W,H,seed,far=.76){R=rng(seed);let a=`<rect width="${W}" height="
   for(let i=0;i<16;i++)a+=sparkle(R()*W,R()*H,4+R()*6,i%2?GOLD:AMBER);
   if(far)a+=starAt(W*(.5-far/2),H*.7,.9)+starAt(W*(.5+far/2),H*.31,.9);
   return a+frame(18,18,W-36,H-36,{sw:3.4,amp:2.4,stroke:GOLD,step:40});}
+function coverCast(W,H){const s=Math.min(H/800,W/1280);return cow(W*.2,H-40*s,1.05*s,'sp tiny sparkles',{cape:'big'})+nerd(W*.82,H-34*s,.78*s,'side wobble sweat blush',{arms:'shrug'})}
 function paintSky(cv,seed,far){const w=cv.clientWidth,h=cv.clientHeight;if(!w||!h)return Promise.resolve();
-  return paint(cv,w,h,skyArt(w,h,seed,far),w*Math.min(DPR(),1),h*Math.min(DPR(),1),'none')}
+  return paint(cv,w,h,skyArt(w,h,seed,far)+(cv.id==='csky'?coverCast(w,h):''),w*Math.min(DPR(),1),h*Math.min(DPR(),1),'none')}
 
 /* ================= PHONE ================= */
 const partyHat=`<g transform="translate(18 -104) rotate(16)" filter="url(#wob)"><path d="M-20,8 L0,-48 L20,8Z" fill="${PINK}" stroke="${INK}" stroke-width="2.8" stroke-linejoin="round"/><path d="M-13,-12 L11,-2 M-7,-30 L7,-24" stroke="${GOLD}" stroke-width="5"/><circle cy="-50" r="8" fill="${GOLD}" stroke="${INK}" stroke-width="2.4"/><path d="M-22,8 q22,10 44,0" stroke="${INK}" stroke-width="2.6" fill="none"/></g>`;
@@ -161,7 +162,12 @@ function song(k,ms=2500){A.want=k;if(!A.on)return;for(const o in A.tr)if(o!==k&&
 function label(k){if(!k)return;document.getElementById('song').textContent=k==='rain'?'rain':`${SONGS[k][1]} · sung by Gauri`}
 function sfx(n,rel=.55,delay=0){if(!A.on)return;setTimeout(()=>{const a=new Audio(`sfx/${n}.mp3`);a.volume=Math.min(1,A.vol*rel*2.2);a.play().catch(()=>{})},delay)}
 function wake(){if(A.on)return;A.on=true;document.getElementById('knob').hidden=false;const k=A.want;A.want=null;if(k==='rain'){fadeTo('rain',1,1500);label('rain')}else song(k)}
-document.getElementById('begin').addEventListener('click',()=>{wake();clearTimeout(prog);prog=setTimeout(()=>prog=0,1600);const f=CHAPTERS[0];document.getElementById(f.id).scrollIntoView({behavior:matchMedia('(prefers-reduced-motion:reduce)').matches?'auto':'smooth'})});
+/* full screen needs a click: "begin" (or any click on the countdown) hides the browser's bars */
+function goFull(){const d=document.documentElement;if(document.fullscreenElement||document.webkitFullscreenElement)return Promise.resolve();
+  try{const r=d.requestFullscreen?d.requestFullscreen({navigationUI:'hide'}):d.webkitRequestFullscreen&&d.webkitRequestFullscreen();return Promise.resolve(r).catch(()=>{})}catch(e){return Promise.resolve()}}
+document.getElementById('lock').addEventListener('click',()=>goFull());
+document.getElementById('begin').addEventListener('click',()=>{wake();clearTimeout(prog);prog=setTimeout(()=>prog=0,2200);const f=CHAPTERS[0];
+  goFull().then(()=>setTimeout(()=>document.getElementById(f.id).scrollIntoView({behavior:matchMedia('(prefers-reduced-motion:reduce)').matches?'auto':'smooth'}),350))});
 
 /* cues fire when their panel appears */
 function runCue(el,silent){const p=el._p;if(!p||!p.cue)return;if(silent){if(p.cue==='flight')el.classList.add('flying','done');if(p.art2)el.classList.add('cape');return}CUES[p.cue](el)}

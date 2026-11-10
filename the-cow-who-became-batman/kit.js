@@ -372,5 +372,5 @@ function letteringCSS(){
     let b='';for(let i=0;i<16;i++){const a=i/16*Math.PI*2,rr=i%2?.55:1;b+=`${i?'L':'M'}${(50+Math.cos(a)*48*rr).toFixed(1)},${(20+Math.sin(a)*19*rr).toFixed(1)}`}
     r.setProperty(`--mk-${name}-burst`,svgURI(100,40,`<path d='${b}Z' fill='${col}' opacity='.9'/>`));
   };
-  [['gold','#fcb315'],['rose','#f2a6c4'],['salmon','#e9b38b'],['orange','#f6a35c'],['grey','#c8c9c2'],['ember','#f0995a']].forEach(([n,c])=>mk(n,c));
+  [['gold','#fcb315'],['rose','#f2a6c4'],['salmon','#e9b38b'],['orange','#f6a35c'],['grey','#c8c9c2'],['ember','#f0995a'],['lilac','#cdb6e0']].forEach(([n,c])=>mk(n,c));
 }

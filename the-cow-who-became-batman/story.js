@@ -43,7 +43,7 @@ const FLY='M300,170 C300,60 420,40 470,90 C490,110 510,100 530,90 L530,330 C560,
 const CHAPTERS=[
 /* ================= CHAPTER 1 ================= */
 {id:'ch1',num:1,title:'A Cow Gets Named',pal:PAL.c1,mk:'salmon',stars:.62,tilt:-14,
- band:band('pencil',PAL.c1,ST.note,{base:'#6b2a5e'}),ground:ground(PAL.c1,101),
+ band:(W,H)=>band('pencil',PAL.c1,ST.note,{base:'#6b2a5e'})(W,H)+[[250,40,-12],[330,120,8],[470,30,5],[640,135,-7],[790,46,10],[880,118,-4]].map(([x,y,r],i)=>i%2?`<g transform="translate(${x} ${y}) rotate(${r})">${sbub(-26,-14,52,28,-22,22,i%4?'#ffe3a8':CREAM,2)}</g>`:P.sticky(x-18,y-16,36,32,r,i%4?'#f7cbd9':'#ffd86b')).join(''),ground:ground(PAL.c1,101),
  rows:[[0,1],[2,3]],
  panels:[
   {W:660,H:440,bg:['paper'],cue:'risk',
@@ -85,7 +85,7 @@ const CHAPTERS=[
   {W:680,H:460,bg:['screentone',{fx:190,fy:280,spot:'#ffe7b0'}],
    art:(W,H)=>{R=rng(221);let a=`<path d="M400,0 L330,460" stroke="${INK}" stroke-width="7"/><path d="M412,0 L342,460" stroke="${PAL.c2.b}" stroke-width="4"/>`;
      a+=cow(180,446,1.0,'wet wob shake',{pose:'hold',hold:P.phone(0,30,.8)});
-     a+=nerd(540,472,.92,'panic wobble bigsweat');
+     a+=nerd(540,472,.92,'x wobble bigsweat shake');
      for(let i=0;i<3;i++)a+=ln(`M${250+i*30},${250-i*14} q8,-10 0,-20 q-8,-10 0,-20`,3,PAL.c2.a)+ln(`M${450+i*24},${180-i*10} q8,-10 0,-20 q-8,-10 0,-20`,3,PAL.c2.a);
      return a},
    t:[{k:'narr',x:20,y:20,w:300,html:'The <b>first and only</b> call.'}]},
@@ -95,7 +95,7 @@ const CHAPTERS=[
      a+=cow(566,494,.85,'xd wail drops',{r:-10});return a},
    t:[{k:'narr',x:20,y:20,w:320,html:'He spills water all over his jeans. It looks <b class="s">VERY</b> bad.'},
       {k:'bub',x:400,y:100,w:250,html:'So… now we’re <b>both</b> nervous.',tail:['b',12]},
-      {k:'lab',x:500,y:262,w:150,html:'(she laughs)',rot:-6}]},
+      {k:'lab',cls:'pp',x:490,y:258,w:150,html:'(she laughs)',rot:-6}]},
   {W:440,H:500,bg:['pencil'],
    art:(W,H)=>cow(150,482,.95,'sp O sparkles',{cape:'big'})+nerd(372,524,.86,'side wobble blush',{arms:'out',flip:true}),
    t:[{k:'ash',x:140,y:24,w:280,fs:16,h:12,html:'you’re becoming batman gauri…?<br>step one.<br><span style="font-size:.5em;opacity:.8">'+NERD_P5+'</span>',tail:['b',72]},
@@ -105,7 +105,7 @@ const CHAPTERS=[
 /* ================= CHAPTER 3 ================= */
 {id:'ch3',num:3,title:'They Get Too Close',pal:PAL.c3,mk:'gold',stars:.05,tilt:0,
  band:band('glow',PAL.c3,ST.voice,{base:'#d4568c'}),ground:ground(PAL.c3,303),
- bandFx:'<div class="pulse" style="position:absolute;left:50%;top:50%;width:26cqw;height:26cqw;margin:-13cqw 0 0 -13cqw;border-radius:50%;background:radial-gradient(#fff6dc 0,#fcb31599 30%,#fcb31500 70%)"></div>',
+ bandFx:'<div class="pulse" style="position:absolute;left:50%;top:50%;width:16cqw;height:16cqw;margin:-8cqw 0 0 -8cqw;top:70%;border-radius:50%;background:radial-gradient(#fff6dc 0,#fcb31599 30%,#fcb31500 70%)"></div>',
  rows:[[0,1],[2,3]],
  panels:[
   {W:660,H:430,bg:['notes'],cue:'cloud',
@@ -118,7 +118,7 @@ const CHAPTERS=[
       {k:'lab',x:24,y:316,w:80,html:'Gauri',rot:-6},{k:'lab',x:590,y:220,w:60,html:'me',rot:4},
       {k:'ash',x:290,y:112,w:170,h:18,html:NERD_P1,tail:['br',70]}]},
   {W:440,H:430,bg:['screentone',{fx:220,fy:200,spot:'#ffd1e0'}],cue:'gasp',
-   art:(W,H)=>{R=rng(321);let a=nerd(392,566,1.05,'fog wobble bigsweat');
+   art:(W,H)=>{R=rng(321);let a=nerd(360,566,1.05,'fog wobble bigsweat');
      a+=cow(84,404,.68,'ov cat blush nerv');
      a+=sbub(18,110,92,44,46,262)+sbub(124,96,212,96,370,236)+sbub(148,214,176,74,108,272);
      a+=bars(150,124,150,4,15,10)+bars(176,236,124,3,15,10);
@@ -152,7 +152,7 @@ const CHAPTERS=[
  ]},
 
 /* ================= CHAPTER 4 ================= */
-{id:'ch4',num:4,title:'They Drift Far',pal:PAL.c4,mk:'grey',stars:.84,tilt:-6,dim:.5,
+{id:'ch4',num:4,title:'They Drift Far',pal:PAL.c4,mk:'lilac',stars:.84,tilt:-6,dim:.5,
  band:band('rain',PAL.c4,ST.drop,{base:'#1c1b1e'}),ground:ground(PAL.c4,404),
  rows:[[0,1],[2],[3]],
  panels:[
@@ -177,10 +177,10 @@ const CHAPTERS=[
      a+=`<circle cx="840" cy="${410-250*.85}" r="40" fill="${GOLD}" opacity=".35" filter="url(#soft)"/>`;
      a+=nerd(840,410,.85,'closed smile',{arms:'chest'});return a},
    t:[{k:'narr',x:24,y:24,w:230,html:'Each grows <b>alone.</b>'},
-      {k:'lab',cls:'lt',x:400,y:150,w:150,fs:20,html:'small hops.<br>no cape.',rot:-4},
-      {k:'lab',cls:'lt',x:900,y:120,w:200,fs:20,html:'feeling it in his body, not just his head.',rot:3}]},
+      {k:'lab',cls:'pp',x:400,y:150,w:150,fs:20,html:'small hops.<br>no cape.',rot:-4},
+      {k:'lab',cls:'pp',x:900,y:110,w:200,fs:20,html:'feeling it in his body, not just his head.',rot:3}]},
   {W:1120,H:480,bg:['door',{dx:500,dw:180,dark:'#19181b'}],cue:'door',
-   art:(W,H)=>{let a=nerd(230,470,.85,'huge O brow:up',{arms:'down'});
+   art:(W,H)=>{let a=nerd(230,470,.85,'huge scream brow:up shake',{arms:'shrug'});
      a+=cow(690,452,1.0,'o< cat blush');
      a+=`<path d="${wob([[690,56],[790,26],[790,470],[690,442]],1.4,true)}" fill="#3b2a24" stroke="${INK}" stroke-width="3"/><path d="M700,70 L780,44 M700,430 L780,456" stroke="#5a4036" stroke-width="3"/><circle cx="772" cy="250" r="6" fill="${GOLD}" stroke="${INK}" stroke-width="2"/>`;return a},
    t:[{k:'bub',x:700,y:110,w:300,html:'AHEM<br>Very long time no see <b>hehe</b>',tail:['b',6]},
@@ -202,7 +202,7 @@ const CHAPTERS=[
    t:[{k:'sign',x:339,y:18,w:110,fs:22,rot:-14,html:'MY POINT'},
       {k:'narr',x:22,y:22,w:220,html:'One <b class="s">big</b> fight.'}]},
   {W:460,H:500,bg:['pencil',{base:'#f1d6dc'}],
-   art:(W,H)=>P.hammer(220,452,.5,92)+cow(104,486,.75,'wet wob')+nerd(320,494,.95,'^soft flat',{arms:'down'}),
+   art:(W,H)=>P.hammer(220,452,.5,92)+cow(104,486,.75,'wet wob')+nerd(320,494,.95,'^soft frown brow:worry',{arms:'down'}),
    t:[{k:'narr',x:18,y:18,w:300,html:'He puts it down. Pushes his goggles up. <b>Just looks.</b>'},
       {k:'bub',x:16,y:190,w:200,html:'I should’ve <b>voiced it</b>',tail:['b',40]}]},
   {W:660,H:500,bg:['bricks'],
@@ -211,7 +211,7 @@ const CHAPTERS=[
      a+=nerd(560,490,.85,'^hap tongue',{arms:'out',flip:true});
      a+=P.brick(560-94*.85,490-262*.85,58,26,-8);return a},
    t:[{k:'narr',x:20,y:20,w:300,html:'We build it back <b>together.</b>'},
-      {k:'sign',cls:'chalk',x:280,y:150,w:300,fs:30,col:'#fdf4e3',rot:-3,html:'conflicts or <b class="s" style="color:#2b0d2a;text-shadow:none">opportunities.</b>'}]}
+      {k:'sign',cls:'pp',x:280,y:140,w:290,fs:28,rot:-3,html:'conflicts or <b class="s">opportunities.</b>'}]}
  ]},
 
 /* ================= ENDING ================= */
@@ -221,23 +221,23 @@ const CHAPTERS=[
  panels:[
   {W:1120,H:520,bg:['stars'],cue:'ending',
    art:(W,H)=>{let a=`<path d="${wob([[0,520],[0,440],[200,420],[420,398],[560,392],[700,398],[900,420],[1120,440],[1120,520]],3,true)}" fill="#14060f"/>`;
-     return a+cow(520,402,.32,'o^ smile')+nerd(600,404,.3,'^up smile',{arms:'down'})},
+     return a+cow(500,402,.48,'o^ smile')+nerd(620,404,.45,'^up smile',{arms:'down'})},
    over:()=>'<div class="orbit" style="inset:auto;left:50%;top:34%;width:0;height:0"><img class="bstar" alt="" style="left:-11cqw;top:-3.5cqw;margin:0;width:7cqw;height:7cqw"><img class="bstar" alt="" style="left:4cqw;top:-3.5cqw;margin:0;width:7cqw;height:7cqw"></div>',
    t:[{k:'narr',x:40,y:30,w:440,html:'Close enough to <b>see each other.</b> Far enough to <b class="s">both shine.</b>'}]},
   {W:1120,H:440,bg:['pencil',{base:'#3a1538'}],
-   art:(W,H)=>cow(440,402,.9,'o^ smile blush')+nerd(660,420,.85,'^soft smile blush',{arms:'down'}),
+   art:(W,H)=>cow(440,402,.9,'o^ smile blush')+nerd(660,420,.85,'^hap grin blush sparkle',{arms:'down'}),
    t:[{k:'bub',x:90,y:60,w:300,html:'I’ve been feeling <b>pretty good tooo</b>',tail:['br',86]},
       {k:'bub',x:740,y:52,w:230,html:'me too, <b>cow.</b>',tail:['b',6]}]},
   {W:1120,H:520,bg:['burst',{fx:660,fy:380,base:'#2c0f2b'}],cue:'cape',
-   art:(W,H)=>nerd(330,500,.9,'^teary smile',{arms:'down'})+cow(660,490,1.0,'sp tiny'),
-   art2:(W,H)=>panelSVG(W,H,722,bg('burst',W,H,722,PAL.end,{fx:660,fy:380,base:'#2c0f2b'})+nerd(330,500,.9,'^teary smile',{arms:'down'})+cow(660,490,1.0,'sp tiny sparkles',{cape:'fit'})+sparkle(560,200,12,GOLD)+sparkle(780,170,9,GOLD)+sparkle(800,330,7,CREAM)),
+   art:(W,H)=>nerd(330,500,.9,'^teary wobble tears',{arms:'chest'})+cow(660,490,1.0,'sp tiny'),
+   art2:(W,H)=>panelSVG(W,H,722,bg('burst',W,H,722,PAL.end,{fx:660,fy:380,base:'#2c0f2b'})+nerd(330,500,.9,'^teary wobble tears',{arms:'chest'})+cow(660,490,1.0,'sp tiny sparkles',{cape:'fit'})+sparkle(560,200,12,GOLD)+sparkle(780,170,9,GOLD)+sparkle(800,330,7,CREAM)),
    t:[{k:'narr',x:40,y:30,w:330,html:'A long beat of <b>silence.</b>'},
-      {k:'narr',cls:'after',x:780,y:360,w:300,html:'Then the cape. It <b class="c">fits</b> now.'}]},
+      {k:'narr',cls:'after',x:720,y:60,w:330,html:'Then the cape. It <b class="c">fits</b> now.'}]},
   {W:1120,H:620,bg:['stars'],cue:'flight',
    art:(W,H)=>nerd(300,600,1.0,'^up O',{arms:'down'}),
    over:()=>{const rel=FLY.replace(/(-?\d+\.?\d*),(-?\d+\.?\d*)/g,(m,x,y)=>`${(+x-300).toFixed(1)},${(+y-170).toFixed(1)}`);
-     return `<svg class="fly" viewBox="0 0 1120 620" aria-hidden="true"><path class="trail" d="${FLY}" fill="none" stroke="#fcb315" stroke-width="7" stroke-linecap="round" stroke-linejoin="round" opacity=".9"/><g transform="translate(300 170)"><image data-cow="1" x="-70" y="-70" width="140" height="140"/><animateMotion dur="8s" begin="indefinite" fill="freeze" calcMode="spline" keyPoints="0;1" keyTimes="0;1" keySplines=".45 .05 .4 1" path="${rel}"/></g></svg>`},
-   t:[{k:'big',x:420,y:440,w:660,fs:58,html:'Happy 19th, <b class="c">Batman.</b>'}]}
+     return `<svg class="fly" viewBox="0 0 1120 620" aria-hidden="true"><path class="trail" d="${FLY}" fill="none" stroke="#fcb315" stroke-width="7" stroke-linecap="round" stroke-linejoin="round" opacity=".9"/><g transform="translate(300 170)"><image data-cow="1" x="-110" y="-130" width="220" height="220"/><animateMotion dur="8s" begin="indefinite" fill="freeze" calcMode="spline" keyPoints="0;1" keyTimes="0;1" keySplines=".45 .05 .4 1" path="${rel}"/></g></svg>`},
+   t:[{k:'big',x:420,y:440,w:660,fs:58,html:'Happy 19th,<br><span style="color:#fdf4e3">Batman.</span>'}]}
  ]}
 ];
 /* the rain that falls over Chapter 4: a light tile, moved by transform only */
