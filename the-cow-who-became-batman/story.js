@@ -98,7 +98,7 @@ const CHAPTERS=[
       {k:'lab',cls:'pp',x:490,y:258,w:150,html:'(she laughs)',rot:-6}]},
   {W:440,H:500,bg:['pencil'],
    art:(W,H)=>cow(150,482,.95,'sp O sparkles',{cape:'big'})+nerd(372,524,.86,'side wobble blush',{arms:'out',flip:true}),
-   t:[{k:'ash',x:140,y:24,w:280,fs:16,h:12,html:'you’re becoming batman gauri…?<br>step one.<br><span style="font-size:.5em;opacity:.8">'+NERD_P5+'</span>',tail:['b',72]},
+   t:[{k:'ash',x:140,y:24,w:280,fs:16,h:12,html:'you’re becoming batman gauri…?<br>step one.<br><span style="display:block;font-size:.5em;line-height:1.25;margin-top:.5em;opacity:.8">'+NERD_P5+'</span>',tail:['b',72]},
       {k:'narr',x:16,y:150,w:150,html:'Way <b>too big.</b>'}]}
  ]},
 
@@ -116,7 +116,7 @@ const CHAPTERS=[
      a+=arrow('M66,312 q14,-24 46,-24')+arrow('M612,214 q-8,-26 -40,-36');return a},
    t:[{k:'narr',x:22,y:22,w:330,html:'A cow named <b>Gauri</b>. A very weird nerd (me). <b class="c">Booboo era</b>: when we couldn’t stop talking.'},
       {k:'lab',x:24,y:316,w:80,html:'Gauri',rot:-6},{k:'lab',x:590,y:220,w:60,html:'me',rot:4},
-      {k:'ash',x:290,y:112,w:170,h:18,html:NERD_P1,tail:['br',70]}]},
+      {k:'ash',x:214,y:112,w:236,h:18,html:NERD_P1,tail:['br',70]}]},
   {W:440,H:430,bg:['screentone',{fx:220,fy:200,spot:'#ffd1e0'}],cue:'gasp',
    art:(W,H)=>{R=rng(321);let a=nerd(360,566,1.05,'fog wobble bigsweat');
      a+=cow(84,404,.68,'ov cat blush nerv');
@@ -140,7 +140,7 @@ const CHAPTERS=[
      a+=nerd(398,536,.5,'focus tongue',{arms:'type'});
      a+=sbub(300,466,58,30,374,470,CREAM,2)+`<g fill="${INK}"><circle cx="316" cy="481" r="3"/><circle cx="328" cy="481" r="3"/><circle cx="340" cy="481" r="3"/></g>`;return a},
    t:[{k:'cnt',x:16,y:20,w:180,html:'<b>38,526</b> messages.<br><b>1,531</b> XDs.<br><b>53</b> ‘wanna talk’s.'},
-      {k:'ash',x:236,y:300,w:150,h:16,html:NERD_P3,tail:['br',60]}]},
+      {k:'ash',x:186,y:282,w:196,h:16,html:NERD_P3,tail:['br',60]}]},
   {W:640,H:540,bg:['glow'],cue:'glow',
    art:(W,H)=>cow(196,520,.95,'shut grit')+nerd(468,532,.92,'glare o',{arms:'down'}),
    art2:(W,H)=>{R=rng(341);let a=`<circle cx="320" cy="170" r="300" fill="url(#burn)"/>`;
