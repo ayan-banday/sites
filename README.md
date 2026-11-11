@@ -2,6 +2,7 @@
 
 Public pages, served by GitHub Pages at https://ayan-banday.github.io/sites/
 
+- `drip/`: DRIP, Ash's magazine on ecology and business: 18 hand-drawn pages you turn left to right (Erin Brockovich, Phool, Suta, Kering, Vantara).
 - `chatform-talked-through/`: Chatform, Talked Through, a 10-slide animated phone walkthrough of how voice could work on Chatform's big questions (talking, live follow-ups, "Here's what I heard") and what the form owner gets back.
 - `the-cow-who-became-batman/`: The Cow Who Became Batman, a hand-drawn birthday manga for Gauri: on a phone it sends her to her iPad; on an iPad or laptop it counts down to 00:00 IST on Nov 11, then plays five chapters with her own singing behind them.
 - `nvidia-talk-study-guide/`: Nvidia Talk Study Guide, a phone page with everything needed to give the Budget Is a Risk Plan talk: terms, numbers, what to say and likely questions, slide by slide.
