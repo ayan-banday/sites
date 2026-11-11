@@ -1,0 +1,598 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cpath d='M0 15 6 4l3 5 2-3 5 9z' fill='%232b2722'/%3E%3C/svg%3E">
+<style>
+:root{color-scheme:light;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+body{margin:0;font:14px/1.4 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif}
+img{max-width:100%}
+[hidden]{display:none!important}
+</style>
+<title>Chatform, Talked Through</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,800&family=Overpass:wght@400;600;700&family=Overpass+Mono:wght@500;600&display=swap">
+<style>
+/* Palette: No. 178, Ivory Buff + Light Glaucous Blue + Green Blue (match-ash-design scripts/palette.py)
+   Stage (idea slides) = place dark; phone screens = place light. One deliberate look, no theme switch.
+   Layout: a horizontal deck of full-height slides; on a laptop each slide sits in a phone-sized column. */
+:root{
+  /* stage, dark */
+  --d-bg:#15120D; --d-bg2:#1D1910; --d-bg3:#252015;
+  --d-tx:#EAE7E2; --d-mu:#ABA79F; --d-ln:rgba(234,231,226,0.12);
+  --d-p1:#EBD3A2; --d-p2:#A5C8D1; --d-p3:#7DD5DA; --d-acc:#099197;
+  /* phone screens, light */
+  --l-bg:#F8F4EC; --l-bg2:#EFEADF; --l-bg3:#E5DFD2;
+  --l-tx:#0B2425; --l-mu:#4B5F60; --l-ln:rgba(11,36,37,0.14);
+  --l-p1:#95E0E4; --l-p2:#E6CE9D; --l-p3:#B5D8E1; --l-acc:#099197; --l-acc2:#9B8556;
+  --f-display:'Bricolage Grotesque','Segoe UI',system-ui,sans-serif;
+  --f-body:'Overpass','Segoe UI',system-ui,sans-serif;
+  --f-mono:'Overpass Mono',ui-monospace,Menlo,monospace;
+  --nav-h:64px;
+  color-scheme:dark;
+}
+html,body{height:100%}
+body{background:var(--d-bg);color:var(--d-tx);font:400 16px/1.5 var(--f-body);overflow:hidden}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:10;background:var(--d-bg)}
+*{box-sizing:border-box}
+button{font:inherit;color:inherit;cursor:pointer}
+button:focus-visible{outline:2px solid var(--d-p3);outline-offset:3px}
+
+/* ---------- the deck ---------- */
+.deck{height:100%;display:flex;overflow-x:auto;overflow-y:hidden;scroll-snap-type:x mandatory;scrollbar-width:none;overscroll-behavior-x:contain}
+.deck::-webkit-scrollbar{display:none}
+.slide{flex:0 0 100%;height:100%;scroll-snap-align:start;display:flex;justify-content:center;padding-bottom:calc(var(--nav-h) + env(safe-area-inset-bottom,0px))}
+.frame{width:100%;max-width:430px;height:100%;overflow-y:auto;position:relative;display:flex;flex-direction:column}
+@media (min-width:640px){
+  .slide{align-items:center;padding-top:20px}
+  .frame{height:min(780px,100%);border-radius:34px;border:1px solid var(--d-ln)}
+}
+
+/* ---------- idea slides (stage) ---------- */
+.idea .frame{background:var(--d-bg2);padding:28px max(22px,env(safe-area-inset-left,0px)) 24px max(22px,env(safe-area-inset-right,0px));gap:18px}
+@media (min-width:640px){.idea .frame{background:var(--d-bg2)}}
+.eyebrow{font:600 11.5px var(--f-mono);letter-spacing:.08em;text-transform:uppercase;color:var(--d-p1)}
+.idea h2{font:800 34px/1.05 var(--f-display);letter-spacing:-.01em;margin:0;text-wrap:balance}
+.take{font:700 18px/1.3 var(--f-display);color:var(--d-p3);margin:-6px 0 0;text-wrap:balance}
+.idea .lead{font-size:17px;color:var(--d-mu);margin:0;max-width:34ch}
+.versus{display:grid;gap:10px;margin-top:4px}
+.vs{display:grid;grid-template-columns:62px 1fr;gap:12px;align-items:start;padding:14px 16px;border-radius:14px;background:var(--d-bg3)}
+.vs b{font:600 11px var(--f-mono);letter-spacing:.07em;text-transform:uppercase;padding-top:3px}
+.vs.before b{color:var(--d-mu)}
+.vs.before p{color:var(--d-mu);text-decoration:line-through;text-decoration-color:rgba(171,167,159,.5)}
+.vs.now{background:transparent;border:1.5px solid var(--d-p3)}
+.vs.now b{color:var(--d-p3)}
+.vs p{margin:0;font-size:16px;line-height:1.45}
+.why{margin-top:auto;font-size:14px;color:var(--d-mu);border-top:1px solid var(--d-ln);padding-top:14px}
+.why strong{color:var(--d-p1);font-weight:600}
+.next-hint{font:600 12px var(--f-mono);color:var(--d-p3);letter-spacing:.05em}
+
+/* idea illustrations */
+.ill{height:120px;border-radius:16px;background:var(--d-bg);display:flex;align-items:center;justify-content:center;gap:10px;flex-wrap:wrap;padding:12px;position:relative;overflow:hidden}
+.ill .tag{font:600 13px var(--f-mono);padding:8px 12px;border-radius:99px;border:1px dashed var(--d-ln);color:var(--d-mu);transition:all .35s steps(3)}
+.ill .tag.on{border-style:solid;border-color:var(--d-p3);color:var(--d-bg);background:var(--d-p3)}
+.ill .bars{display:flex;align-items:center;gap:4px;height:70px}
+.ill .bars i{display:block;width:6px;border-radius:3px;background:var(--d-p2);height:10px;transition:height .18s steps(2)}
+.ill .pausechip{position:absolute;right:14px;top:12px;font:600 11px var(--f-mono);color:var(--d-p1);opacity:0;transition:opacity .2s}
+.ill .pausechip.on{opacity:1}
+
+/* cover and close */
+.cover .frame{justify-content:center}
+.cover h1{font:800 46px/1 var(--f-display);margin:0;letter-spacing:-.02em;text-wrap:balance}
+.cover h1 span{color:var(--d-p3)}
+.cover .lead{color:var(--d-mu);font-size:18px;margin:0}
+.cover .meta{font:500 12px var(--f-mono);color:var(--d-mu);display:grid;gap:6px;margin-top:8px}
+.steps{display:grid;gap:10px;margin:0;padding:0;list-style:none;counter-reset:s}
+.steps li{counter-increment:s;display:grid;grid-template-columns:34px 1fr;gap:12px;align-items:start;padding:12px 14px;border-radius:14px;background:var(--d-bg3)}
+.steps li::before{content:counter(s);font:800 22px/1 var(--f-display);color:var(--d-p3)}
+.steps li strong{display:block;font-weight:700}
+.steps li span{color:var(--d-mu);font-size:14px}
+
+/* ---------- phone screens (light) ---------- */
+.screen .frame{background:var(--l-bg);color:var(--l-tx)}
+.screen .frame button:focus-visible{outline-color:var(--l-acc)}
+.narr{background:var(--d-bg3);color:var(--d-tx);font-size:13.5px;line-height:1.4;padding:10px max(16px,env(safe-area-inset-left,0px)) 10px max(16px,env(safe-area-inset-right,0px));display:flex;gap:10px;align-items:baseline;min-height:58px}
+.narr b{font:600 10.5px var(--f-mono);letter-spacing:.08em;text-transform:uppercase;color:var(--d-p1);flex:0 0 auto}
+.narr span{transition:opacity .25s}
+.appbar{display:flex;align-items:center;gap:12px;padding:14px 16px 10px;border-bottom:1px solid var(--l-ln)}
+.mark{width:34px;height:34px;border-radius:10px;background:var(--l-tx);position:relative;flex:0 0 auto}
+.mark::before,.mark::after{content:"";position:absolute;width:11px;height:15px;border-radius:7px 7px 7px 2px;top:9px}
+.mark::before{left:8px;background:var(--l-p2)}
+.mark::after{left:15px;background:var(--l-p1);border-radius:7px 7px 2px 7px}
+.appbar .t{flex:1;min-width:0}
+.appbar .t strong{display:block;font:700 15px/1.2 var(--f-body)}
+.appbar .t small{color:var(--l-mu);font:500 12px var(--f-mono)}
+.prog{height:3px;background:var(--l-bg3)}
+.prog i{display:block;height:100%;background:var(--l-acc);transition:width .6s}
+.body{flex:1;padding:18px 16px 14px;display:flex;flex-direction:column;gap:12px;min-height:0}
+.bub{max-width:86%;padding:12px 15px;border-radius:18px 18px 18px 6px;background:#fff;border:1px solid var(--l-ln);font-size:15.5px;line-height:1.45;animation:pop .3s steps(3) both}
+.bub.me{align-self:flex-end;background:var(--l-p3);border-color:transparent;border-radius:18px 18px 6px 18px}
+.bub.claude{background:var(--l-bg2)}
+.who{font:600 10.5px var(--f-mono);letter-spacing:.07em;text-transform:uppercase;color:var(--l-mu);margin-bottom:-6px}
+.who.r{align-self:flex-end}
+@keyframes pop{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+.chips{display:flex;flex-wrap:wrap;gap:8px;animation:pop .3s steps(3) both}
+.chip{min-height:44px;padding:10px 16px;border-radius:99px;border:1.5px solid var(--l-ln);background:#fff;font-size:15px;display:inline-flex;align-items:center;gap:8px}
+.chip kbd{font:600 11px var(--f-mono);background:var(--l-bg2);border-radius:5px;padding:2px 6px;color:var(--l-mu)}
+.chip.sel{border-color:var(--l-acc);background:var(--l-p1)}
+.inputbar{display:flex;gap:10px;padding:10px 16px calc(12px);border-top:1px solid var(--l-ln);background:var(--l-bg)}
+.inputbar .field{flex:1;min-height:46px;border-radius:23px;background:#fff;border:1px solid var(--l-ln);padding:12px 16px;color:var(--l-mu);font-size:15px;min-width:0;white-space:nowrap;overflow:hidden}
+.inputbar .field.typing{color:var(--l-tx)}
+.send{width:46px;height:46px;border-radius:50%;border:0;background:var(--l-tx);color:var(--l-bg);display:grid;place-items:center;flex:0 0 auto}
+.foot{text-align:center;font:500 11px var(--f-mono);color:var(--l-mu);padding:6px 0 10px}
+
+/* question card (maker) */
+.qcard{background:#fff;border:1.5px solid var(--l-tx);border-radius:18px;padding:14px 15px;display:grid;gap:9px;animation:pop .35s steps(3) both}
+.qcard .lbl{font:600 10.5px var(--f-mono);letter-spacing:.08em;text-transform:uppercase;color:var(--l-acc2)}
+.qcard h4{margin:0;font:700 18px/1.25 var(--f-display)}
+.qcard ul{margin:0;padding-left:18px;color:var(--l-mu);font-size:14px}
+.slots{display:flex;flex-wrap:wrap;gap:6px}
+.slot{font:600 12px var(--f-mono);padding:6px 10px;border-radius:99px;border:1.5px dashed var(--l-mu);color:var(--l-mu);transition:background .3s steps(3),color .3s,border-color .3s}
+.slot.on{border-style:solid;border-color:var(--l-acc);background:var(--l-acc);color:#fff}
+.btn{min-height:46px;border-radius:14px;border:0;background:var(--l-tx);color:var(--l-bg);font-weight:700;padding:12px 16px}
+.btn.ghost{background:transparent;border:1.5px solid var(--l-ln);color:var(--l-tx)}
+
+/* big question */
+.bigq{font:800 29px/1.1 var(--f-display);margin:4px 0 0;letter-spacing:-.01em;text-wrap:balance}
+.examples{display:grid;gap:6px;margin:0;padding:0;list-style:none}
+.examples li{font-size:15px;color:var(--l-mu);padding-left:16px;position:relative}
+.examples li::before{content:"";position:absolute;left:0;top:9px;width:7px;height:7px;border-radius:50%;background:var(--l-p2)}
+.micwrap{flex:1;display:grid;place-items:center;min-height:200px;position:relative}
+.mic{width:min(56vw,200px);aspect-ratio:1;border-radius:50%;border:0;background:var(--l-acc);color:#fff;display:grid;place-items:center;position:relative;z-index:1}
+.mic svg{width:34%;height:34%}
+.ring{position:absolute;width:min(56vw,200px);aspect-ratio:1;border-radius:50%;border:2px solid var(--l-acc);animation:ring 2.4s infinite;opacity:0}
+.ring.b{animation-delay:1.2s}
+@keyframes ring{0%{transform:scale(1);opacity:.55}100%{transform:scale(1.45);opacity:0}}
+.micnote{text-align:center;font-size:14px;color:var(--l-mu)}
+.typeinst{align-self:center;background:none;border:0;color:var(--l-tx);text-decoration:underline;text-underline-offset:3px;font-size:14.5px;min-height:44px}
+
+/* talking */
+.talk{flex:1;display:flex;flex-direction:column;gap:14px}
+.qmini{font:700 17px/1.3 var(--f-display);color:var(--l-tx)}
+.timer{font:600 13px var(--f-mono);color:var(--l-mu);display:flex;align-items:center;gap:8px}
+.timer .dot{width:9px;height:9px;border-radius:50%;background:#C0442C}
+.timer .state{margin-left:auto;color:var(--l-acc)}
+.wave{height:96px;display:flex;align-items:center;justify-content:center;gap:4px;border-radius:18px;background:var(--l-bg2)}
+.wave i{display:block;width:5px;border-radius:3px;background:var(--l-acc);height:6px;transition:height .14s linear}
+.covered{display:grid;gap:8px}
+.covered .lbl{font:600 10.5px var(--f-mono);letter-spacing:.08em;text-transform:uppercase;color:var(--l-mu)}
+.probe{border-radius:18px;padding:14px 16px;background:var(--l-tx);color:var(--l-bg);display:grid;gap:4px;transform:translateY(16px);opacity:0;transition:transform .35s steps(4),opacity .35s steps(4)}
+.probe.on{transform:none;opacity:1}
+.probe small{font:600 10.5px var(--f-mono);letter-spacing:.08em;text-transform:uppercase;color:var(--l-p1)}
+.probe span{font:700 17px/1.3 var(--f-display)}
+.donebar{display:flex;gap:10px;margin-top:auto}
+.donebar .btn{flex:1}
+.donebar .btn.ready{background:var(--l-acc)}
+.stopmic{width:58px;height:46px;border-radius:14px;border:0;background:#C0442C;color:#fff}
+
+/* summary */
+.heard{background:#fff;border-radius:20px;border:1.5px solid var(--l-ln);padding:16px;display:grid;gap:10px;animation:pop .35s steps(3) both}
+.heard .lbl{font:600 10.5px var(--f-mono);letter-spacing:.08em;text-transform:uppercase;color:var(--l-acc)}
+.heard p{margin:0;font:600 19px/1.35 var(--f-display)}
+.saved{font:500 12px/1.5 var(--f-mono);color:var(--l-mu);border-top:1px dashed var(--l-ln);padding-top:10px}
+
+/* owner */
+.tabs{display:flex;gap:6px;padding:10px 16px 0}
+.tab{font:600 13px var(--f-body);padding:8px 12px;border-radius:99px;color:var(--l-mu)}
+.tab.on{background:var(--l-tx);color:var(--l-bg)}
+.big-insight{border-radius:20px;background:var(--l-tx);color:var(--l-bg);padding:16px;display:grid;gap:6px}
+.big-insight small{font:600 10.5px var(--f-mono);letter-spacing:.08em;text-transform:uppercase;color:var(--l-p1)}
+.big-insight strong{font:800 22px/1.15 var(--f-display)}
+.big-insight span{font-size:14px;color:var(--l-bg3)}
+.sect{font:600 10.5px var(--f-mono);letter-spacing:.08em;text-transform:uppercase;color:var(--l-mu);margin-top:4px}
+.mot{display:grid;gap:5px}
+.mot .row{display:flex;justify-content:space-between;gap:10px;font-size:14.5px;font-weight:600}
+.mot .row em{font:600 13px var(--f-mono);font-style:normal;color:var(--l-mu);font-variant-numeric:tabular-nums}
+.mot .track{height:10px;border-radius:5px;background:var(--l-bg3);overflow:hidden}
+.mot .track i{display:block;height:100%;width:0;background:var(--l-acc);border-radius:5px;transition:width .7s steps(7)}
+.mot .q{font-size:13px;color:var(--l-mu);font-style:italic}
+.under{border:1.5px solid var(--l-ln);border-radius:16px;padding:12px 14px;display:grid;gap:8px;background:#fff}
+.under .head{font-size:14px}
+.under .head b{font-weight:700}
+.split{display:flex;height:28px;border-radius:8px;overflow:hidden;font:600 11.5px var(--f-mono)}
+.split i{display:flex;align-items:center;padding-left:8px;font-style:normal;white-space:nowrap;overflow:hidden}
+.split .a{background:var(--l-acc);color:#fff}
+.split .b{background:var(--l-p1);color:var(--l-tx)}
+.split .c{background:var(--l-p2);color:var(--l-tx)}
+.legend{display:grid;gap:3px;font-size:13px;color:var(--l-mu)}
+.legend b{color:var(--l-tx);font-variant-numeric:tabular-nums}
+.ask{display:grid;gap:8px}
+.askbar{display:flex;gap:8px;align-items:center;min-height:46px;border-radius:23px;background:#fff;border:1.5px solid var(--l-tx);padding:6px 6px 6px 16px;font-size:14.5px}
+.askbar span{flex:1;min-width:0;color:var(--l-tx)}
+.askbar .send{width:34px;height:34px}
+.answer{background:var(--l-bg2);border-radius:16px;padding:12px 14px;font-size:14.5px;display:none}
+.answer.on{display:block;animation:pop .3s steps(3) both}
+.answer ul{margin:6px 0 0;padding-left:18px}
+
+/* responses */
+.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.stat{background:#fff;border:1px solid var(--l-ln);border-radius:14px;padding:10px 12px}
+.stat strong{display:block;font:800 22px/1.1 var(--f-display);font-variant-numeric:tabular-nums}
+.stat small{font-size:12px;color:var(--l-mu)}
+.drop{display:grid;gap:6px}
+.drop .r{display:grid;grid-template-columns:96px 1fr 30px;gap:8px;align-items:center;font-size:12.5px;color:var(--l-mu)}
+.drop .r i{display:block;height:8px;border-radius:4px;background:var(--l-p3)}
+.drop .r b{font:600 12px var(--f-mono);color:var(--l-tx);text-align:right}
+.funnel{display:grid;gap:4px;justify-items:center}
+.rung{width:var(--w);min-height:40px;display:flex;justify-content:space-between;align-items:center;gap:8px;padding:8px 18px;background:var(--l-p3);color:var(--l-tx);font-size:13.5px;clip-path:polygon(0 0,100% 0,97% 100%,3% 100%)}
+.rung:nth-child(2){background:var(--l-p1)}.rung:nth-child(3){background:var(--l-acc);color:#fff}.rung:nth-child(4){background:var(--l-tx);color:var(--l-bg)}
+.rung b{font:600 13px var(--f-mono);font-variant-numeric:tabular-nums}
+.person{display:grid;grid-template-columns:38px 1fr auto;gap:10px;align-items:center;background:#fff;border:1px solid var(--l-ln);border-radius:14px;padding:10px 12px}
+.av{width:38px;height:38px;border-radius:50%;background:var(--l-p2);display:grid;place-items:center;font:700 14px var(--f-display)}
+.person small{display:block;color:var(--l-mu);font-size:12.5px}
+.person .open{font:600 12px var(--f-mono);color:var(--l-acc)}
+.exports{display:flex;flex-wrap:wrap;gap:8px}
+.exports span{font-size:13px;padding:9px 12px;border-radius:10px;border:1.5px solid var(--l-ln);background:#fff}
+
+.replay{position:absolute;right:12px;top:11px;z-index:3;font:600 11.5px var(--f-mono);border-radius:99px;border:1px solid var(--d-ln);background:var(--d-bg2);color:var(--d-p1);min-height:36px;padding:6px 12px}
+.narr{padding-right:92px!important}
+.body.chat{overflow-y:auto;flex:1 1 0}
+
+/* ---------- nav ---------- */
+.nav{position:fixed;left:0;right:0;bottom:0;height:calc(var(--nav-h) + env(safe-area-inset-bottom,0px));padding:0 max(16px,env(safe-area-inset-right,0px)) env(safe-area-inset-bottom,0px) max(16px,env(safe-area-inset-left,0px));display:flex;align-items:center;justify-content:center;gap:14px;background:var(--d-bg);z-index:5}
+.nav .arrow{width:46px;height:46px;border-radius:50%;border:1px solid var(--d-ln);background:var(--d-bg2);display:grid;place-items:center}
+.nav .arrow:disabled{opacity:.3;cursor:default}
+.dots{display:flex;gap:5px;align-items:center;flex-wrap:nowrap;justify-content:center}
+.dots button{width:7px;height:7px;flex:0 0 auto;border-radius:50%;border:0;padding:0;background:var(--d-ln)}
+.dots button.scr{border-radius:2px}
+.dots button.on{background:var(--d-p3);width:16px;border-radius:4px}
+.count{font:600 12px var(--f-mono);color:var(--d-mu);min-width:44px;text-align:center;white-space:nowrap}
+
+@media (prefers-reduced-motion:reduce){
+  *,*::before,*::after{animation:none!important;transition:none!important}
+}
+</style>
+
+<main class="deck" id="deck" aria-label="Chatform walkthrough">
+
+<!-- 1 cover -->
+<section class="slide idea cover" data-anim="cover" aria-label="Cover">
+  <div class="frame">
+    <div class="eyebrow">Chatform · the voice conversation</div>
+    <h1>How do we get people to <span>really talk</span> to a form?</h1>
+    <p class="take">A form that listens, then tells you what people want.</p>
+    <p class="lead">How I see voice working on Chatform's big questions: what the student sees while talking, and what you get back. Each idea comes just before its screen.</p>
+    <div class="ill" aria-hidden="true"><div class="bars" id="coverBars"></div></div>
+    <div class="meta"><span>Swipe, or use the arrows below</span><span>Riya and every number are made-up examples</span></div>
+  </div>
+</section>
+
+<!-- 6 idea: big question -->
+<section class="slide idea" data-anim="none" aria-label="The big question">
+  <div class="frame">
+    <div class="eyebrow">Step 1 · the big question</div>
+    <h2>Why do big questions get one-word answers?</h2>
+    <p class="take">Show what a good answer sounds like, then make talking the easy choice.</p>
+    <div class="versus">
+      <p class="lead">Three small example questions under it, and a mic that fills half the screen. "Type instead" is always there for a bus or a classroom.</p>
+    </div>
+    <p class="why"><strong>Why:</strong> people go short when they can't tell what kind of answer is wanted. Examples show the size of an answer.</p>
+    <div class="next-hint">Next: how it looks →</div>
+  </div>
+</section>
+
+<!-- 7 screen: big question -->
+<section class="slide screen" data-anim="none" aria-label="Screen: big question">
+  <div class="frame">
+    <div class="narr"><b>Mockup</b><span>Small questions stay taps. Big ones open like this.</span></div>
+    <div class="appbar"><div class="mark" aria-hidden="true"></div><div class="t"><strong>Before Day 1</strong><small>Part 2 of 3 · what you want</small></div></div>
+    <div class="prog"><i style="width:38%"></i></div>
+    <div class="body">
+      <h3 class="bigq">What do you want this semester to get you?</h3>
+      <ul class="examples">
+        <li>What would make you proud in May?</li>
+        <li>What do you want to be able to show someone?</li>
+        <li>Who do you want to become by the end of it?</li>
+      </ul>
+      <div class="micwrap">
+        <span class="ring" aria-hidden="true"></span><span class="ring b" aria-hidden="true"></span>
+        <button class="mic" type="button" id="bigMic" aria-label="Start talking"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="3" width="6" height="11" rx="3"/><path d="M5 11a7 7 0 0 0 14 0M12 18v3"/></svg></button>
+      </div>
+      <p class="micnote">Tap and talk. Take your time; nobody hears this but the form.</p>
+      <button class="typeinst" type="button">Type instead</button>
+    </div>
+  </div>
+</section>
+
+<!-- 8 idea: probes and slots -->
+<section class="slide idea" data-anim="probeIdea" aria-label="Probes and slots">
+  <div class="frame">
+    <div class="eyebrow">Step 2 · while they talk</div>
+    <h2>How does the form ask for more without cutting people off?</h2>
+    <p class="take">Wait for a breath, then ask about the one thing still missing.</p>
+    <div class="versus">
+      <p class="lead">Chips light up as Riya covers each part of a full answer. At a 2-second pause, one short follow-up slides in, and she answers it in the same recording.</p>
+    </div>
+    <div class="ill" aria-hidden="true"><div class="bars" id="ideaBars"></div><span class="pausechip" id="ideaPause">pause → one follow-up</span></div>
+    <p class="why"><strong>Why:</strong> a good listener waits for you to breathe before asking "why that?". Follow-ups only ask about unlit chips, two at most, so nobody feels questioned.</p>
+    <div class="next-hint">Next: how it looks →</div>
+  </div>
+</section>
+
+<!-- 9 screen: talking -->
+<section class="slide screen" data-anim="talk" aria-label="Screen: talking">
+  <div class="frame">
+    <div class="narr"><b>Riya says</b><span id="talkSay">…</span></div>
+    <div class="appbar"><div class="mark" aria-hidden="true"></div><div class="t"><strong>Before Day 1</strong><small>Part 2 of 3 · what you want</small></div></div>
+    <div class="prog"><i style="width:46%"></i></div>
+    <div class="body">
+      <div class="talk">
+        <div class="qmini">What do you want this semester to get you?</div>
+        <div class="timer"><span class="dot" aria-hidden="true"></span><span id="talkTime">0:00</span><span class="state" id="talkState">listening</span></div>
+        <div class="wave" id="talkWave" aria-hidden="true"></div>
+        <div class="covered">
+          <span class="lbl">What you've covered</span>
+          <div class="slots"><span class="slot" id="s1">a goal</span><span class="slot" id="s2">by when</span><span class="slot" id="s3">why it matters</span></div>
+        </div>
+        <div class="probe" id="talkProbe" role="status"><small>One more thing</small><span>Why does a recruiter asking about it matter to you?</span></div>
+        <div class="donebar"><button class="stopmic" type="button" aria-label="Pause recording"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><rect x="6" y="5" width="4" height="14" rx="1"/><rect x="14" y="5" width="4" height="14" rx="1"/></svg></button><button class="btn" type="button" id="talkDone">Done</button></div>
+      </div>
+    </div>
+    <button class="replay" type="button" data-replay="talk" >Replay</button>
+  </div>
+</section>
+
+<!-- 10 screen: heard -->
+<section class="slide screen" data-anim="none" aria-label="Screen: here's what I heard">
+  <div class="frame">
+    <div class="narr"><b>Mockup</b><span>Riya taps Done. She checks one line, then moves on.</span></div>
+    <div class="appbar"><div class="mark" aria-hidden="true"></div><div class="t"><strong>Before Day 1</strong><small>Part 2 of 3 · what you want</small></div></div>
+    <div class="prog"><i style="width:55%"></i></div>
+    <div class="body">
+      <div class="heard">
+        <span class="lbl">Here's what I heard</span>
+        <p>You want one project a recruiter asks you about before placements, because your resume has nothing yet that's yours.</p>
+        <div class="slots"><span class="slot on">a goal</span><span class="slot on">by when</span><span class="slot on">why it matters</span></div>
+      </div>
+      <div style="display:grid;gap:8px">
+        <button class="btn" type="button">That's right</button>
+        <button class="btn ghost" type="button">Add more</button>
+      </div>
+      <p class="saved">Saved for the owner: the full transcript, the three parts, and this line.<br>The recording is deleted once it's written down.</p>
+    </div>
+  </div>
+</section>
+
+<!-- 11 idea: owner -->
+<section class="slide idea" data-anim="none" aria-label="The owner's insight">
+  <div class="frame">
+    <div class="eyebrow">Step 3 · what the owner gets</div>
+    <h2>How do we see what people really want without reading every answer?</h2>
+    <p class="take">Find the want under the want, in their own words.</p>
+    <div class="versus">
+      <p class="lead">Chatform reads every spoken answer for the specific thing each person cares about, groups them with their quotes, and lets you ask the answers anything, like a normal chat.</p>
+    </div>
+    <p class="why"><strong>Why:</strong> nobody wants "an internship" for its own sake. They want something specific it gives them. That specific thing is what you design for.</p>
+    <div class="next-hint">Next: how it looks →</div>
+  </div>
+</section>
+
+<!-- 12 screen: insights -->
+<section class="slide screen" data-anim="insight" aria-label="Screen: insights">
+  <div class="frame">
+    <div class="narr"><b>Mockup</b><span>The owner's phone, after 30 students answer</span></div>
+    <div class="appbar"><div class="mark" aria-hidden="true"></div><div class="t"><strong>Before Day 1 · 30 answers</strong><small>What do you want this semester to get you?</small></div></div>
+    <div class="tabs"><span class="tab on">Insights</span><span class="tab">Responses</span><span class="tab">Questions</span></div>
+    <div class="body">
+      <div class="big-insight"><small>The biggest motivator</small><strong>A project of their own to walk a recruiter through</strong><span>11 of 30 · "I want one thing on my resume I built myself and can talk about for five minutes."</span></div>
+      <div class="sect">What they really want · 30 students</div>
+      <div class="mot" id="motList"></div>
+      <div class="sect">What "internship" meant · 12 said it</div>
+      <div class="under">
+        <div class="split"><i class="a" data-w="58">7</i><i class="b" data-w="25">3</i><i class="c" data-w="17">2</i></div>
+        <div class="legend"><span><b>7</b> a story for interviews</span><span><b>3</b> money that isn't from their parents</span><span><b>2</b> a named company, mostly for their family</span></div>
+      </div>
+      <div class="sect">Ask your answers</div>
+      <div class="ask">
+        <div class="askbar"><span id="askText"></span><button class="send" type="button" aria-label="Ask"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6"><path d="M4 12h15M13 5l7 7-7 7"/></svg></button></div>
+        <div class="answer" id="askAns">4 students want to build their own thing and have 10 or more free hours a week: <b>Riya, Kabir, Sana, Arjun</b>. All four said they'd rather lead than research. Kabir and Sana both named food delivery as the problem they'd pick.</div>
+      </div>
+    </div>
+    <button class="replay" type="button" data-replay="insight">Replay</button>
+  </div>
+</section>
+
+<!-- 13 screen: responses -->
+<section class="slide screen" data-anim="none" aria-label="Screen: responses">
+  <div class="frame">
+    <div class="narr"><b>Mockup</b><span>How far people got, and each person's answer</span></div>
+    <div class="appbar"><div class="mark" aria-hidden="true"></div><div class="t"><strong>Before Day 1 · 30 answers</strong><small>Responses</small></div></div>
+    <div class="tabs"><span class="tab">Insights</span><span class="tab on">Responses</span><span class="tab">Questions</span></div>
+    <div class="body">
+      <div class="stats">
+        <div class="stat"><strong>40</strong><small>opened</small></div>
+        <div class="stat"><strong>30</strong><small>finished</small></div>
+        <div class="stat"><strong>2 min</strong><small>avg talk</small></div>
+      </div>
+      <div class="sect">Where people stopped</div>
+      <div class="funnel">
+        <div class="rung" style="--w:100%"><span>Opened the link</span><b>100%</b></div>
+        <div class="rung" style="--w:90%"><span>Reached the big question</span><b>90%</b></div>
+        <div class="rung" style="--w:83%"><span>Answered it out loud</span><b>83%</b></div>
+        <div class="rung" style="--w:75%"><span>Finished the form</span><b>75%</b></div>
+      </div>
+      <div class="sect">Each person</div>
+      <div class="person"><span class="av">R</span><div><strong>Riya</strong><small>2nd year · 2 min 40 s of talk · 3 of 3 covered</small></div><span class="open">open</span></div>
+      <div class="person"><span class="av">K</span><div><strong>Kabir</strong><small>3rd year · typed · 2 of 3 covered</small></div><span class="open">open</span></div>
+</div>
+    </div>
+  </div>
+</section>
+
+<!-- 14 close -->
+<section class="slide idea" data-anim="none" aria-label="What to build first">
+  <div class="frame">
+    <div class="eyebrow">For the engineer · how I see voice</div>
+    <h2>What do we build first?</h2>
+    <p class="take">Build it in this order. Each step works on its own.</p>
+    <ol class="steps">
+      <li><div><strong>The big-question screen</strong><span>Examples, the big mic, type instead. Save the transcript.</span></div></li>
+      <li><div><strong>"Here's what I heard"</strong><span>One summary line from the transcript, with "That's right" and "Add more".</span></div></li>
+      <li><div><strong>Chips and follow-ups while talking</strong><span>Each question carries its goal and 2 to 4 parts. At a 2-second pause, ask about one unlit part. Two follow-ups at most.</span></div></li>
+      <li><div><strong>Insights and "ask your answers"</strong><span>Group spoken answers by the specific want, with quotes.</span></div></li>
+    </ol>
+  </div>
+</section>
+
+</main>
+
+<nav class="nav" aria-label="Slides">
+  <button class="arrow" type="button" id="prev" aria-label="Previous slide"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M15 5l-7 7 7 7"/></svg></button>
+  <div class="dots" id="dots"></div>
+  <span class="count" id="count">1 / 10</span>
+  <button class="arrow" type="button" id="next" aria-label="Next slide"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M9 5l7 7-7 7"/></svg></button>
+</nav>
+
+<script>
+(function(){
+  const deck=document.getElementById('deck');
+  const slides=[...deck.querySelectorAll('.slide')];
+  const dots=document.getElementById('dots');
+  const count=document.getElementById('count');
+  const reduce=matchMedia('(prefers-reduced-motion: reduce)').matches;
+  let cur=0, timers=[], loops=[];
+
+  /* timers per run, cleared on slide change */
+  const after=(ms,fn)=>{const t=setTimeout(fn,reduce?0:ms);timers.push(t);return t};
+  const every=(ms,fn)=>{const t=setInterval(fn,ms);loops.push(t);return t};
+  const clearAll=()=>{timers.forEach(clearTimeout);loops.forEach(clearInterval);timers=[];loops=[]};
+  const el=(tag,cls,html)=>{const e=document.createElement(tag);if(cls)e.className=cls;if(html!=null)e.innerHTML=html;return e};
+
+  slides.forEach((s,i)=>{
+    const b=el('button',s.classList.contains('screen')?'scr':'');
+    b.type='button';b.setAttribute('aria-label','Go to slide '+(i+1));
+    b.onclick=()=>go(i);dots.appendChild(b);
+  });
+
+  function go(i){i=Math.max(0,Math.min(slides.length-1,i));deck.scrollTo({left:i*deck.clientWidth,behavior:reduce?'auto':'smooth'})}
+  document.getElementById('prev').onclick=()=>go(cur-1);
+  document.getElementById('next').onclick=()=>go(cur+1);
+  addEventListener('keydown',e=>{if(e.key==='ArrowRight')go(cur+1);if(e.key==='ArrowLeft')go(cur-1)});
+  document.getElementById('bigMic').onclick=()=>go(cur+2);
+
+  let raf;
+  deck.addEventListener('scroll',()=>{cancelAnimationFrame(raf);raf=requestAnimationFrame(()=>{
+    const i=Math.round(deck.scrollLeft/deck.clientWidth);if(i!==cur)activate(i);
+  })});
+  addEventListener('resize',()=>deck.scrollTo({left:cur*deck.clientWidth}));
+
+  function activate(i){
+    cur=i;clearAll();
+    [...dots.children].forEach((d,j)=>d.classList.toggle('on',j===i));
+    count.textContent=(i+1)+' / '+slides.length;
+    document.getElementById('prev').disabled=i===0;
+    document.getElementById('next').disabled=i===slides.length-1;
+    const a=slides[i].dataset.anim; if(anims[a])anims[a]();
+  }
+  document.querySelectorAll('[data-replay]').forEach(b=>b.onclick=()=>{clearAll();anims[b.dataset.replay]()});
+
+  /* waveform helper */
+  function makeBars(host,n){host.innerHTML='';const bars=[];for(let k=0;k<n;k++){const i=el('i');host.appendChild(i);bars.push(i)}return bars}
+  function wave(bars,maxH,state){ // state.on = talking
+    every(140,()=>bars.forEach((b,k)=>{
+      const h=state.on?(8+Math.random()*maxH*(0.45+0.55*Math.sin((k/bars.length)*Math.PI))):5;
+      b.style.height=h.toFixed(0)+'px';
+    }));
+  }
+
+  const anims={
+    cover(){const bars=makeBars(document.getElementById('coverBars'),22);const st={on:true};if(reduce){bars.forEach((b,k)=>b.style.height=(12+40*Math.sin(k/21*Math.PI))+'px');return}wave(bars,56,st)},
+
+    tags1(){const tags=[...slides[cur].querySelectorAll('.tag')];tags.forEach(t=>t.classList.remove('on'));tags.forEach((t,k)=>after(400+k*500,()=>t.classList.add('on')))},
+
+    maker(){
+      const body=document.getElementById('makerBody');body.innerHTML='';
+      const add=(n)=>{body.appendChild(n);body.scrollTop=body.scrollHeight};
+      after(200,()=>{add(el('div','who r','You'));add(el('div','bub me','I\'m onboarding 30 BBA students before Day 1. I want to know what really drives each one, in specifics. Write me the big questions.'))});
+      after(1600,()=>{add(el('div','who','Your AI'));add(el('div','bub claude','Here\'s the first one. Each question comes with what a full answer has to contain, so the form knows when to ask more.'))});
+      after(3000,()=>{add(el('div','qcard',
+        '<span class="lbl">Big question · voice first</span>'+
+        '<h4>What do you want this semester to get you?</h4>'+
+        '<ul><li>What would make you proud in May?</li><li>What do you want to be able to show someone?</li><li>Who do you want to become by the end of it?</li></ul>'+
+        '<span class="lbl">Goal</span><div style="font-size:14px">Find the specific thing this student is working toward, so their project can be the way to get it.</div>'+
+        '<span class="lbl">A full answer has</span><div class="slots"><span class="slot on">a goal</span><span class="slot on">by when</span><span class="slot on">why it matters</span></div>'))});
+      after(4300,()=>add(el('button','btn','Send to Chatform')));
+    },
+
+    warm(){
+      const body=document.getElementById('warmBody'),field=document.getElementById('warmField'),prog=document.getElementById('warmProg');
+      body.innerHTML='';field.textContent='Type your answer…';field.classList.remove('typing');prog.style.width='4%';
+      const add=n=>{body.appendChild(n);body.scrollTop=body.scrollHeight};
+      after(200,()=>add(el('div','bub','Hi! Six minutes, three parts, no wrong answers. First, what should we call you?')));
+      const name='Riya';
+      for(let k=1;k<=name.length;k++)after(1100+k*160,()=>{field.textContent=name.slice(0,k);field.classList.add('typing')});
+      after(2200,()=>{field.textContent='Type your answer…';field.classList.remove('typing');add(el('div','bub me','Riya'));prog.style.width='10%'});
+      after(2900,()=>add(el('div','bub','Nice to meet you, Riya. Which year are you in?')));
+      after(3400,()=>{const c=el('div','chips','<span class="chip"><kbd>1</kbd>1st year</span><span class="chip" id="y2"><kbd>2</kbd>2nd year</span><span class="chip"><kbd>3</kbd>3rd year</span>');add(c)});
+      after(4600,()=>{const y=document.getElementById('y2');if(y)y.classList.add('sel');prog.style.width='16%'});
+      after(5400,()=>add(el('div','bub','And which campus do you study at?')));
+      after(5900,()=>add(el('div','chips','<span class="chip"><kbd>1</kbd>Main campus</span><span class="chip"><kbd>2</kbd>City campus</span><span class="chip"><kbd>3</kbd>Other</span>')));
+    },
+
+    probeIdea(){
+      const bars=makeBars(document.getElementById('ideaBars'),24),pc=document.getElementById('ideaPause');
+      const st={on:true};pc.classList.remove('on');
+      if(reduce){pc.classList.add('on');return}
+      wave(bars,60,st);
+      const cycle=()=>{st.on=true;pc.classList.remove('on');after(2600,()=>{st.on=false});after(3400,()=>pc.classList.add('on'));after(5600,cycle)};
+      cycle();
+    },
+
+    talk(){
+      const bars=makeBars(document.getElementById('talkWave'),30);
+      const say=document.getElementById('talkSay'),time=document.getElementById('talkTime'),state=document.getElementById('talkState');
+      const probe=document.getElementById('talkProbe'),done=document.getElementById('talkDone');
+      const s=[1,2,3].map(n=>document.getElementById('s'+n));
+      s.forEach(x=>x.classList.remove('on'));probe.classList.remove('on');done.classList.remove('ready');done.textContent='Done';
+      const st={on:true};
+      const lines=[
+        [0,'"I think I want to finish one project that a recruiter actually stops and asks me about…"'],
+        [3600,'"…and I want it done this semester, before placements start."'],
+        [6600,'(pauses)'],
+        [9800,'"Because right now my resume has nothing on it that I did myself. I want one thing that\'s mine."']
+      ];
+      if(reduce){say.textContent=lines[3][1];s.forEach(x=>x.classList.add('on'));probe.classList.add('on');done.classList.add('ready');done.textContent='All covered, done';time.textContent='0:41';bars.forEach((b,k)=>b.style.height=(8+30*Math.sin(k/29*Math.PI))+'px');return}
+      wave(bars,64,st);
+      let sec=0;time.textContent='0:00';state.textContent='listening';
+      every(1000,()=>{sec+=3;time.textContent=Math.floor(sec/60)+':'+String(sec%60).padStart(2,'0')});
+      lines.forEach(([t,txt])=>after(t,()=>{say.textContent=txt}));
+      after(2600,()=>s[0].classList.add('on'));
+      after(5400,()=>s[1].classList.add('on'));
+      after(6600,()=>{st.on=false;state.textContent='pause'});
+      after(8200,()=>{probe.classList.add('on');state.textContent='follow-up'});
+      after(9800,()=>{st.on=true;state.textContent='listening'});
+      after(12800,()=>{s[2].classList.add('on')});
+      after(13600,()=>{st.on=false;state.textContent='all covered';done.classList.add('ready');done.textContent='All covered, done'});
+    },
+
+    insight(){
+      const data=[
+        ['A project to show recruiters',11,'"Something I built that I can explain in an interview."'],
+        ['Make their parents proud',7,'"My dad still asks what BBA is for."'],
+        ['Get noticed in class',5,'"I want people to know my name for a good reason."'],
+        ['Earn their first money',4,'"Even ₹500 that I made myself."'],
+        ['Work with friends',3,'"Last group project I did alone."']
+      ];
+      const host=document.getElementById('motList');host.innerHTML='';
+      const tracks=data.map(([name,n,q])=>{
+        const m=el('div','mot','<div class="row"><span>'+name+'</span><em>'+n+'</em></div><div class="track"><i></i></div><div class="q">'+q+'</div>');
+        host.appendChild(m);return [m.querySelector('.track i'),n];
+      });
+      tracks.forEach(([t,n],k)=>after(300+k*220,()=>{t.style.width=(n/11*100)+'%'}));
+      document.querySelectorAll('.split i').forEach(i=>{i.style.width='0';i.style.flex='0 0 0'});
+      after(1500,()=>document.querySelectorAll('.split i').forEach(i=>{i.style.transition=reduce?'none':'flex-basis .6s steps(6)';i.style.flex='0 0 '+i.dataset.w+'%'}));
+      const q='Who wants their own thing and has 10+ free hours?';const ask=document.getElementById('askText'),ans=document.getElementById('askAns');
+      ask.textContent='';ans.classList.remove('on');
+      if(reduce){ask.textContent=q;ans.classList.add('on');return}
+      for(let k=1;k<=q.length;k++)after(2400+k*45,()=>{ask.textContent=q.slice(0,k)});
+      after(2400+q.length*45+700,()=>ans.classList.add('on'));
+    }
+  };
+
+  activate(0);
+})();
+</script>
+
