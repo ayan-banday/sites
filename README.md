@@ -2,6 +2,7 @@
 
 Public pages, served by GitHub Pages at https://ayan-banday.github.io/sites/
 
+- `unpredictable-lead-flow/`: Unpredictable Lead Flow, Demo Day 1 problem framing deck for Design Thinking and Innovation, shown as 7 slide pictures.
 - `how-i-learn/`: How I Learn, a phone-first page on how Ash breaks into a new field: a yes-or-no number, one real project (Mohit's website, 50,000 visitors a month), the problems, the fields as a latticework, one problem at a time, and reality as the test.
 - `drip/`: DRIP, Ash's magazine on ecology and business: 18 hand-drawn pages you turn left to right (Erin Brockovich, Phool, Suta, Kering, Vantara).
 - `chatform-talked-through/`: Chatform, Talked Through, a 10-slide animated phone walkthrough of how voice could work on Chatform's big questions (talking, live follow-ups, "Here's what I heard") and what the form owner gets back.
