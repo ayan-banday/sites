@@ -2,6 +2,7 @@
 
 Public pages, served by GitHub Pages at https://ayan-banday.github.io/sites/
 
+- `internship-updates-ayan/`: Internship Updates (ayan), Ash's internship pitch to Shradha Ma'am: on a phone a short summary that sends her to her iPad; on an iPad a tap-to-open page with six animated screens and the ask to meet this week.
 - `unpredictable-lead-flow/`: Unpredictable Lead Flow, Demo Day 1 problem framing deck for Design Thinking and Innovation, shown as 7 slide pictures.
 - `how-i-learn/`: How I Learn, a phone-first page on how Ash breaks into a new field: a yes-or-no number, one real project (Mohit's website, 50,000 visitors a month), the problems, the fields as a latticework, one problem at a time, and reality as the test.
 - `drip/`: DRIP, Ash's magazine on ecology and business: 18 hand-drawn pages you turn left to right (Erin Brockovich, Phool, Suta, Kering, Vantara).
