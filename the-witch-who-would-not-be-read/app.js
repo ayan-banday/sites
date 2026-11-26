@@ -4,6 +4,9 @@
   const Q = new URLSearchParams(location.search);
   const OPENS = Date.UTC(2026, 10, 30, 18, 30, 0); // 2026-12-01 00:00 IST
   const PREVIEW = Q.has('preview') || window.FORCE_MOVIE === true;
+  /* Test clock: ?now=2026-11-30T23:59:50+05:30 starts the page's clock there and lets it keep ticking. */
+  const NOW_OFFSET = (() => { const t = Date.parse(Q.get('now') || ''); return isNaN(t) ? 0 : t - Date.now(); })();
+  const nowMs = () => Date.now() + NOW_OFFSET;
   const PHONE = window.FORCE_MOVIE !== true && (Math.min(screen.width, screen.height) < 600 || matchMedia('(max-width:599px)').matches);
   const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
   const pad = n => String(n).padStart(2, '0');
@@ -43,7 +46,7 @@
       paint(pl, 220, 150,
         `<path d="${wob(rectPts(22, 10, 176, 128, 16), 1.2, true)}" fill="${INK}" stroke="${BONE}" stroke-width="3" stroke-linejoin="round"/>` +
         `<path d="${wob(rectPts(34, 20, 152, 108, 18), 1.1, true)}" fill="${PLUM}"/>` +
-        `<path d="M56,20 L56,128 M164,20 L164,128" stroke="${VELVET || '#6a1a35'}" stroke-width="18"/>` +
+        `<path d="M56,20 L56,128 M164,20 L164,128" stroke="#6a1a35" stroke-width="18"/>` +
         sparkle(110, 72, 14, GOLD) +
         `<path d="M198,42 v14" stroke="${BONE}" stroke-width="3" stroke-linecap="round"/>`,
         pl.clientWidth || 220, pl.clientHeight || 150);
@@ -70,8 +73,9 @@
     requestAnimationFrame(paintLockSky);
     preloadTheatre();
     const tick = () => {
-      const left = OPENS - Date.now();
+      const left = OPENS - nowMs();
       if (left <= 0) {
+        if (el.hidden) return;
         clearInterval(iv);
         el.hidden = true;
         openMovie();
@@ -83,6 +87,7 @@
       $('ss').textContent = pad(s % 60);
     };
     const iv = setInterval(tick, 500);
+    document.addEventListener('visibilitychange', tick); // a slept tab catches up the moment it wakes
     tick();
   }
 
@@ -165,14 +170,35 @@
     return o;
   }
 
+  let activeName = null, fadeTimer = null, finaleTimer = null, bellsEndAt = 0;
   function stopMusicDead() {
+    if (fadeTimer) { clearInterval(fadeTimer); fadeTimer = null; }
+    if (finaleTimer) { clearTimeout(finaleTimer); finaleTimer = null; }
     if (activeTrack) {
       try { activeTrack.pause(); activeTrack.currentTime = 0; } catch (e) {}
       activeTrack = null;
+      activeName = null;
     }
   }
+  // Short fade for the last cue (fanfare ends on the iris, not a click)
+  function fadeMusicOut(ms) {
+    const t = activeName && tracks[activeName];
+    if (!t) return stopMusicDead();
+    const t0 = performance.now();
+    const v0 = t.node ? t.node.gain.value : t.el.volume;
+    activeTrack = null;
+    fadeTimer = setInterval(() => {
+      const k = Math.min(1, (performance.now() - t0) / ms);
+      if (t.node) t.node.gain.value = v0 * (1 - k); else t.el.volume = v0 * (1 - k);
+      if (k >= 1) {
+        clearInterval(fadeTimer); fadeTimer = null;
+        try { t.el.pause(); t.el.currentTime = 0; } catch (e) {}
+        activeName = null;
+      }
+    }, 40);
+  }
 
-  function playFile(name, loop = true, vol = 0.85) {
+  function playFile(name, loop = true, vol = 0.85, loopStart = 0) {
     stopMusicDead();
     let t = tracks[name];
     if (!t) {
@@ -190,7 +216,12 @@
       }
       t = tracks[name] = { el, node };
     }
-    t.el.loop = loop;
+    t.el.loop = loop && !loopStart;
+    if (loop && loopStart && !t.wired) {
+      t.wired = true;
+      t.el.addEventListener('ended', () => { try { t.el.currentTime = loopStart; t.el.play().catch(() => {}); } catch (e) {} });
+    }
+    activeName = name;
     if (t.node) t.node.gain.value = vol;
     else t.el.volume = vol;
     try { t.el.currentTime = 0; } catch (e) {}
@@ -206,17 +237,21 @@
     const t = ACX ? ACX.currentTime : 0;
     switch (name) {
       case 'silence':
-        stopMusicDead();
+        if (activeName === 'fanfare-applause') {
+          fadeMusicOut(900);
+          const cr = $('stageCredits');
+          if (cr) setTimeout(() => { cr.hidden = false; }, 700);
+        } else stopMusicDead();
         break;
       case 'overture':
         if (ACX) {
           // Dramatic theatre-organ chord stab before overture mp3 kicks in
           [43, 55, 58, 62, 67].forEach(m => osc('sawtooth', mtof(m), t, 0.9, 0.08, sfxGain, 2200));
         }
-        playFile('overture-misterioso', true, 0.88);
+        playFile('overture-misterioso', true, 0.88, 3.6); // loops from 3.6s, past the organ chord
         break;
       case 'waltz':
-        playFile('waltz-prim', true, 0.85);
+        playFile('waltz-prim', true, 0.88);
         break;
       case 'flingHit':
         stopMusicDead();
@@ -225,10 +260,10 @@
         }
         break;
       case 'bach':
-        playFile('bach-agitato', true, 0.9);
+        playFile('bach-agitato', false, 0.88);
         break;
       case 'danse':
-        playFile('danse-macabre', true, 0.86);
+        playFile('danse-macabre', true, 0.88);
         break;
       case 'ting':
         if (ACX) {
@@ -244,13 +279,13 @@
         }
         break;
       case 'mountainKing':
-        playFile('mountain-king', true, 0.88);
+        playFile('mountain-king', false, 0.88);
         break;
       case 'musicBox':
-        playFile('music-box', true, 0.84);
+        playFile('music-box', true, 0.88);
         break;
       case 'misteriosoCard':
-        playFile('misterioso-card', true, 0.84);
+        playFile('misterioso-card', true, 0.88);
         break;
       case 'gong':
         stopMusicDead();
@@ -285,6 +320,7 @@
       }
       case 'bells12':
         stopMusicDead();
+        bellsEndAt = performance.now() + 12 * 160 + 500;
         if (ACX) {
           for (let i = 0; i < 12; i++) {
             const bt = t + i * 0.16;
@@ -294,10 +330,15 @@
         }
         break;
       case 'finale':
-        playFile('waltz-finale', true, 0.9);
+        // twelve bells first (about 2.4s), then the waltz
+        stopMusicDead();
+        finaleTimer = setTimeout(() => { finaleTimer = null; playFile('waltz-finale', false, 0.88); }, Math.max(0, bellsEndAt - performance.now()));
         break;
       case 'fanfare':
-        playFile('fanfare-applause', false, 0.9);
+        {
+          const cr = $('stageCredits'); if (cr) cr.hidden = true;
+          playFile('fanfare-applause', false, 0.96); // file measures 0.7 LU quieter than the rest
+        }
         break;
     }
   }
@@ -576,6 +617,6 @@
   }
 
   if (PHONE) runPhone();
-  else if (!PREVIEW && Date.now() < OPENS) runLock();
+  else if (!PREVIEW && nowMs() < OPENS) runLock();
   else openMovie();
 })();
