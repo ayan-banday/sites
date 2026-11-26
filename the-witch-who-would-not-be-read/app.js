@@ -180,7 +180,7 @@
      SFX: thud(i) gong hit flingHit(hit + cut) ting(i) doorSlam pencil tick longTick heartbeatTick stroke(i)
      brushChord(=stroke) bell(n) bells([a,b] or 'a-b') bellsA(1-6) bellsB(7-11) bell12 bells12(all twelve)
      whoosh pop rustle munch chime flap boing slideWhistle. Unknown names are logged and stay silent. */
-  let activeName = null, noiseBuf = null;
+  let activeName = null, noiseBuf = null, strokeN = 0;
   const BASE_VOL = 0.88;
 
   function setVol(t, v) {
@@ -260,7 +260,20 @@
     mountainKing: { file: 'mountain-king', loop: false },
     musicBox: { file: 'music-box', loop: true },
     misteriosoCard: { file: 'misterioso-card', loop: true },
-    finale: { file: 'waltz-finale', loop: false }
+    finale: { file: 'waltz-finale', loop: false },
+    /* v2 additions (Kevin MacLeod, CC BY 4.0; 38-75 s, they fade out by themselves) */
+    dreamyTarot: { file: 'dreamy-tarot', loop: false },
+    hitmanDread: { file: 'hitman-dread', loop: false },
+    gymnopedieCall: { file: 'gymnopedie-call', loop: false },
+    eveningMelodramaStamp: { file: 'evening-melodrama-stamp', loop: false },
+    ossuaryAirSuspended: { file: 'ossuary-air-suspended', loop: true },
+    virtutesDoctor: { file: 'virtutes-doctor', loop: false },
+    sneakySnitchBitch: { file: 'sneaky-snitch-bitch', loop: false },
+    heartOfNowhereHealer: { file: 'heart-of-nowhere-healer', loop: false },
+    ghostStoryWitch: { file: 'ghost-story-witch', loop: false },
+    carefreeArtist: { file: 'carefree-artist', loop: false },
+    merryGoConfetti: { file: 'merry-go-confetti', loop: false },
+    healingClosing: { file: 'healing-closing', loop: false }
   };
   const ALIAS = {
     waltzPrim: ['waltz'], waltzSoft: ['waltz', 'soft'], waltzLoud: ['waltz', 'loud'], waltzOff: ['waltz', 'off'],
@@ -274,7 +287,7 @@
     if (f.soft) vol *= 0.55;
     if (f.low) vol *= 0.5;
     if (f.loud) vol = 0.95;
-    playFile(d.file, { loop: d.loop, loopStart: d.loopStart || 0, vol, rate: f.off ? 0.94 : 1, fadeIn: f.fade ? 1000 : 0, cross: f.cross ? 1000 : 0, cutAfter: d.cutAfter || 0 });
+    playFile(d.file, { loop: d.loop, loopStart: d.loopStart || 0, vol, rate: f.off ? 0.94 : 1, fadeIn: f.fade2 ? 2000 : (f.fade || f.fadeIn) ? 1000 : 0, cross: f.cross2 ? 2000 : f.cross ? 1000 : 0, cutAfter: d.cutAfter || 0 });
   }
 
   const mtof = m => 440 * Math.pow(2, (m - 69) / 12);
@@ -312,12 +325,16 @@
     const t = ACX ? ACX.currentTime : 0;
     const num = Number.isFinite(Number(arg)) && arg !== null && arg !== '' && !Array.isArray(arg) ? Number(arg) : 0;
     if (MUSIC[name]) {
+      if (name === 'overture') strokeN = 0;
       if (name === 'overture' && ACX) [43, 55, 58, 62, 67].forEach(m => osc('sawtooth', mtof(m), t, 0.9, 0.08, sfxGain, 2200));
       playMusic(name, arg);
       return;
     }
     switch (name) {
       case 'silence': case 'cut': stopMusicDead(); break;
+      case 'musicLevel': { const m = activeName && tracks[activeName]; if (m) { m.base = Math.min(1, num); fadeTrack(m, m.base, 400); } break; }
+      case 'musicDuck': { const m = activeName && tracks[activeName]; if (m) fadeTrack(m, arg == null ? 0.25 : num, 300); break; }
+      case 'musicFade': fadeMusicOut(1000); break;
       case 'fadeOut': fadeMusicOut(typeof arg === 'number' ? arg : 1000); break;
       case 'duck': { const m = activeName && tracks[activeName]; if (m) fadeTrack(m, (m.base || BASE_VOL) * 0.25, 400); break; }
       case 'unduck': {
@@ -371,6 +388,20 @@
         if (o) o.frequency.exponentialRampToValueAtTime(f0 * 2, t + 0.5);
         osc('triangle', f0 * 3, t + 0.05, 0.4, 0.05, sfxGain, 6000);
         noise(t, 0.25, 0.04, 2500, 'bandpass', 0.9);
+      } break;
+      case 'gongSoft': if (ACX) [38, 45, 50, 57, 61, 66].forEach((m, i) => osc(i % 2 ? 'triangle' : 'sawtooth', mtof(m), t, 2.2, 0.022, sfxGain, 1000)); break; /* leaves the music running */
+      case 'tagThud': if (ACX) {
+        const o = osc('sine', 150, t, 0.2, 0.2, sfxGain, 420);
+        if (o) o.frequency.exponentialRampToValueAtTime(70, t + 0.15);
+        noise(t, 0.06, 0.07, 1200, 'lowpass');
+      } break;
+      case 'brushStroke': if (ACX) {
+        if (arg === 'reset') { strokeN = 0; break; }
+        const f0 = 392 * Math.pow(1.1225, strokeN % 9); strokeN++;
+        const o = osc('sine', f0, t, 0.35, 0.13, sfxGain, 5000);
+        if (o) o.frequency.exponentialRampToValueAtTime(f0 * 1.5, t + 0.25);
+        osc('triangle', f0 * 2, t + 0.03, 0.22, 0.035, sfxGain, 6000);
+        noise(t, 0.12, 0.025, 2600, 'bandpass', 0.9);
       } break;
       case 'bell': if (ACX) bell(num || 1, t); break;
       case 'bells': if (ACX) {

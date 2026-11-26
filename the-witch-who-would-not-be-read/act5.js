@@ -129,7 +129,7 @@ const V5clock = { x: 836, y: 104, s: 0.4, h: 11.984 };
     ],
     async run(ctx) {
       ctx.setCurtain(1); V5.tick(ctx);
-      ctx.audio('waltz');
+      ctx.audio('virtutesDoctor');
       ctx.say(this.words, V5.HINT);
       ctx.pose('tag', { dy: -220, op: 0, r: -16 });
       ctx.tween(520, p => { const e = ctx.ease(p); ctx.pose('tag', { dy: -220 * (1 - e), op: Math.min(1, p * 3), r: -16 * (1 - e) }); });
@@ -206,6 +206,7 @@ const V5clock = { x: 836, y: 104, s: 0.4, h: 11.984 };
       async function (ctx) {
         V5.tick(ctx);
         ctx.say('The Script ticked it off. Her card kept growing.', V5.HINT);
+        ctx.audio('fadeOut', 1500);
         ctx.hide('list'); ctx.show('tick');
         ctx.audio('tagThud');
         ctx.pose('script', { r: 0 });
@@ -236,7 +237,7 @@ const V5clock = { x: 836, y: 104, s: 0.4, h: 11.984 };
     ],
     async run(ctx) {
       ctx.setCurtain(1); V5.tick(ctx);
-      ctx.audio('bach');
+      ctx.audio('sneakySnitchBitch');
       ctx.say(this.words, V5.HINT);
       ctx.pose('tag', { dx: -200, dy: -60, r: -300, op: 0 });
       ctx.tween(380, p => {
@@ -296,7 +297,7 @@ const V5clock = { x: 836, y: 104, s: 0.4, h: 11.984 };
     ],
     async run(ctx) {
       ctx.setCurtain(1); V5.tick(ctx);
-      ctx.audio('musicBox');
+      ctx.audio('heartOfNowhereHealer', 'fade2');
       ctx.say(this.words, V5.HINT);
       ctx.pose('tag', { dx: -60, dy: -20, op: 0 });
       ctx.tween(700, p => { const e = ctx.ease(p); ctx.pose('tag', { dx: -60 * (1 - e), dy: -20 * (1 - e), op: Math.min(1, p * 3), r: 4 * Math.sin(p * 6) }); });
@@ -372,7 +373,7 @@ const V5clock = { x: 836, y: 104, s: 0.4, h: 11.984 };
     ],
     async run(ctx) {
       ctx.setCurtain(1); V5.tick(ctx);
-      ctx.audio('danse');
+      ctx.audio('ghostStoryWitch', 'fade');
       ctx.say(this.words, V5.HINT);
       const sx = [185, 185, 185, 185, 185], sy = [300, 300, 300, 300, 300], ex = [270, 370, 480, 640, 800], ey = [130, 190, 100, 100, 105];
       for (let i = 0; i < 5; i++) {
@@ -435,8 +436,7 @@ const V5clock = { x: 836, y: 104, s: 0.4, h: 11.984 };
     ],
     async run(ctx) {
       ctx.setCurtain(1); V5.tick(ctx);
-      ctx.audio('danse');
-      ctx.say(this.words, V5.HINT);
+      ctx.say(this.words, V5.HINT); // ghost-story-witch keeps playing
       ctx.pose('glass', { dx: 0, dy: 0 });
       ctx.tween(2400, p => {
         const e = ctx.ease(Math.min(1, p * 1.5));
@@ -491,6 +491,7 @@ const V5clock = { x: 836, y: 104, s: 0.4, h: 11.984 };
     ],
     async run(ctx) {
       ctx.setCurtain(1); V5.tick(ctx);
+      ctx.audio('carefreeArtist');
       ctx.say(this.words, V5.HINT);
       ctx.pose('hand', { dx: -100, dy: 160, op: 0 });
       ctx.tween(1100, p => {
@@ -528,7 +529,7 @@ const V5clock = { x: 836, y: 104, s: 0.4, h: 11.984 };
       async function (ctx) {
         V5.tick(ctx);
         ctx.say('The last stroke was her eyes.', V5.HINT);
-        ctx.audio('silence');
+        ctx.audio('fadeOut', 1000);
         ctx.show('s5'); ctx.pose('s5', { clip: 'inset(0 100% 0 0)' });
         ctx.show('brush');
         ctx.audio('brushStroke');
@@ -597,7 +598,7 @@ const V5clock = { x: 836, y: 104, s: 0.4, h: 11.984 };
       sprites,
       async run(ctx) {
         ctx.setCurtain(1); V5.tick(ctx);
-        ctx.audio('musicBox');
+        ctx.audio('ossuaryAirSuspended', 'fade');
         ctx.say(this.words, V5.HINT);
         H5.forEach((h, i) => {
           setTimeout(() => {

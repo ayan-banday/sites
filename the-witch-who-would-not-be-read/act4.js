@@ -40,7 +40,7 @@ const a4CardText = (lines, y0) => `<g transform="translate(500 285) scale(1.3)">
     async run(ctx) {
       // P42: intertitle; Khushi deals, the card flips to THE FOOL (0)
       ctx.setCurtain(1);
-      ctx.audio('misteriosoCard');
+      ctx.audio('dreamyTarot', 'fade');
       ctx.say(this.words, 'press space');
       ctx.show('plaque');
       ctx.pose('plaque', { s: 0.4 });
@@ -71,7 +71,6 @@ const a4CardText = (lines, y0) => `<g transform="translate(500 285) scale(1.3)">
         ctx.show('t1');
         ctx.pose('t1', { op: 0 });
         ctx.tween(500, p => ctx.pose('t1', { op: ctx.ease(p) }));
-        setTimeout(() => ctx.audio('misteriosoCard'), 700);
         await ctx.wait(600);
       },
       // P44: line 2 and the tower
@@ -129,6 +128,7 @@ const a4CardText = (lines, y0) => `<g transform="translate(500 285) scale(1.3)">
     async run(ctx) {
       // P45: the Script snatches the card, pen out
       ctx.setCurtain(1);
+      ctx.audio('fadeOut', 1000); // the tarot colour fades out
       ctx.say(this.words, 'press space');
       ctx.pose('card', { dx: a4px(140), dy: a4px(5), r: 14 });
       await ctx.wait(350);

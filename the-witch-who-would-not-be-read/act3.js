@@ -60,7 +60,7 @@ const a3Flakes = () => { let g = ''; for (let i = 0; i < 26; i++) g += `<path d=
       async function (ctx) { // P28
         ctx.setClockTime(a3Clock(28));
         a3Say(ctx, 'He had a talk coming up, and he did not feel ready.');
-        ctx.audio('mountainKing', 'low');
+        ctx.audio('hitmanDread', 'fade soft');
         ctx.hide('ayanA'); ctx.show('ayanB');
         ctx.show('page');
         ctx.pose('page', { dx: 190, op: 0 });
@@ -118,6 +118,7 @@ const a3Flakes = () => { let g = ''; for (let i = 0; i < 26; i++) g += `<path d=
       async function (ctx) { // P30
         ctx.setClockTime(a3Clock(30));
         a3Say(ctx, 'Then came a panic attack. His chest got tight. Even the banana looked worried.');
+        ctx.audio('musicLevel', 0.9); // the dread swells with the tilt
         ctx.hide('ayanE'); ctx.show('ayanF');
         ctx.show('banW');
         const T = this.T, s0 = T.spin, th0 = T.th;
@@ -132,6 +133,7 @@ const a3Flakes = () => { let g = ''; for (let i = 0; i < 26; i++) g += `<path d=
       async function (ctx) { // P31
         ctx.setClockTime(a3Clock(31));
         a3Say(ctx, 'The harder he thought, the bigger the storm got.');
+        ctx.audio('mountainKing', 'cross'); // the P31 peak
         ctx.hide('ayanF'); ctx.show('ayanG');
         ctx.show('bolts'); ctx.show('script');
         const T = this.T, s0 = T.spin, th0 = T.th;
@@ -220,7 +222,7 @@ const a3Flakes = () => { let g = ''; for (let i = 0; i < 26; i++) g += `<path d=
       ctx.setCurtain(1);
       ctx.setClockTime(a3Clock(34));
       a3Say(ctx, this.words);
-      ctx.audio('musicBox', 'fadeIn');
+      ctx.audio('gymnopedieCall', 'fade');
       ctx.tween(800, p => {
         const k = Math.sin(p * Math.PI * 6);
         ctx.pose('rings', { op: k > -0.2 ? 1 : 0.15 });
@@ -272,6 +274,7 @@ const a3Flakes = () => { let g = ''; for (let i = 0; i < 26; i++) g += `<path d=
       ctx.setCurtain(1);
       ctx.setClockTime(a3Clock(36));
       a3Say(ctx, this.words);
+      ctx.audio('musicDuck', 0.35); // under the spoken lines
       ctx.tween(500, p => {
         const k = (1 - p);
         ctx.pose('tags', { dx: 10 * Math.sin(p * 20) * k, dy: 8 * Math.cos(p * 17) * k, r: 4 * Math.sin(p * 13) * k });
@@ -336,7 +339,7 @@ const a3Flakes = () => { let g = ''; for (let i = 0; i < 26; i++) g += `<path d=
       async function (ctx) { // P40
         ctx.setClockTime(a3Clock(40));
         a3Say(ctx, '"Pause."');
-        ctx.audio('musicDuck');
+        ctx.audio('silence'); // hard silence for the pause
         ctx.hide('ay1'); ctx.show('ay2');
         ctx.pose('ay2', { s: 1.05, dy: -4 });
         await ctx.wait(1700);
@@ -344,7 +347,7 @@ const a3Flakes = () => { let g = ''; for (let i = 0; i < 26; i++) g += `<path d=
       async function (ctx) { // P41
         ctx.setClockTime(a3Clock(41));
         a3Say(ctx, '"Don\'t dismiss it." So they felt it together.');
-        ctx.audio('musicLevel', 1);
+        ctx.audio('musicBox', 'fade soft'); // music-box only for the breath out
         ctx.hide('ay2'); ctx.show('ay3');
         ctx.show('flakes');
         ctx.pose('flakes', { dy: -170, op: 0 });

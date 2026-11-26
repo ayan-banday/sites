@@ -63,7 +63,7 @@ const finClose = ['scriptCU', 'mono', 'cuCard2', 'cuTitle', 'cuScrap', 'cuPlayed
       ctx.hideIris();
       ctx.say(this.words, '');
       ctx.pose('stampW', { r: 8 });
-      ctx.audio('waltz', 'loud');
+      ctx.audio('eveningMelodramaStamp');
       ctx.audio('bells', '1-6');
       const hand = finEl('cMin');
       ctx.tween(1800, p => { if (hand) hand.setAttribute('transform', `rotate(${(352.8 + (1080 - 352.8) * ctx.ease(p)).toFixed(1)})`); }, () => ctx.setClockTime(12));
@@ -198,12 +198,13 @@ const finClose = ['scriptCU', 'mono', 'cuCard2', 'cuTitle', 'cuScrap', 'cuPlayed
       ctx.pose('ayanEat', { op: 1 });
       ctx.audio('munch');
       await ctx.wait(900);
+      ctx.audio('merryGoConfetti', 'cross'); // under the confetti
       ctx.say("Even the Script bowed. Ayan cheered, and finally ate his banana.", 'press space to continue');
     },
     async confettiWide(ctx) { // P84
       const k = finK();
       ctx.say("Happy birthday, Khushi.", '');
-      ctx.audio('unduck');
+      ctx.audio('healingClosing', 'cross2');
       ctx.pose('khushiH', { op: 0 });
       ctx.pose('khushiB', { op: 1, r: 0 });
       ['conf1', 'conf2'].forEach(i => ctx.pose(i, { op: 1, dy: -480 * k }));
@@ -218,7 +219,7 @@ const finClose = ['scriptCU', 'mono', 'cuCard2', 'cuTitle', 'cuScrap', 'cuPlayed
       finWide.forEach(i => ctx.hide(i));
       ctx.pose('cuCardFin', { op: 1 });
       const clk = finEl('clockLayer'); if (clk) clk.hidden = true;
-      ctx.audio('fadeOut', 4200);
+      ctx.audio('fadeOut', 9000);
       ctx.showIris(480, 250, 620);
       ctx.tween(4500, p => ctx.showIris(480, 250, 620 - 450 * ctx.ease(p)));
       await ctx.wait(4700);
