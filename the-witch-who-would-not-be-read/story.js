@@ -152,11 +152,11 @@ const SHOTS = [
         svg: () => `<g transform="translate(560 220) rotate(12) scale(.85) translate(0 210)"><use href="#k-coat"/></g>`
       },
       {
-        id: 'khushiBase', vx: 170, vy: 60, vw: 440, vh: 420, z: 6, boil: 1.5,
+        id: 'khushiBase', vx: 90, vy: 20, vw: 600, vh: 540, z: 6, boil: 1.5,
         svg: () => khead(390, 300, 1.9, 'cat fang brow:angry', { wild: true, hat: false, pierce: ['earL'] })
       },
       {
-        id: 'khushiEpic', vx: 170, vy: 20, vw: 440, vh: 460, z: 7, boil: 1.8, hidden: true,
+        id: 'khushiEpic', vx: 90, vy: 20, vw: 600, vh: 540, z: 7, boil: 1.8, hidden: true,
         svg: () => khead(390, 300, 1.9, 'cat cackle brow:angry sparkle bolt', { wild: true, hat: true, pierce: ['earL'] })
       },
       {
@@ -228,8 +228,8 @@ const SHOTS = [
         svg: () => K.needle(600, 300, 1.3, 28, 'sweat')
       },
       {
-        id: 'needleFaint', vx: 650, vy: 330, vw: 230, vh: 180, z: 8, boil: 0.5, hidden: true,
-        svg: () => K.needle(770, 430, 0.95, 92, 'faint')
+        id: 'needleFaint', vx: 560, vy: 330, vw: 230, vh: 180, z: 8, boil: 0.5, hidden: true,
+        svg: () => K.needle(680, 430, 0.95, 92, 'faint')
       }
     ],
     async run(ctx) {
@@ -312,16 +312,16 @@ const SHOTS = [
     n: 7,
     title: 'The Breathing Spell',
     words: "She talked the fool down: \"Stop using your brain. Deep breath in. Pause. Don't dismiss it.\"",
-    clock: { x: 880, y: 72, s: 0.42, h: 11.88 },
+    clock: { x: 880, y: 118, s: 0.36, h: 11.88 },
     bg: () => bg('glow', W, H, 107, GP.lilac),
     sprites: [
       {
         id: 'stormLive', vx: 540, vy: 30, vw: 380, vh: 240, z: 3, boil: 2.0,
-        svg: () => bolt(600, 90, 0.9, GOLD) + bolt(700, 170, 0.6, GOLD, 30) + K.script(860, 140, 0.6, 20)
+        svg: () => bolt(600, 90, 0.9, GOLD) + bolt(700, 170, 0.6, GOLD, 30) + K.script(810, 160, 0.6, 20)
       },
       {
         id: 'stormFrozen', vx: 540, vy: 30, vw: 380, vh: 240, z: 3, boil: 0, hidden: true,
-        svg: () => bolt(600, 90, 0.9, '#c9c2d4') + bolt(700, 170, 0.6, '#c9c2d4', 30) + K.script(860, 140, 0.6, 20).replace('#fbf6ea', '#e3dde9')
+        svg: () => bolt(600, 90, 0.9, '#c9c2d4') + bolt(700, 170, 0.6, '#c9c2d4', 30) + K.script(810, 160, 0.6, 20).replace('#fbf6ea', '#e3dde9')
       },
       {
         id: 'candles', vx: 500, vy: 380, vw: 180, vh: 165, z: 4, boil: 0.6,
@@ -369,7 +369,7 @@ const SHOTS = [
     n: 8,
     title: 'She Reads Him',
     words: "The fool tried to read her tarot. \"I'm unpredictable,\" she said, and dealt him The Fool.",
-    clock: { x: 890, y: 70, s: 0.4, h: 11.92 },
+    clock: { x: 890, y: 118, s: 0.36, h: 11.92 },
     bg: () => bg('halftone', W, H, 108, GP.candle, { fx: 520, fy: 250 }),
     sprites: [
       {
@@ -442,9 +442,9 @@ const SHOTS = [
       {
         id: 'scriptPrinting', vx: 540, vy: 60, vw: 420, vh: 470, z: 7, boil: 0.7,
         svg: () => K.villain(830, 130, 0.5, 'prim', -8) +
-          `<path d="${wob(rectPts(560, 470, 390, 44, 20), 1, true)}" fill="#fbf6ea" stroke="${INK}" stroke-width="2.4" filter="url(#wob)"/>` +
-          K.word(750, 500, 22, 'starring Khushi as THE SENSIBLE ON_') +
-          `<path d="M940,470 q-4,14 0,26" stroke="${INK}" stroke-width="5" stroke-linecap="round"/>`
+          `<path d="${wob(rectPts(540, 470, 350, 44, 20), 1, true)}" fill="#fbf6ea" stroke="${INK}" stroke-width="2.4" filter="url(#wob)"/>` +
+          K.word(715, 500, 18, 'starring Khushi as THE SENSIBLE ON_') +
+          `<path d="M880,470 q-4,14 0,26" stroke="${INK}" stroke-width="5" stroke-linecap="round"/>`
       }
     ],
     async run(ctx) {
@@ -475,25 +475,25 @@ const SHOTS = [
     n: 10,
     title: 'She Paints Her Own',
     words: "So she painted the blank card herself. Press space for each brushstroke.",
-    clock: { x: 905, y: 62, s: 0.36, h: 11.984 },
+    clock: { x: 900, y: 92, s: 0.36, h: 11.984 },
     bg: () => bg('pencil', W, H, 110, GP.bone) +
       `<path d="${wob(rectPts(110, 26, 740, 500, 30), 1.6, true)}" fill="${PLUM}" stroke="${INK}" stroke-width="4" filter="url(#wob)"/><rect x="132" y="48" width="696" height="456" rx="10" fill="none" stroke="${GOLD}" stroke-width="4"/>`,
     sprites: [
       {
-        id: 'stroke1', vx: 135, vy: 210, vw: 700, vh: 260, z: 5, boil: 0.5, hidden: true,
-        svg: () => `<g filter="url(#wob)" fill="none" stroke-linecap="round"><path d="M180,420 C300,240 420,460 560,300 S760,160 800,250" stroke="${CORAL}" stroke-width="34"/></g>`
+        id: 'stroke1', vx: 135, vy: 120, vw: 700, vh: 340, z: 5, boil: 0.5, hidden: true,
+        svg: () => `<g filter="url(#wob)" fill="none" stroke-linecap="round"><rect x="150" y="130" width="670" height="320" stroke="none"/><path d="M180,420 C300,240 420,460 560,300 S760,160 800,250" stroke="${CORAL}" stroke-width="34"/></g>`
       },
       {
-        id: 'stroke2', vx: 165, vy: 90, vw: 410, vh: 140, z: 6, boil: 0.5, hidden: true,
-        svg: () => `<g filter="url(#wob)" fill="none" stroke-linecap="round"><path d="M200,140 C320,90 380,200 520,150" stroke="${LILAC}" stroke-width="24"/></g>`
+        id: 'stroke2', vx: 165, vy: 65, vw: 410, vh: 175, z: 6, boil: 0.5, hidden: true,
+        svg: () => `<g filter="url(#wob)" fill="none" stroke-linecap="round"><rect x="180" y="70" width="360" height="165" stroke="none"/><path d="M200,140 C320,90 380,200 520,150" stroke="${LILAC}" stroke-width="24"/></g>`
       },
       {
         id: 'stroke3', vx: 560, vy: 330, vw: 220, vh: 140, z: 6, boil: 0.5, hidden: true,
-        svg: () => `<g filter="url(#wob)" fill="none" stroke-linecap="round"><path d="M600,420 q60,-80 140,-40" stroke="${GOLD}" stroke-width="16"/></g>`
+        svg: () => `<g filter="url(#wob)" fill="none" stroke-linecap="round"><rect x="575" y="335" width="190" height="130" stroke="none"/><path d="M600,420 q60,-80 140,-40" stroke="${GOLD}" stroke-width="16"/></g>`
       },
       {
-        id: 'stroke4', vx: 375, vy: 200, vw: 210, vh: 100, z: 7, boil: 0.8, hidden: true,
-        svg: () => `<g filter="url(#wob)"><circle cx="430" cy="250" r="34" fill="none" stroke="#fff" stroke-width="12"/><circle cx="530" cy="250" r="34" fill="none" stroke="#fff" stroke-width="12" stroke-dasharray="120 300"/></g>`
+        id: 'stroke4', vx: 375, vy: 185, vw: 210, vh: 130, z: 7, boil: 0.8, hidden: true,
+        svg: () => `<g filter="url(#wob)"><rect x="385" y="190" width="190" height="120" fill="none"/><circle cx="430" cy="250" r="34" fill="none" stroke="#fff" stroke-width="12"/><circle cx="530" cy="250" r="34" fill="none" stroke="#fff" stroke-width="12" stroke-dasharray="120 300"/></g>`
       },
       {
         id: 'stroke5', vx: 590, vy: 310, vw: 100, vh: 100, z: 8, boil: 0.9, hidden: true,
@@ -512,7 +512,7 @@ const SHOTS = [
         svg: () => `<path d="M250,26 v80" stroke="${INK}" stroke-width="12" stroke-linecap="round" filter="url(#wob)"/>`
       },
       {
-        id: 'brush', vx: 560, vy: 180, vw: 240, vh: 340, z: 10, boil: 0.8,
+        id: 'brush', vx: 560, vy: 180, vw: 260, vh: 370, z: 10, boil: 0.8,
         svg: () => K.brush(760, 640, 3.3, -38)
       }
     ],
@@ -565,9 +565,9 @@ const SHOTS = [
           `<rect x="-78" y="-88" width="156" height="176" fill="${PLUM}"/><path d="M-70,80 C-30,40 20,90 70,30" stroke="${CORAL}" stroke-width="10" fill="none" stroke-linecap="round"/>${khead(0, 8, 0.6, 'star fang sparkle', { pierce: ALLP })}`)
       },
       {
-        id: 'reprintBill', vx: 665, vy: 25, vw: 280, vh: 90, z: 6, boil: 0.6,
-        svg: () => `<path d="${wob(rectPts(675, 36, 260, 56, 16), 1, true)}" fill="#fbf6ea" stroke="${GOLD}" stroke-width="2.6" filter="url(#wob)"/>` +
-          K.word(805, 70, 18, 'Starring Khushi as Khushi', INK, 0, 'middle', 'italic')
+        id: 'reprintBill', vx: 655, vy: 105, vw: 270, vh: 90, z: 6, boil: 0.6,
+        svg: () => `<path d="${wob(rectPts(668, 117, 232, 56, 16), 1, true)}" fill="#fbf6ea" stroke="${GOLD}" stroke-width="2.6" filter="url(#wob)"/>` +
+          K.word(784, 151, 15.5, 'Starring Khushi as Khushi', INK, 0, 'middle', 'italic')
       },
       {
         id: 'confetti', vx: 680, vy: 60, vw: 270, vh: 420, z: 5, boil: 1.9,
@@ -609,7 +609,7 @@ const SHOTS = [
       [...Array(8)].map((_, i) => `<path d="${wob(rectPts(0, 0, 14, 18, 6), 1, true)}" transform="translate(${760 + i * 18} ${450 - (i % 3) * 14}) rotate(${i * 50})" fill="#fbf6ea" stroke="${INK}" stroke-width="1.4"/>`).join(''),
     sprites: [
       {
-        id: 'foolBow', vx: 125, vy: 220, vw: 210, vh: 275, z: 5, boil: 0.9,
+        id: 'foolBow', vx: 100, vy: 200, vw: 300, vh: 295, z: 5, boil: 0.9,
         svg: () => nerd(250, 476, 0.52, 'closed smile blush', { arms: 'down', r: 30, top: ASH_WEIRD })
       },
       {

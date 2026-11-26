@@ -373,10 +373,10 @@
 
   function showIris(cx, cy, r) {
     const svg = $('irisSvg');
-    svg.hidden = false;
+    svg.removeAttribute('hidden');
     $('irisPath').setAttribute('d', `M0,0 H${W} V${H} H0Z M${(cx - r).toFixed(1)},${cy.toFixed(1)} a${r.toFixed(1)},${r.toFixed(1)} 0 1 0 ${(2 * r).toFixed(1)},0 a${r.toFixed(1)},${r.toFixed(1)} 0 1 0 ${(-2 * r).toFixed(1)},0Z`);
   }
-  function hideIris() { $('irisSvg').hidden = true; }
+  function hideIris() { $('irisSvg').setAttribute('hidden', ''); }
 
   function setClock(cfg) {
     const cl = $('clockLayer');
