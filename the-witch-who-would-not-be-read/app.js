@@ -619,5 +619,13 @@
 
   if (PHONE) runPhone();
   else if (!PREVIEW && nowMs() < OPENS) runLock();
-  else openMovie();
+  else openMovie().then(() => {
+    // Test jump (?preview&shot=N): the next press mounts shot N directly.
+    const N = parseInt(Q.get('shot') || '0', 10);
+    if (PREVIEW && N > 1 && N <= SHOTS.length) {
+      shotIdx = N - 2;
+      subIdx = ((SHOTS[shotIdx] || {}).subPresses || []).length;
+      window.__MOVIE_STATE__.shotIndex = shotIdx;
+    }
+  });
 })();

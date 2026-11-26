@@ -18,7 +18,9 @@ const SHOTS = [];
 function assembleShots() {
   SHOTS.length = 0;
   const by = window.SHOTS_BY_ACT || {};
-  ACT_ORDER.forEach(k => (by[k] || []).forEach(s => SHOTS.push(s)));
+  // Test only: ?preview&only=act3 loads just that act's shots (shot=N then counts inside it).
+  const only = new URLSearchParams(location.search).get('only');
+  ACT_ORDER.filter(k => !only || !location.search.includes('preview') || k === only).forEach(k => (by[k] || []).forEach(s => SHOTS.push(s)));
   SHOTS.forEach((s, i) => { s.n = i + 1; });
   return SHOTS;
 }
