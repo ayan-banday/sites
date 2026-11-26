@@ -280,6 +280,7 @@
     waltzFinale: ['finale'], bellsA: ['bells', '1-6'], bellsB: ['bells', '7-11'], bell12: ['bell', 12],
     brushChord: ['stroke'], bachAgitato: ['bach'], mountain: ['mountainKing']
   };
+  const MUSIC_TRIM = { 'evening-melodrama-stamp': 0.86, 'hitman-dread': 1.07, 'waltz-finale': 1.09, 'virtutes-doctor': 0.95, 'ossuary-air-suspended': 1.06 };
   const flagsOf = arg => { const f = {}; String(arg == null ? '' : arg).split(/[ ,+]/).forEach(s => { if (s) f[s] = true; }); return f; };
   function playMusic(name, arg) {
     const d = MUSIC[name], f = flagsOf(arg);
@@ -287,7 +288,10 @@
     if (f.soft) vol *= 0.55;
     if (f.low) vol *= 0.5;
     if (f.loud) vol = 0.95;
-    playFile(d.file, { loop: d.loop, loopStart: d.loopStart || 0, vol, rate: f.off ? 0.94 : 1, fadeIn: f.fade2 ? 2000 : (f.fade || f.fadeIn) ? 1000 : 0, cross: f.cross2 ? 2000 : f.cross ? 1000 : 0, cutAfter: d.cutAfter || 0 });
+    vol = Math.min(1, vol * (MUSIC_TRIM[d.file] || 1)); // per-file loudness trim toward -16.4 LUFS (measured with ffmpeg ebur128)
+    const cross = f.cross2 ? 2000 : f.cross ? 1000 : 0;
+    const fadeIn = f.fade2 ? 2000 : (f.fade || f.fadeIn) ? 1000 : cross; // a crossfade also fades the new track in, so the old one never leaves a dip or a jump
+    playFile(d.file, { loop: d.loop, loopStart: d.loopStart || 0, vol, rate: f.off ? 0.94 : 1, fadeIn, cross, cutAfter: d.cutAfter || 0 });
   }
 
   const mtof = m => 440 * Math.pow(2, (m - 69) / 12);
@@ -522,7 +526,7 @@
 
   function say(line, hint = '') {
     $('capLine').textContent = line;
-    $('capHint').textContent = hint;
+    $('capHint').textContent = PHONE ? hint.replace(/press space/gi, 'tap').replace(/sound on · space, click, or swipe/, 'sound on · tap anywhere') : hint;
     $('cap').classList.toggle('blank', !line && !hint);
   }
 
@@ -594,6 +598,7 @@
   }
 
   async function advance() {
+    try { ensureAudio(); } catch (e) {} // resume WebAudio inside the user gesture (iOS/Android)
     if (!movieStarted) {
       movieStarted = true;
       goFull();
@@ -637,7 +642,8 @@
     if (document.fullscreenElement || document.webkitFullscreenElement) return;
     try {
       const r = d.requestFullscreen ? d.requestFullscreen({ navigationUI: 'hide' }) : d.webkitRequestFullscreen && d.webkitRequestFullscreen();
-      if (r && r.catch) r.catch(() => {});
+      const lock = () => { try { const o = screen.orientation; if (PHONE && o && o.lock) o.lock('landscape').catch(() => {}); } catch (e) {} };
+      if (r && r.then) r.then(lock, () => {}); else lock();
     } catch (e) {}
   }
 
@@ -649,10 +655,12 @@
       advance();
     }
   });
+  /* Mouse/pen advance on pointerdown; touch advances once on touchend (tap or swipe), so no double-advance. */
   $('movie').addEventListener('pointerdown', e => {
-    if ($('movie').hidden) return;
+    if ($('movie').hidden || e.pointerType === 'touch') return;
     advance();
   });
+  const turnShown = () => getComputedStyle($('turn')).display !== 'none';
   let wq = 0;
   addEventListener('wheel', e => {
     if ($('movie').hidden) return;
@@ -667,23 +675,27 @@
   addEventListener('touchstart', e => { ty = e.touches[0].clientY; tx = e.touches[0].clientX; }, { passive: true });
   addEventListener('touchend', e => {
     if ($('movie').hidden || ty === null) return;
-    const t = e.changedTouches[0];
-    const dy = t.clientY - ty, dx = t.clientX - tx;
     ty = null;
-    if (Math.abs(dy) > 36 || Math.abs(dx) > 36) advance();
+    if (turnShown()) return;
+    advance();
   }, { passive: true });
 
   /* ================= BOOT ================= */
   async function openMovie() {
     window.__MOVIE_STATE__.unlocked = true;
     document.documentElement.classList.add('wide');
+    if (PHONE) {
+      document.documentElement.classList.add('pm');
+      const tp = document.querySelector('#turn p');
+      if (tp) tp.innerHTML = 'turn your phone sideways<small>this movie plays wide</small>';
+    }
     $('movie').hidden = false;
     await preloadTheatre();
     setCurtain(0);
     $('playbillFloat').hidden = false;
     // Paint shot 1 ready behind curtain
     if (SHOTS[0]) await buildShotAssets(SHOTS[0]);
-    say('Press space to raise the curtain.', 'sound on · space, click, or swipe');
+    say(PHONE ? 'Tap to raise the curtain.' : 'Press space to raise the curtain.', 'sound on · space, click, or swipe');
     // Hook first advance to hide floating playbill cleanly
     const origMount = mountShot;
     $('playbillFloat').hidden = false;
@@ -699,7 +711,10 @@
     }
   }
 
-  if (PHONE) runPhone();
+  if (PHONE && !PREVIEW && nowMs() < OPENS) {
+    runPhone();
+    const pv = setInterval(() => { if (nowMs() >= OPENS) { clearInterval(pv); location.reload(); } }, 1000);
+  }
   else if (!PREVIEW && nowMs() < OPENS) runLock();
   else openMovie().then(() => {
     // Test jump (?preview&shot=N): the next press mounts shot N directly.

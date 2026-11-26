@@ -101,6 +101,16 @@ html.phone,html.phone body{height:100%;overflow-y:auto;scroll-snap-type:y mandat
 @keyframes turn{0%,20%{transform:rotate(0)}55%,85%{transform:rotate(-90deg)}100%{transform:rotate(0)}}
 @media (orientation:portrait) and (pointer:coarse){html.wide #turn{display:grid}}
 @media (prefers-reduced-motion:reduce){#turn svg{animation:none!important}}
+
+/* Phone movie (html.pm): plays sideways; portrait gets the turn screen; stage sized by height, caption in its own strip */
+@media (orientation:portrait){html.pm #turn{display:grid}}
+html.pm #movie{padding:4px max(10px,env(safe-area-inset-right,0px)) max(4px,env(safe-area-inset-bottom,0px)) max(10px,env(safe-area-inset-left,0px));touch-action:manipulation}
+html.pm #theatre{width:min(100%,calc((100dvh - 82px - env(safe-area-inset-bottom,0px)) * 16 / 9));flex:none}
+html.pm #stageWrap{border-width:2px;outline-offset:3px}
+html.pm #cap{margin-top:10px;min-height:52px;padding:4px 12px;outline-offset:3px}
+html.pm #cap .line{font-size:15px;line-height:1.2;max-width:none}
+html.pm #cap .hint{font-size:13px;margin-top:2px}
+html.pm #credits{display:none}
 </style>
 </head>
 <body>
@@ -114,11 +124,11 @@ html.phone,html.phone body{height:100%;overflow-y:auto;scroll-snap-type:y mandat
       <svg class="down" id="pDown" viewBox="0 0 34 34" aria-hidden="true"></svg>
     </div>
   </section>
-  <section class="scr" aria-label="Open on a laptop">
+  <section class="scr" aria-label="Opens at midnight">
     <canvas class="bg" id="psky2"></canvas>
     <div class="in">
       <canvas class="plap" id="pLap" width="220" height="150"></canvas>
-      <p>This one’s a movie.<br><b>Open this same link on your laptop.</b></p>
+      <p>This one’s a movie.<br><b>It opens at midnight, 1 December.</b><br>On a phone, it plays best sideways.</p>
     </div>
   </section>
 </div>
