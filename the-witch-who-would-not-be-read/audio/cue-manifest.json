@@ -1,5 +1,5 @@
 {
-  "title": "The Witch Who Would Not Be Read \u2014 Pit-Band Audio Cues",
+  "title": "The Witch Who Would Not Be Read — Pit-Band Audio Cues",
   "target_lufs": -16.0,
   "target_true_peak_dbtp": -1.5,
   "format": "MP3 44.1kHz stereo 112kbps",
@@ -131,11 +131,155 @@
       "source": "Original synthesized theatre fanfare and paper-theatre applause",
       "license": "Public domain / original project audio",
       "attribution": null
+    },
+    {
+      "file": "gymnopedie-call.mp3",
+      "shot": "P34-P41 (shots 13-15)",
+      "description": "Tender solo piano (Satie's Gymnopedie No. 1) for the phone call between Ayan and Khushi",
+      "loop": false,
+      "duration_sec": 75.0,
+      "size_bytes": 1201699,
+      "source": "https://incompetech.com/music/royalty-free/mp3-royaltyfree/Gymnopedie%20No%201.mp3",
+      "license": "CC BY 4.0",
+      "attribution": "\"Gymnopedie No 1\" Kevin MacLeod (incompetech.com). Licensed under Creative Commons: By Attribution 4.0 License (http://creativecommons.org/licenses/by/4.0/)."
+    },
+    {
+      "file": "heart-of-nowhere-healer.mp3",
+      "shot": "P61-P65 (shots 22-23)",
+      "description": "Soft warm piano/ambient, the HEALER hand",
+      "loop": false,
+      "duration_sec": 55.0,
+      "size_bytes": 881423,
+      "source": "https://incompetech.com/music/royalty-free/mp3-royaltyfree/Heart%20of%20Nowhere.mp3",
+      "license": "CC BY 4.0",
+      "attribution": "\"Heart of Nowhere\" Kevin MacLeod (incompetech.com). Licensed under Creative Commons: By Attribution 4.0 License (http://creativecommons.org/licenses/by/4.0/)."
+    },
+    {
+      "file": "healing-closing.mp3",
+      "shot": "P84-P85 (shot 29)",
+      "description": "Gentle piano resolve for 'Happy birthday, Khushi' and the last line",
+      "loop": false,
+      "duration_sec": 50.0,
+      "size_bytes": 801696,
+      "source": "https://incompetech.com/music/royalty-free/mp3-royaltyfree/Healing.mp3",
+      "license": "CC BY 4.0",
+      "attribution": "\"Healing\" Kevin MacLeod (incompetech.com). Licensed under Creative Commons: By Attribution 4.0 License (http://creativecommons.org/licenses/by/4.0/)."
+    },
+    {
+      "file": "hitman-dread.mp3",
+      "shot": "P28-P31 (shots 10-11)",
+      "description": "Low anxious dread bed for the panic attack (gentle, not graphic)",
+      "loop": false,
+      "duration_sec": 50.0,
+      "size_bytes": 801718,
+      "source": "https://incompetech.com/music/royalty-free/mp3-royaltyfree/Hitman.mp3",
+      "license": "CC BY 4.0",
+      "attribution": "\"Hitman\" Kevin MacLeod (incompetech.com). Licensed under Creative Commons: By Attribution 4.0 License (http://creativecommons.org/licenses/by/4.0/)."
+    },
+    {
+      "file": "ossuary-air-suspended.mp3",
+      "shot": "P48-P50 (shot 18)",
+      "description": "Quiet airy suspended drone under the 11:59 low point; mixed deliberately quiet (-19 LUFS) as a bed",
+      "loop": false,
+      "duration_sec": 60.0,
+      "size_bytes": 961453,
+      "source": "https://incompetech.com/music/royalty-free/mp3-royaltyfree/Ossuary%206%20-%20Air.mp3",
+      "license": "CC BY 4.0",
+      "attribution": "\"Ossuary 6 - Air\" Kevin MacLeod (incompetech.com). Licensed under Creative Commons: By Attribution 4.0 License (http://creativecommons.org/licenses/by/4.0/)."
+    },
+    {
+      "file": "sneaky-snitch-bitch.mp3",
+      "shot": "P57-P60 (shot 21)",
+      "description": "Sly pizzicato strut for the BITCH hand",
+      "loop": false,
+      "duration_sec": 40.0,
+      "size_bytes": 641607,
+      "source": "https://incompetech.com/music/royalty-free/mp3-royaltyfree/Sneaky%20Snitch.mp3",
+      "license": "CC BY 4.0",
+      "attribution": "\"Sneaky Snitch\" Kevin MacLeod (incompetech.com). Licensed under Creative Commons: By Attribution 4.0 License (http://creativecommons.org/licenses/by/4.0/)."
+    },
+    {
+      "file": "ghost-story-witch.mp3",
+      "shot": "P66-P70 (shots 24-25)",
+      "description": "Spooky ghostly colour for the WITCH hand and the bats",
+      "loop": false,
+      "duration_sec": 50.0,
+      "size_bytes": 801701,
+      "source": "https://incompetech.com/music/royalty-free/mp3-royaltyfree/Ghost%20Story.mp3",
+      "license": "CC BY 4.0",
+      "attribution": "\"Ghost Story\" Kevin MacLeod (incompetech.com). Licensed under Creative Commons: By Attribution 4.0 License (http://creativecommons.org/licenses/by/4.0/)."
+    },
+    {
+      "file": "dreamy-tarot.mp3",
+      "shot": "P42-P44 (shot 16)",
+      "description": "Dreamy mystical harp/pad for the tarot reading",
+      "loop": false,
+      "duration_sec": 50.0,
+      "size_bytes": 922499,
+      "source": "https://incompetech.com/music/royalty-free/mp3-royaltyfree/Dreamy%20Flashback.mp3",
+      "license": "CC BY 4.0",
+      "attribution": "\"Dreamy Flashback\" Kevin MacLeod (incompetech.com). Licensed under Creative Commons: By Attribution 4.0 License (http://creativecommons.org/licenses/by/4.0/)."
+    },
+    {
+      "file": "virtutes-doctor.mp3",
+      "shot": "P51-P56 (shots 19-20)",
+      "description": "Precise clinical baroque-style pulse for the DOCTOR hand",
+      "loop": false,
+      "duration_sec": 45.0,
+      "size_bytes": 721449,
+      "source": "https://incompetech.com/music/royalty-free/mp3-royaltyfree/Virtutes%20Instrumenti.mp3",
+      "license": "CC BY 4.0",
+      "attribution": "\"Virtutes Instrumenti\" Kevin MacLeod (incompetech.com). Licensed under Creative Commons: By Attribution 4.0 License (http://creativecommons.org/licenses/by/4.0/)."
+    },
+    {
+      "file": "carefree-artist.mp3",
+      "shot": "P71-P74 (shot 26)",
+      "description": "Playful bouncy cue for the ARTIST hand and the painting",
+      "loop": false,
+      "duration_sec": 45.0,
+      "size_bytes": 721506,
+      "source": "https://incompetech.com/music/royalty-free/mp3-royaltyfree/Carefree.mp3",
+      "license": "CC BY 4.0",
+      "attribution": "\"Carefree\" Kevin MacLeod (incompetech.com). Licensed under Creative Commons: By Attribution 4.0 License (http://creativecommons.org/licenses/by/4.0/)."
+    },
+    {
+      "file": "merry-go-confetti.mp3",
+      "shot": "P82-P83 (shot 29)",
+      "description": "Carousel celebration for the bow, banana and confetti",
+      "loop": false,
+      "duration_sec": 45.0,
+      "size_bytes": 721457,
+      "source": "https://incompetech.com/music/royalty-free/mp3-royaltyfree/Merry%20Go.mp3",
+      "license": "CC BY 4.0",
+      "attribution": "\"Merry Go\" Kevin MacLeod (incompetech.com). Licensed under Creative Commons: By Attribution 4.0 License (http://creativecommons.org/licenses/by/4.0/)."
+    },
+    {
+      "file": "evening-melodrama-stamp.mp3",
+      "shot": "P79-P81 (shot 28)",
+      "description": "Old-film melodrama piano for the midnight stamp coming down",
+      "loop": false,
+      "duration_sec": 37.98,
+      "size_bytes": 608996,
+      "source": "https://incompetech.com/music/royalty-free/mp3-royaltyfree/Evening%20Melodrama.mp3",
+      "license": "CC BY 4.0",
+      "attribution": "\"Evening Melodrama\" Kevin MacLeod (incompetech.com). Licensed under Creative Commons: By Attribution 4.0 License (http://creativecommons.org/licenses/by/4.0/)."
     }
   ],
   "attributions": [
-    "\"Danse Macabre - Xylophone\" Kevin MacLeod (incompetech.com). Licensed under Creative Commons: By Attribution 4.0 License (http://creativecommons.org/licenses/by/4.0/). Composition: Camille Saint-Saens (Public Domain)."
+    "\"Danse Macabre - Xylophone\" Kevin MacLeod (incompetech.com). Licensed under Creative Commons: By Attribution 4.0 License (http://creativecommons.org/licenses/by/4.0/). Composition: Camille Saint-Saens (Public Domain).",
+    "\"Gymnopedie No 1\" Kevin MacLeod (incompetech.com). Licensed under Creative Commons: By Attribution 4.0 License (http://creativecommons.org/licenses/by/4.0/).",
+    "\"Heart of Nowhere\" Kevin MacLeod (incompetech.com). Licensed under Creative Commons: By Attribution 4.0 License (http://creativecommons.org/licenses/by/4.0/).",
+    "\"Healing\" Kevin MacLeod (incompetech.com). Licensed under Creative Commons: By Attribution 4.0 License (http://creativecommons.org/licenses/by/4.0/).",
+    "\"Hitman\" Kevin MacLeod (incompetech.com). Licensed under Creative Commons: By Attribution 4.0 License (http://creativecommons.org/licenses/by/4.0/).",
+    "\"Ossuary 6 - Air\" Kevin MacLeod (incompetech.com). Licensed under Creative Commons: By Attribution 4.0 License (http://creativecommons.org/licenses/by/4.0/).",
+    "\"Sneaky Snitch\" Kevin MacLeod (incompetech.com). Licensed under Creative Commons: By Attribution 4.0 License (http://creativecommons.org/licenses/by/4.0/).",
+    "\"Ghost Story\" Kevin MacLeod (incompetech.com). Licensed under Creative Commons: By Attribution 4.0 License (http://creativecommons.org/licenses/by/4.0/).",
+    "\"Dreamy Flashback\" Kevin MacLeod (incompetech.com). Licensed under Creative Commons: By Attribution 4.0 License (http://creativecommons.org/licenses/by/4.0/).",
+    "\"Virtutes Instrumenti\" Kevin MacLeod (incompetech.com). Licensed under Creative Commons: By Attribution 4.0 License (http://creativecommons.org/licenses/by/4.0/).",
+    "\"Carefree\" Kevin MacLeod (incompetech.com). Licensed under Creative Commons: By Attribution 4.0 License (http://creativecommons.org/licenses/by/4.0/).",
+    "\"Merry Go\" Kevin MacLeod (incompetech.com). Licensed under Creative Commons: By Attribution 4.0 License (http://creativecommons.org/licenses/by/4.0/).",
+    "\"Evening Melodrama\" Kevin MacLeod (incompetech.com). Licensed under Creative Commons: By Attribution 4.0 License (http://creativecommons.org/licenses/by/4.0/)."
   ],
-  "total_size_bytes": 2998834,
-  "total_size_mb": 2.86
+  "total_size_bytes": 12786038,
+  "total_size_mb": 12.19
 }

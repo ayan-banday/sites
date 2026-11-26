@@ -171,178 +171,229 @@
     return o;
   }
 
-  let activeName = null, fadeTimer = null, finaleTimer = null, bellsEndAt = 0;
-  function stopMusicDead() {
-    if (fadeTimer) { clearInterval(fadeTimer); fadeTimer = null; }
-    if (finaleTimer) { clearTimeout(finaleTimer); finaleTimer = null; }
-    if (activeTrack) {
-      try { activeTrack.pause(); activeTrack.currentTime = 0; } catch (e) {}
-      activeTrack = null;
-      activeName = null;
-    }
+  /* CUE LIST (ctx.audio(name, arg)). Music: overture, organChord, waltz, bach, danse, mountainKing, musicBox,
+     misteriosoCard, finale (=waltz-finale, once), fanfare (layered over the running music, ducks it).
+     Music flags in arg (string, space separated): 'soft' 55% volume, 'low' 50%, 'loud' full, 'fade' 1 s fade in,
+     'cross' 1 s crossfade from the old track, 'off' (waltz played at 0.94 so it sounds off). Aliases: waltzSoft,
+     waltzLoud, waltzOff, waltzPrim, waltzFinale. Control: silence (hard cut), fadeOut (arg ms, default 1000),
+     duck / unduck (running music), credits / creditsHide.
+     SFX: thud(i) gong hit flingHit(hit + cut) ting(i) doorSlam pencil tick longTick heartbeatTick stroke(i)
+     brushChord(=stroke) bell(n) bells([a,b] or 'a-b') bellsA(1-6) bellsB(7-11) bell12 bells12(all twelve)
+     whoosh pop rustle munch chime flap boing slideWhistle. Unknown names are logged and stay silent. */
+  let activeName = null, noiseBuf = null;
+  const BASE_VOL = 0.88;
+
+  function setVol(t, v) {
+    t.vol = v;
+    if (t.node) t.node.gain.value = v; else t.el.volume = Math.max(0, Math.min(1, v));
   }
-  // Short fade for the last cue (fanfare ends on the iris, not a click)
-  function fadeMusicOut(ms) {
-    const t = activeName && tracks[activeName];
-    if (!t) return stopMusicDead();
-    const t0 = performance.now();
-    const v0 = t.node ? t.node.gain.value : t.el.volume;
-    activeTrack = null;
-    fadeTimer = setInterval(() => {
+  function fadeTrack(t, to, ms, done) {
+    if (t.fx) { clearInterval(t.fx); t.fx = null; }
+    if (ms <= 0) { setVol(t, to); done && done(); return; }
+    const t0 = performance.now(), v0 = t.vol == null ? to : t.vol;
+    t.fx = setInterval(() => {
       const k = Math.min(1, (performance.now() - t0) / ms);
-      if (t.node) t.node.gain.value = v0 * (1 - k); else t.el.volume = v0 * (1 - k);
-      if (k >= 1) {
-        clearInterval(fadeTimer); fadeTimer = null;
-        try { t.el.pause(); t.el.currentTime = 0; } catch (e) {}
-        activeName = null;
-      }
+      setVol(t, v0 + (to - v0) * k);
+      if (k >= 1) { clearInterval(t.fx); t.fx = null; done && done(); }
     }, 40);
   }
+  function haltTrack(t) {
+    if (t.fx) { clearInterval(t.fx); t.fx = null; }
+    if (t.stopT) { clearTimeout(t.stopT); t.stopT = null; }
+    try { t.el.pause(); t.el.currentTime = 0; t.el.playbackRate = 1; } catch (e) {}
+  }
+  function stopMusicDead() { for (const k in tracks) haltTrack(tracks[k]); activeName = null; }
+  function fadeMusicOut(ms) {
+    for (const k in tracks) {
+      const t = tracks[k];
+      if (t.el.paused) continue;
+      fadeTrack(t, 0, ms, () => haltTrack(t));
+    }
+    activeName = null;
+  }
 
-  function playFile(name, loop = true, vol = 0.85, loopStart = 0) {
-    stopMusicDead();
+  function playFile(name, o = {}) {
+    const { loop = true, vol = BASE_VOL, loopStart = 0, rate = 1, fadeIn = 0, cross = 0, layer = false, cutAfter = 0 } = o;
+    if (!layer) {
+      for (const k in tracks) {
+        const t = tracks[k];
+        if (k === name || t.el.paused) continue;
+        if (cross > 0) fadeTrack(t, 0, cross, () => haltTrack(t)); else haltTrack(t);
+      }
+    }
     let t = tracks[name];
     if (!t) {
       const el = new Audio(`audio/${name}.mp3`);
       el.preload = 'auto';
-      el.loop = loop;
       let node = null;
       if (ACX) {
         try {
           const src = ACX.createMediaElementSource(el);
           node = ACX.createGain();
-          node.gain.value = vol;
           src.connect(node).connect(masterGain);
         } catch (e) {}
       }
-      t = tracks[name] = { el, node };
+      t = tracks[name] = { el, node, vol };
+      el.addEventListener('ended', () => {
+        if (t.loopStart && t.wantLoop) { try { el.currentTime = t.loopStart; el.play().catch(() => {}); } catch (e) {} }
+        if (t.onEnd) t.onEnd();
+      });
     }
+    haltTrack(t);
+    t.loopStart = loopStart; t.wantLoop = loop; t.base = vol; t.onEnd = null;
     t.el.loop = loop && !loopStart;
-    if (loop && loopStart && !t.wired) {
-      t.wired = true;
-      t.el.addEventListener('ended', () => { try { t.el.currentTime = loopStart; t.el.play().catch(() => {}); } catch (e) {} });
-    }
-    activeName = name;
-    if (t.node) t.node.gain.value = vol;
-    else t.el.volume = vol;
-    try { t.el.currentTime = 0; } catch (e) {}
-    activeTrack = t.el;
+    t.el.playbackRate = rate;
+    setVol(t, fadeIn ? 0 : vol);
+    if (fadeIn) fadeTrack(t, vol, fadeIn);
+    if (cutAfter) t.stopT = setTimeout(() => fadeTrack(t, 0, 500, () => haltTrack(t)), cutAfter * 1000);
+    if (!layer) activeName = name;
     t.el.play().catch(() => {});
+    return t;
+  }
+
+  const MUSIC = {
+    overture: { file: 'overture-misterioso', loop: true, loopStart: 3.6 },
+    organChord: { file: 'overture-misterioso', loop: false, cutAfter: 3.6 },
+    waltz: { file: 'waltz-prim', loop: true },
+    bach: { file: 'bach-agitato', loop: false },
+    danse: { file: 'danse-macabre', loop: true },
+    mountainKing: { file: 'mountain-king', loop: false },
+    musicBox: { file: 'music-box', loop: true },
+    misteriosoCard: { file: 'misterioso-card', loop: true },
+    finale: { file: 'waltz-finale', loop: false }
+  };
+  const ALIAS = {
+    waltzPrim: ['waltz'], waltzSoft: ['waltz', 'soft'], waltzLoud: ['waltz', 'loud'], waltzOff: ['waltz', 'off'],
+    waltzFinale: ['finale'], bellsA: ['bells', '1-6'], bellsB: ['bells', '7-11'], bell12: ['bell', 12],
+    brushChord: ['stroke'], bachAgitato: ['bach'], mountain: ['mountainKing']
+  };
+  const flagsOf = arg => { const f = {}; String(arg == null ? '' : arg).split(/[ ,+]/).forEach(s => { if (s) f[s] = true; }); return f; };
+  function playMusic(name, arg) {
+    const d = MUSIC[name], f = flagsOf(arg);
+    let vol = BASE_VOL;
+    if (f.soft) vol *= 0.55;
+    if (f.low) vol *= 0.5;
+    if (f.loud) vol = 0.95;
+    playFile(d.file, { loop: d.loop, loopStart: d.loopStart || 0, vol, rate: f.off ? 0.94 : 1, fadeIn: f.fade ? 1000 : 0, cross: f.cross ? 1000 : 0, cutAfter: d.cutAfter || 0 });
   }
 
   const mtof = m => 440 * Math.pow(2, (m - 69) / 12);
+  function noise(t, dur, vol, freq, type = 'lowpass', q = 0.7, bus = sfxGain) {
+    if (!ACX) return;
+    if (!noiseBuf) {
+      noiseBuf = ACX.createBuffer(1, ACX.sampleRate, ACX.sampleRate);
+      const d = noiseBuf.getChannelData(0);
+      for (let i = 0; i < d.length; i++) d[i] = Math.random() * 2 - 1;
+    }
+    const s = ACX.createBufferSource(), f = ACX.createBiquadFilter(), g = ACX.createGain();
+    s.buffer = noiseBuf; s.loop = true;
+    f.type = type; f.frequency.value = freq; f.Q.value = q;
+    g.gain.setValueAtTime(vol, t);
+    g.gain.exponentialRampToValueAtTime(0.0005, t + dur);
+    s.connect(f); f.connect(g); g.connect(bus);
+    s.start(t); s.stop(t + dur + 0.05);
+  }
+  function bell(n, t) {
+    const big = n === 12, f = big ? 294 : 587 * (1 + (n % 3) * 0.004);
+    osc('sine', f, t, big ? 2.6 : 1.3, big ? 0.16 : 0.1, sfxGain, 4200);
+    osc('triangle', f * 1.5, t, big ? 1.6 : 0.8, 0.045, sfxGain, 5000);
+    osc('sine', f * 2.01, t, 0.6, 0.04, sfxGain, 6000);
+    noise(t, 0.05, 0.05, 3000, 'highpass');
+  }
+  function bells(a, b, t, gap = 0.3) { for (let i = a; i <= b; i++) bell(i, t + (i - a) * gap); }
+  function orchHit(t, vol = 0.11) { [43, 55, 58, 62, 67, 74].forEach(m => osc('sawtooth', mtof(m), t, 0.55, vol, sfxGain, 2800)); }
 
-  function triggerAudio(name, arg) {
+  function triggerAudio(rawName, arg) {
     ensureAudio();
-    window.__MOVIE_STATE__.cuesPlayed.push({ cue: name, arg: arg ?? null, t: Math.round(performance.now()) });
+    window.__MOVIE_STATE__.cuesPlayed.push({ cue: rawName, arg: arg ?? null, t: Math.round(performance.now()) });
+    let name = rawName;
+    const al = ALIAS[name];
+    if (al) { name = al[0]; if (arg == null && al.length > 1) arg = al[1]; }
     const t = ACX ? ACX.currentTime : 0;
+    const num = Number.isFinite(Number(arg)) && arg !== null && arg !== '' && !Array.isArray(arg) ? Number(arg) : 0;
+    if (MUSIC[name]) {
+      if (name === 'overture' && ACX) [43, 55, 58, 62, 67].forEach(m => osc('sawtooth', mtof(m), t, 0.9, 0.08, sfxGain, 2200));
+      playMusic(name, arg);
+      return;
+    }
     switch (name) {
-      case 'silence':
-        if (activeName === 'fanfare-applause') {
-          fadeMusicOut(900);
-          const cr = $('stageCredits');
-          if (cr) setTimeout(() => { cr.hidden = false; }, 700);
-        } else stopMusicDead();
-        break;
-      case 'overture':
-        if (ACX) {
-          // Dramatic theatre-organ chord stab before overture mp3 kicks in
-          [43, 55, 58, 62, 67].forEach(m => osc('sawtooth', mtof(m), t, 0.9, 0.08, sfxGain, 2200));
-        }
-        playFile('overture-misterioso', true, 0.88, 3.6); // loops from 3.6s, past the organ chord
-        break;
-      case 'waltz':
-        playFile('waltz-prim', true, 0.88);
-        break;
-      case 'flingHit':
-        stopMusicDead();
-        if (ACX) {
-          [43, 55, 58, 62, 67, 74].forEach(m => osc('sawtooth', mtof(m), t, 0.6, 0.11, sfxGain, 2800));
-        }
-        break;
-      case 'bach':
-        playFile('bach-agitato', false, 0.88);
-        break;
-      case 'danse':
-        playFile('danse-macabre', true, 0.88);
-        break;
-      case 'ting':
-        if (ACX) {
-          const f = mtof(84 + (arg || 0) * 2);
-          osc('sine', f, t, 0.45, 0.25, sfxGain, 8000);
-          osc('triangle', f * 2, t, 0.25, 0.12, sfxGain, 8000);
-        }
-        break;
-      case 'slideWhistle':
-        if (ACX) {
-          const o = osc('sine', 1150, t, 0.75, 0.22, sfxGain, 6000);
-          if (o) o.frequency.exponentialRampToValueAtTime(210, t + 0.7);
-        }
-        break;
-      case 'mountainKing':
-        playFile('mountain-king', false, 0.88);
-        break;
-      case 'musicBox':
-        playFile('music-box', true, 0.88);
-        break;
-      case 'misteriosoCard':
-        playFile('misterioso-card', true, 0.88);
-        break;
-      case 'gong':
-        stopMusicDead();
-        if (ACX) {
-          [38, 45, 50, 57, 61, 66].forEach((m, i) => osc(i % 2 ? 'triangle' : 'sawtooth', mtof(m), t, 2.6, 0.09, sfxGain, 1400));
-        }
-        break;
-      case 'heartbeatTick':
-        stopMusicDead();
-        if (ACX) {
-          osc('sine', 58, t, 0.25, 0.4, sfxGain, 400);
-          osc('sine', 52, t + 0.18, 0.25, 0.3, sfxGain, 400);
-          osc('square', 920, t + 0.55, 0.05, 0.12, sfxGain, 2000);
-        }
-        break;
-      case 'longTick':
-        if (ACX) {
-          osc('square', 780, t, 0.06, 0.16, sfxGain, 1800);
-          osc('triangle', 390, t, 0.2, 0.14, sfxGain, 1200);
-        }
-        break;
-      case 'brushChord': {
-        stopMusicDead();
-        const chords = [[55, 58, 62], [60, 63, 67], [63, 67, 70], [62, 66, 69], [67, 71, 74, 79]];
-        const c = chords[(arg || 0) % chords.length];
-        if (ACX) {
-          c.forEach(m => osc('triangle', mtof(m), t, 0.75, 0.14, sfxGain, 3200));
-          // Script ink drip counterpoint
-          osc('sine', mtof(48 - (arg || 0)), t + 0.18, 0.18, 0.12, sfxGain, 1500);
-        }
+      case 'silence': case 'cut': stopMusicDead(); break;
+      case 'fadeOut': fadeMusicOut(typeof arg === 'number' ? arg : 1000); break;
+      case 'duck': { const m = activeName && tracks[activeName]; if (m) fadeTrack(m, (m.base || BASE_VOL) * 0.25, 400); break; }
+      case 'unduck': {
+        const m = activeName && tracks[activeName]; if (m) fadeTrack(m, m.base || BASE_VOL, 600);
+        const fa = tracks['fanfare-applause']; if (fa && !fa.el.paused) fadeTrack(fa, 0.3, 800);
         break;
       }
-      case 'bells12':
-        stopMusicDead();
-        bellsEndAt = performance.now() + 12 * 160 + 500;
-        if (ACX) {
-          for (let i = 0; i < 12; i++) {
-            const bt = t + i * 0.16;
-            osc('sine', 587, bt, 0.9, 0.11, sfxGain, 4200);
-            osc('triangle', 880, bt, 0.5, 0.05, sfxGain, 5000);
-          }
-        }
+      case 'credits': { const cr = $('stageCredits'); if (cr) cr.hidden = false; break; }
+      case 'creditsHide': { const cr = $('stageCredits'); if (cr) cr.hidden = true; break; }
+      case 'fanfare': {
+        const m = activeName && tracks[activeName];
+        const layer = !!(m && !m.el.paused);
+        if (layer) fadeTrack(m, (m.base || BASE_VOL) * 0.25, 400);
+        const fa = playFile('fanfare-applause', { loop: false, vol: 0.96, layer }); // file measures 0.7 LU quieter than the rest
+        fa.onEnd = () => { const mm = activeName && tracks[activeName]; if (mm && !mm.el.paused) fadeTrack(mm, mm.base || BASE_VOL, 800); };
         break;
-      case 'finale':
-        // twelve bells first (about 2.4s), then the waltz
-        stopMusicDead();
-        finaleTimer = setTimeout(() => { finaleTimer = null; playFile('waltz-finale', false, 0.88); }, Math.max(0, bellsEndAt - performance.now()));
-        break;
-      case 'fanfare':
-        {
-          const cr = $('stageCredits'); if (cr) cr.hidden = true;
-          playFile('fanfare-applause', false, 0.96); // file measures 0.7 LU quieter than the rest
-        }
-        break;
+      }
+      case 'flingHit': stopMusicDead(); if (ACX) orchHit(t, 0.11); break;
+      case 'hit': if (ACX) orchHit(t, 0.11); break;
+      case 'thud': if (ACX) {
+        const o = osc('sine', 120 - num * 6, t, 0.3, 0.45, sfxGain, 500);
+        if (o) o.frequency.exponentialRampToValueAtTime(48, t + 0.25);
+        noise(t, 0.08, 0.12, 700);
+      } break;
+      case 'gong': if (ACX) [38, 45, 50, 57, 61, 66].forEach((m, i) => osc(i % 2 ? 'triangle' : 'sawtooth', mtof(m), t, 2.6, 0.06, sfxGain, 1400)); break;
+      case 'ting': if (ACX) {
+        const f = mtof(84 + num * 2);
+        osc('sine', f, t, 0.45, 0.25, sfxGain, 8000);
+        osc('triangle', f * 2, t, 0.25, 0.12, sfxGain, 8000);
+      } break;
+      case 'doorSlam': if (ACX) {
+        noise(t, 0.18, 0.5, 900);
+        const o = osc('sine', 90, t, 0.4, 0.5, sfxGain, 400);
+        if (o) o.frequency.exponentialRampToValueAtTime(40, t + 0.3);
+        noise(t + 0.22, 0.12, 0.15, 700);
+      } break;
+      case 'pencil': if (ACX) for (let i = 0; i < 7; i++) noise(t + i * 0.16, 0.12, 0.07 + (i % 2) * 0.03, 3200 + i * 150, 'bandpass', 1.2); break;
+      case 'tick': if (ACX) osc('square', 900, t, 0.04, 0.1, sfxGain, 2000); break;
+      case 'longTick': if (ACX) {
+        osc('square', 780, t, 0.06, 0.16, sfxGain, 1800);
+        osc('triangle', 390, t, 0.2, 0.14, sfxGain, 1200);
+      } break;
+      case 'heartbeatTick': if (ACX) {
+        osc('sine', 58, t, 0.25, 0.4, sfxGain, 400);
+        osc('sine', 52, t + 0.18, 0.25, 0.3, sfxGain, 400);
+        osc('square', 920, t + 0.55, 0.05, 0.12, sfxGain, 2000);
+      } break;
+      case 'stroke': if (ACX) {
+        const i = num, f0 = 330 * Math.pow(1.12, i);
+        const o = osc('sine', f0, t, 0.6, 0.18, sfxGain, 5000);
+        if (o) o.frequency.exponentialRampToValueAtTime(f0 * 2, t + 0.5);
+        osc('triangle', f0 * 3, t + 0.05, 0.4, 0.05, sfxGain, 6000);
+        noise(t, 0.25, 0.04, 2500, 'bandpass', 0.9);
+      } break;
+      case 'bell': if (ACX) bell(num || 1, t); break;
+      case 'bells': if (ACX) {
+        let a = 1, b = 12;
+        if (Array.isArray(arg)) [a, b] = arg; else if (typeof arg === 'string' && arg.includes('-')) [a, b] = arg.split('-').map(Number);
+        else if (typeof arg === 'number') a = b = arg;
+        bells(a, b, t);
+      } break;
+      case 'bells12': if (ACX) bells(1, 12, t, 0.16); break;
+      case 'whoosh': if (ACX) noise(t, 0.45, 0.14, 1200, 'bandpass', 0.8); break;
+      case 'pop': if (ACX) { const o = osc('sine', 500, t, 0.12, 0.3, sfxGain, 3000); if (o) o.frequency.exponentialRampToValueAtTime(160, t + 0.1); } break;
+      case 'rustle': if (ACX) for (let i = 0; i < 4; i++) noise(t + i * 0.07, 0.08, 0.08, 4500, 'highpass'); break;
+      case 'munch': if (ACX) for (let i = 0; i < 3; i++) { noise(t + i * 0.22, 0.1, 0.2, 700); osc('sine', 150, t + i * 0.22, 0.08, 0.2, sfxGain, 600); } break;
+      case 'chime': if (ACX) [84, 88, 91, 96].forEach((m, i) => osc('sine', mtof(m), t + i * 0.09, 0.7, 0.12, sfxGain, 8000)); break;
+      case 'flap': if (ACX) for (let i = 0; i < 5; i++) noise(t + i * 0.08, 0.06, 0.1, 1800, 'bandpass', 1); break;
+      case 'boing': if (ACX) { const o = osc('triangle', 180, t, 0.5, 0.2, sfxGain, 2500); if (o) { o.frequency.exponentialRampToValueAtTime(420, t + 0.12); o.frequency.exponentialRampToValueAtTime(150, t + 0.45); } } break;
+      case 'slideWhistle': if (ACX) {
+        const o = osc('sine', 1150, t, 0.75, 0.22, sfxGain, 6000);
+        if (o) o.frequency.exponentialRampToValueAtTime(210, t + 0.7);
+      } break;
     }
   }
+  window.__MOVIE_STATE__.audio = triggerAudio; // test hook
 
   /* ================= PRE-PAINT PIPELINE ================= */
   const cache = new Map();
