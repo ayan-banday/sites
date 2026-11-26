@@ -577,7 +577,7 @@ const V5clock = { x: 836, y: 104, s: 0.4, h: 11.984 };
       const ux = dx / d, uy = dy / d, tl = ARM * HS + 70;
       const x0 = Math.min(h.x, h.x - ux * tl) - 90, x1 = Math.max(h.x, h.x - ux * tl) + 90;
       const y0 = Math.min(h.y, h.y - uy * tl) - 90, y1 = Math.max(h.y, h.y - uy * tl) + 90;
-      return { ...h, ux, uy, d, r: Math.atan2(dx, -dy) * 180 / Math.PI, box: V5.vb((x0 + x1) / 2, (y0 + y1) / 2, (x1 - x0) / 2, (y1 - y0) / 2) };
+      return { ...h, ux, uy, d, r: Math.atan2(dx, -dy) * 180 / Math.PI, box: (b => h.k === 'doc' ? { ...b, vx: -160, vw: b.vw + 160 } : h.k === 'art' ? { ...b, vw: 1120 - b.vx } : b)(V5.vb((x0 + x1) / 2, (y0 + y1) / 2, (x1 - x0) / 2, (y1 - y0) / 2)) };
     });
     const sprites = [
       { id: 'khushiA', ...V5.kb(400, 478, 0.82), z: 5, boil: 1.1, svg: () => khushi(400, 478, 0.82, 'wink/soft smirk brow:arch', { outfit: 'witch', arms: 'hip', pierce: ALLP }) },

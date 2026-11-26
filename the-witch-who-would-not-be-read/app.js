@@ -342,8 +342,8 @@
         const fa = tracks['fanfare-applause']; if (fa && !fa.el.paused) fadeTrack(fa, 0.3, 800);
         break;
       }
-      case 'credits': { const cr = $('stageCredits'); if (cr) cr.hidden = false; break; }
-      case 'creditsHide': { const cr = $('stageCredits'); if (cr) cr.hidden = true; break; }
+      case 'credits': { const cr = $('stageCredits'); if (cr) { cr.hidden = false; void cr.offsetWidth; cr.classList.add('on'); } break; }
+      case 'creditsHide': { const cr = $('stageCredits'); if (cr) { cr.classList.remove('on'); cr.hidden = true; } break; }
       case 'fanfare': {
         const m = activeName && tracks[activeName];
         const layer = !!(m && !m.el.paused);

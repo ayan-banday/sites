@@ -222,8 +222,8 @@ const finClose = ['scriptCU', 'mono', 'cuCard2', 'cuTitle', 'cuScrap', 'cuPlayed
       ctx.audio('fadeOut', 9000);
       ctx.showIris(480, 250, 620);
       ctx.tween(4500, p => ctx.showIris(480, 250, 620 - 450 * ctx.ease(p)));
+      ctx.audio('credits'); // fades in 4s after the last line lands (CSS delay)
       await ctx.wait(4700);
-      ctx.audio('credits');
       ctx.say("Nobody else could ever play you.", 'press space to bow again');
     },
     subPresses: [
