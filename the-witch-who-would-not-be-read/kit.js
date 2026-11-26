@@ -54,7 +54,7 @@ const MORE_PATTERNS=
 const OL=`stroke="${INK}" stroke-width="2.8" stroke-linejoin="round" stroke-linecap="round"`;
 const thick=(d,w,col)=>`<path d="${d}" fill="none" stroke="${INK}" stroke-width="${w+5}" stroke-linecap="round" stroke-linejoin="round" filter="url(#wob)"/><path d="${d}" fill="none" stroke="${col}" stroke-width="${w}" stroke-linecap="round" stroke-linejoin="round" filter="url(#wob)"/>`;
 
-/* ================= the fool (never named) ================= */
+/* ================= Ayan (the author; sprite ids still say fool) ================= */
 function buildChars(){
   R=rng(7);
   let legsN=thick('M-12,-172 C-16,-130 -24,-110 -20,-90 C-16,-60 -22,-34 -22,-14',13,VIOLET)+thick('M12,-172 C16,-130 22,-112 18,-90 C14,-60 20,-34 20,-14',13,VIOLET);

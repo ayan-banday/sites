@@ -1,5 +1,6 @@
 /* The Witch Who Would Not Be Read — engine, 12 fps stop-motion clock, sound mixer, phone teaser & midnight lock. */
 (() => {
+  assembleShots();
   const $ = id => document.getElementById(id);
   const Q = new URLSearchParams(location.search);
   const OPENS = Date.UTC(2026, 10, 30, 18, 30, 0); // 2026-12-01 00:00 IST
