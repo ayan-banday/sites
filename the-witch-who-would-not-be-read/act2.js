@@ -101,7 +101,7 @@ const a2pile = () => {
       // P19: the Script picks itself up and prints again
       async function (ctx) {
         ctx.setClockTime(a2h(19));
-        ctx.say("The Script picked itself up and kept printing.", 'press space to continue');
+        ctx.say("She wasn't swapping parts. She was breaking the script.", 'press space to continue');
         ctx.audio('waltz');
         ctx.tween(300, p => ctx.pose('villainShock', { dy: a2px(-16) * Math.sin(p * Math.PI) }));
         await ctx.wait(320);

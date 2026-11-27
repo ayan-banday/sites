@@ -544,7 +544,7 @@ const V5clock = { x: 836, y: 104, s: 0.4, h: 11.984 };
       },
       async function (ctx) {
         V5.tick(ctx);
-        ctx.say('She turned it round. No label. Just her.', V5.HINT);
+        ctx.say('She turned it round. No label. Just her, so far.', V5.HINT);
         ctx.show('cardFinal'); ctx.pose('cardFinal', { sx: 0.001, op: 1 });
         ctx.tween(450, p => {
           const e = ctx.ease(p);
@@ -635,7 +635,7 @@ const V5clock = { x: 836, y: 104, s: 0.4, h: 11.984 };
         },
         async function (ctx) {
           V5.tick(ctx);
-          ctx.say('So she let them go.', 'press space for midnight');
+          ctx.say('She could wear any word, any day. She would never be only one.', 'press space for midnight');
           ctx.hide('khushiA'); ctx.show('khushiB');
           ctx.pose('khushiB', { op: 1 });
           ctx.tween(2200, p => {

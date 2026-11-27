@@ -81,7 +81,7 @@ const finClose = ['scriptCU', 'mono', 'cuCard2', 'cuTitle', 'cuScrap', 'cuPlayed
       },
       async function (ctx) { // P81, the twelfth bell, hard cut to the close-up
         const k = finK();
-        ctx.say("The stamp had nowhere to land. The card was already full.", '');
+        ctx.say("The stamp had nowhere to land. She wasn't finished, and a stamp needs a finished thing.", '');
         ctx.audio('silence');
         ctx.audio('bell12');
         ['khushiW', 'cardW', 'scriptW', 'stampW'].forEach(i => ctx.hide(i));
@@ -103,7 +103,7 @@ const finClose = ['scriptCU', 'mono', 'cuCard2', 'cuTitle', 'cuScrap', 'cuPlayed
           ctx.pose('cuBonk', { op: 1 - p });
         });
         await ctx.wait(1500);
-        ctx.say("The stamp had nowhere to land. The card was already full.", 'press space to continue');
+        ctx.say("The stamp had nowhere to land. She wasn't finished, and a stamp needs a finished thing.", 'press space to continue');
       }
     ]
   },
@@ -215,7 +215,7 @@ const finClose = ['scriptCU', 'mono', 'cuCard2', 'cuTitle', 'cuScrap', 'cuPlayed
       ctx.say("Happy birthday, Khushi.", 'press space to continue');
     },
     async irisOut(ctx) { // P85
-      ctx.say("Nobody else could ever play you.", '');
+      ctx.say("Nobody else could ever play you. Keep adding. Keep changing.", '');
       finWide.forEach(i => ctx.hide(i));
       ctx.pose('cuCardFin', { op: 1 });
       const clk = finEl('clockLayer'); if (clk) clk.hidden = true;
@@ -224,7 +224,7 @@ const finClose = ['scriptCU', 'mono', 'cuCard2', 'cuTitle', 'cuScrap', 'cuPlayed
       ctx.tween(4500, p => ctx.showIris(480, 250, 620 - 450 * ctx.ease(p)));
       ctx.audio('credits'); // fades in 4s after the last line lands (CSS delay)
       await ctx.wait(4700);
-      ctx.say("Nobody else could ever play you.", 'press space to bow again');
+      ctx.say("Nobody else could ever play you. Keep adding. Keep changing.", 'press space to bow again');
     },
     subPresses: [
       function (ctx) { return this.bowWide(ctx); },

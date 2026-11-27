@@ -59,7 +59,8 @@
 
   /* ================= MIDNIGHT LOCK ================= */
   function runLock() {
-    document.documentElement.classList.add('wide');
+    if (!PHONE) document.documentElement.classList.add('wide');
+    else { document.documentElement.classList.add('phone'); $('lsub').textContent = 'when it opens, turn your phone sideways and turn the sound on'; }
     const el = $('lock');
     el.hidden = false;
     const paintLockSky = () => {
@@ -79,6 +80,7 @@
         if (el.hidden) return;
         clearInterval(iv);
         el.hidden = true;
+        document.documentElement.classList.remove('phone');
         openMovie();
         return;
       }
@@ -711,11 +713,7 @@
     }
   }
 
-  if (PHONE && !PREVIEW && nowMs() < OPENS) {
-    runPhone();
-    const pv = setInterval(() => { if (nowMs() >= OPENS) { clearInterval(pv); location.reload(); } }, 1000);
-  }
-  else if (!PREVIEW && nowMs() < OPENS) runLock();
+  if (!PREVIEW && nowMs() < OPENS) runLock();
   else openMovie().then(() => {
     // Test jump (?preview&shot=N): the next press mounts shot N directly.
     const N = parseInt(Q.get('shot') || '0', 10);

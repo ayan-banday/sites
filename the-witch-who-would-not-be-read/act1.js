@@ -89,7 +89,7 @@ const a1_sag = (ctx, id, dy, sy, dur = 380) => ctx.tween(dur, p => { const e = c
         ctx.pose('pile', { dy: 40, op: 0 });
         ctx.tween(380, p => ctx.pose('pile', { dy: 40 * (1 - ctx.ease(p)), op: p }));
         await ctx.wait(560);
-        ctx.say('It writes parts for people. It already had one for her.', a1_hint);
+        ctx.say('It writes a part for everyone: the one most people like best. It already had one for her.', a1_hint);
       }
     ]
   },

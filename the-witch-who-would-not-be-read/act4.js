@@ -93,7 +93,7 @@ const a4CardText = (lines, y0) => `<g transform="translate(500 285) scale(1.3)">
   {
     n: 17,
     title: 'The Script Cannot Open the Door',
-    words: "The Script grabbed the card. It wanted to write his love story too.",
+    words: "The Script grabbed the card. It writes everyone's part, so it wanted his love story too.",
     clock: { x: 150, y: 120, s: 0.46, h: a4h(45) },
     bg: () => bg('screentone', W, H, 117, GP.night, { fx: 480, fy: 300, spot: '#3b2a55' }) + floor(490),
     sprites: [
