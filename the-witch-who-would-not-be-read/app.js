@@ -60,7 +60,7 @@
   /* ================= MIDNIGHT LOCK ================= */
   function runLock() {
     if (!PHONE) document.documentElement.classList.add('wide');
-    else { document.documentElement.classList.add('phone'); $('lsub').textContent = 'when it opens, turn your phone sideways and turn the sound on'; }
+    else { document.documentElement.classList.add('phone'); $('lsub').textContent = 'Watch this on your laptop'; $('lsub').classList.add('big'); }
     const el = $('lock');
     el.hidden = false;
     const paintLockSky = () => {
@@ -76,6 +76,12 @@
     preloadTheatre();
     const tick = () => {
       const left = OPENS - nowMs();
+      if (left <= 0 && PHONE) { // phones never play it: the clock hides and the laptop note stays
+        clearInterval(iv);
+        document.querySelector('#lock .clock').hidden = true;
+        document.querySelector('#lock .opens').textContent = 'the curtain is up';
+        return;
+      }
       if (left <= 0) {
         if (el.hidden) return;
         clearInterval(iv);
@@ -417,6 +423,7 @@
         bells(a, b, t);
       } break;
       case 'bells12': if (ACX) bells(1, 12, t, 0.16); break;
+      case 'rip': if (ACX) { for (let i = 0; i < 12; i++) noise(t + i * 0.03, 0.1, 0.13, 1200 + ((i * 937) % 3200), 'bandpass', 0.9); noise(t, 0.35, 0.1, 500, 'lowpass'); orchHit(t + 0.02, 0.07); } break;
       case 'whoosh': if (ACX) noise(t, 0.45, 0.14, 1200, 'bandpass', 0.8); break;
       case 'pop': if (ACX) { const o = osc('sine', 500, t, 0.12, 0.3, sfxGain, 3000); if (o) o.frequency.exponentialRampToValueAtTime(160, t + 0.1); } break;
       case 'rustle': if (ACX) for (let i = 0; i < 4; i++) noise(t + i * 0.07, 0.08, 0.08, 4500, 'highpass'); break;
@@ -713,7 +720,7 @@
     }
   }
 
-  if (!PREVIEW && nowMs() < OPENS) runLock();
+  if (!PREVIEW && (PHONE || nowMs() < OPENS)) runLock();
   else openMovie().then(() => {
     // Test jump (?preview&shot=N): the next press mounts shot N directly.
     const N = parseInt(Q.get('shot') || '0', 10);
