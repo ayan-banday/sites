@@ -4,7 +4,7 @@ const $ = s => document.querySelector(s);
 const DEBUG = /[?&]debug/.test(location.search);
 const sceneEl = $("#scene"), partsEl = $("#parts"), fxEl = $("#fx"), capEl = $("#cap"), panelEl = $("#panel"), hintEl = $("#hint");
 const LEVELS = [2,2,3,1,1,2,2,3,2,3,5,3];           /* music level per shot (music-plan.md, "The dynamic curve") */
-let SILENT = false, BREATH = false, curMood = "none", curScene = "", shotNo = 0, sfxNow = [];
+let actLeft = 0, SILENT = false, BREATH = false, curMood = "none", curScene = "", shotNo = 0, sfxNow = [];
 window.__log = []; window.__missing = [];
 const shown = {};                                      /* id -> {el, name, opts, t} */
 
@@ -42,7 +42,9 @@ function makeC(){
       r.el.innerHTML = renderInner(r);
     },
     say(who, text){ capEl.innerHTML = `<span id="who">${who}</span>${text}`; capEl.classList.remove("blank"); },
-    panel(text){ panelEl.textContent = text; panelEl.classList.remove("blank"); },
+    panel(text){ panelEl.className = ""; panelEl.textContent = text; panelEl.classList.remove("blank"); },
+    /* act title card: an inscription at the top of the miniature, kept for 3 presses */
+    act(no, title, sub){ panelEl.className = "act"; panelEl.innerHTML = `<span class="actno">Act ${no}</span>${title}<small>${sub}</small>`; actLeft = 3; },
     clear(){ capEl.classList.add("blank"); panelEl.classList.add("blank"); },
     mood(name){ curMood = name; if(!SILENT) Sound.cue(name); },
     silence(){ curMood = "silence"; if(!SILENT) Sound.cue("silence"); },
@@ -56,6 +58,7 @@ let idx = 0, last = 0;
 function doPress(n, silent){
   const pr = PRESSES[n]; if(!pr) return;
   SILENT = !!silent; BREATH = !!pr.breath; sfxNow = []; shotNo = pr.shot;
+  if(actLeft > 0 && --actLeft === 0) panelEl.classList.add("blank");
   const c = makeC(); capEl.classList.add("blank");   /* the caption clears on every press unless the press sets its own */
   pr.run(c);
   if(!silent){

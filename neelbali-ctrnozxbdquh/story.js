@@ -9,11 +9,11 @@ const STORY = [
     { p: 2, breath: true,  run: (c) => { c.show("title", "titleCard", { x: 800, y: 805, fade: true }); } },
   ]},
   { shot: 2, presses: [
-    { p: 3, breath: false, run: (c) => { c.scene("hall"); c.mood("bombay"); c.show("gate", "hallGate", { x: 330, y: 740, s: 0.5, state: "open" }); c.show("neel", "throneNeel", {}); c.show("vis", "visitors", { x: 120, y: 830, s: 1, n: 1 }); c.move("vis", { x: 250 }, 1400); c.sfx("chime"); } },
-    { p: 4, breath: false, run: (c) => { c.set("neel", { nod: 1 }); c.set("vis", { n: 2 }); c.sfx("nod-thump"); } },
-    { p: 5, breath: false, run: (c) => { c.set("neel", { nod: 2 }); c.set("vis", { n: 3 }); c.sfx("nod-thump"); } },
-    { p: 6, breath: false, run: (c) => { c.set("neel", { nod: 3 }); c.set("vis", { n: 4 }); c.sfx("nod-thump"); } },
-    { p: 7, breath: false, run: (c) => { c.set("neel", { nod: 4 }); c.sfx("nod-thump"); } },
+    { p: 3, breath: false, run: (c) => { c.scene("hall"); c.mood("bombay"); c.show("gate", "hallGate", { x: 330, y: 740, s: 0.5, state: "open" }); c.show("neel", "throneNeel", {}); c.show("vis", "visitors", { x: 120, y: 830, s: 1, n: 1 }); c.move("vis", { x: 250 }, 1400); c.sfx("chime"); c.act("I", "Everyone In", "Neel never says no."); c.say("Visitor", "A small favour, Jahan Pana?"); } },
+    { p: 4, breath: false, run: (c) => { c.set("neel", { nod: 1 }); c.set("vis", { n: 2 }); c.sfx("nod-thump"); c.say("Visitor", "Just five minutes?"); } },
+    { p: 5, breath: false, run: (c) => { c.set("neel", { nod: 2 }); c.set("vis", { n: 3 }); c.sfx("nod-thump"); c.say("Visitor", "And a loan, perhaps?"); } },
+    { p: 6, breath: false, run: (c) => { c.set("neel", { nod: 3 }); c.set("vis", { n: 4 }); c.sfx("nod-thump"); c.say("Visitor", "Your couch for the night?"); } },
+    { p: 7, breath: false, run: (c) => { c.set("neel", { nod: 4 }); c.sfx("nod-thump"); c.say("Visitor", "Your watch, if it is no trouble?"); } },
     { p: 8, breath: true,  run: (c) => { c.set("neel", { nod: 0, brow: true }); c.sfx("watch-tick"); } },
   ]},
 ];
