@@ -14,14 +14,16 @@ STORY.push(
   { shot: 5, level: 1, grade: "", presses: [
     { p: 16, breath: false, run: (c) => { c.scene("hall"); c.silence(); c.show("gate", "hallGate", { x: 330, y: 740, s: 0.5, state: "open" }); c.show("neel", "walkingNeel", { x: 800, y: 830, state: "stand", moustache: "flat", flip: true }); c.sfx("nod-thump"); c.act("II", "The First No", "It costs more than it should."); c.say("Neel", "No."); } },
     { p: 17, breath: false, run: (c) => { c.set("neel", { state: "walk1" }); c.show("wind", "whirlwind", { x: 1000, y: 820, s: 1, state: "walk", flip: true }); c.move("neel", { x: 400 }, 2400); c.move("wind", { x: 560 }, 2400); c.sfx("footsteps"); c.narr("It was the first time he had ever said it."); } },
-    { p: 18, breath: true, run: (c) => { c.hide("wind"); c.set("gate", { state: "shut" }); c.show("neel", "walkingNeel", { x: 560, y: 830, state: "wave" }); c.show("streaks", "sunStreaks", {}); c.sfx("latch"); c.tally("Guests let in", "0"); } },
+    { p: 18, breath: false, run: (c) => { c.scene("hall"); c.show("gate", "hallGate", { x: 330, y: 740, s: 0.5, state: "shut" }); c.sfx("latch"); c.narr("One small click."); } },
+    { p: 19, breath: true, run: (c) => { c.hide("wind"); c.set("gate", { state: "shut" }); c.show("neel", "walkingNeel", { x: 560, y: 830, state: "wave" }); c.show("streaks", "sunStreaks", {});  c.tally("Guests let in", "0"); } },
   ]},
   { shot: 6, level: 1, grade: "lonely", presses: [
-    { p: 19, breath: false, run: (c) => { c.scene("emptyHall"); c.mood("ossuary"); c.show("neel", "throneNeel", { moustache: "flat" }); c.sfx("watch-tick"); c.narr("Afterwards, the court was very quiet."); } },
-    { p: 20, breath: false, run: (c) => { c.set("neel", { glint: 1 }); c.sfx("watch-tick"); c.say("Neel", "Hello?"); } },
-    { p: 21, breath: false, run: (c) => { c.set("neel", { glint: 0 }); c.show("sil", "passingSilhouette", { x: 1550, y: 830, state: "walk" }); c.move("sil", { x: 1250 }, 1600); c.sfx("footsteps"); c.narr("Someone walked past. Nobody came in."); } },
-    { p: 22, breath: false, run: (c) => { c.set("sil", { state: "peer" }); c.sfx("watch-tick"); c.panel("A quiet court is also a lonely one."); } },
-    { p: 23, breath: false, run: (c) => { c.sfx("watch-tick"); c.narr("He had let in everybody. Not one of them was a friend."); c.tally("Friends", "0"); } },
-    { p: 24, breath: true, run: (c) => { c.silence(); c.sfx("watch-tick"); } },
+    { p: 20, breath: false, run: (c) => { c.scene("emptyHall"); c.mood("ossuary"); c.show("neel", "throneNeel", { moustache: "flat" }); c.sfx("watch-tick"); c.narr("Afterwards, the court was very quiet."); } },
+    { p: 21, breath: false, run: (c) => { c.set("neel", { glint: 1 }); c.sfx("watch-tick"); c.say("Neel", "Hello?"); } },
+    { p: 22, breath: false, run: (c) => { c.sfx("watch-tick"); c.narr("The watch was the only thing still talking."); } },
+    { p: 23, breath: false, run: (c) => { c.set("neel", { glint: 0 }); c.show("sil", "passingSilhouette", { x: 1550, y: 830, state: "walk" }); c.move("sil", { x: 1250 }, 1600); c.sfx("footsteps"); c.narr("Someone walked past. Nobody came in."); } },
+    { p: 24, breath: false, run: (c) => { c.set("sil", { state: "peer" }); c.sfx("watch-tick"); c.panel("A quiet court is also a lonely one."); } },
+    { p: 25, breath: false, run: (c) => { c.sfx("watch-tick"); c.narr("He had let in everybody. Not one of them was a friend."); c.tally("Friends", "0"); } },
+    { p: 26, breath: true, run: (c) => { c.silence(); c.sfx("watch-tick"); } },
   ]}
 );
