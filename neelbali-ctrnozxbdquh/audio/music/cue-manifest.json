@@ -1,0 +1,161 @@
+﻿{
+    "title":  "The Witch Who Would Not Be Read — Pit-Band Audio Cues",
+    "target_lufs":  -16.0,
+    "target_true_peak_dbtp":  -1.5,
+    "format":  "MP3 44.1kHz stereo 112kbps",
+    "cues":  [
+                 {
+                     "file":  "bach-agitato.mp3",
+                     "shot":  "4",
+                     "description":  "Opening run, dramatic organ blasts, and agitato passage from J.S. Bach\u0027s Toccata and Fugue in D minor, BWV 565 (Tamburini pipe organ)",
+                     "loop":  false,
+                     "duration_sec":  34.74,
+                     "measured_lufs":  -16.42,
+                     "true_peak_dbtp":  -2.93,
+                     "lra_lu":  9.6,
+                     "size_bytes":  487175,
+                     "source":  "Wikimedia Commons File:Toccata_et_Fugue_BWV565.ogg (Tamburini organ performed by Ashtar Moira)",
+                     "license":  "Public domain (PD-old / personal recording released to public domain)",
+                     "attribution":  "J. S. Bach, Toccata and Fugue in D minor, BWV 565, performed on Tamburini organ by Ashtar Moira (Wikimedia Commons, Public Domain)"
+                 },
+                 {
+                     "file":  "mountain-king.mp3",
+                     "shot":  "6",
+                     "description":  "Edvard Grieg\u0027s In the Hall of the Mountain King, starting sneaky and accelerating into panic frenzy",
+                     "loop":  false,
+                     "duration_sec":  33.5,
+                     "measured_lufs":  -16.4,
+                     "true_peak_dbtp":  -2.99,
+                     "lra_lu":  4.7,
+                     "size_bytes":  469987,
+                     "source":  "Wikimedia Commons / Musopen File:Musopen_-_In_the_Hall_Of_The_Mountain_King.ogg (Musopen Symphony Orchestra)",
+                     "license":  "Public domain (Musopen)",
+                     "attribution":  "Edvard Grieg, In the Hall of the Mountain King, performed by Musopen Symphony Orchestra (Musopen / Wikimedia Commons, Public Domain)"
+                 },
+                 {
+                     "file":  "waltz-finale.mp3",
+                     "shot":  "11",
+                     "description":  "Grand sweeping major-key full pit-orchestra/organ finale transformation of the Act I prim waltz melody",
+                     "loop":  false,
+                     "duration_sec":  24.07,
+                     "measured_lufs":  -16.45,
+                     "true_peak_dbtp":  -3.04,
+                     "lra_lu":  6.8,
+                     "size_bytes":  337964,
+                     "source":  "Synthesized pit-orchestra \u0026 theatre-organ major-key finale of Act I waltz theme",
+                     "license":  "Public domain / original project audio",
+                     "attribution":  null
+                 },
+                 {
+                     "file":  "fanfare-applause.mp3",
+                     "shot":  "12",
+                     "description":  "Bright celebratory theatre brass/organ fanfare + crisp paper-theatre applause",
+                     "loop":  false,
+                     "duration_sec":  17.5,
+                     "measured_lufs":  -17.12,
+                     "true_peak_dbtp":  -1.79,
+                     "lra_lu":  9.2,
+                     "size_bytes":  245804,
+                     "source":  "Original synthesized theatre fanfare and paper-theatre applause",
+                     "license":  "Public domain / original project audio",
+                     "attribution":  null
+                 },
+                 {
+                     "file":  "heart-of-nowhere-healer.mp3",
+                     "shot":  "P61-P65 (shots 22-23)",
+                     "description":  "Soft warm piano/ambient, the HEALER hand",
+                     "loop":  false,
+                     "duration_sec":  55.0,
+                     "size_bytes":  881423,
+                     "source":  "https://incompetech.com/music/royalty-free/mp3-royaltyfree/Heart%20of%20Nowhere.mp3",
+                     "license":  "CC BY 4.0",
+                     "attribution":  "\"Heart of Nowhere\" Kevin MacLeod (incompetech.com). Licensed under Creative Commons: By Attribution 4.0 License (http://creativecommons.org/licenses/by/4.0/)."
+                 },
+                 {
+                     "file":  "healing-closing.mp3",
+                     "shot":  "P84-P85 (shot 29)",
+                     "description":  "Gentle piano resolve for \u0027Happy birthday, Khushi\u0027 and the last line",
+                     "loop":  false,
+                     "duration_sec":  50.0,
+                     "size_bytes":  801696,
+                     "source":  "https://incompetech.com/music/royalty-free/mp3-royaltyfree/Healing.mp3",
+                     "license":  "CC BY 4.0",
+                     "attribution":  "\"Healing\" Kevin MacLeod (incompetech.com). Licensed under Creative Commons: By Attribution 4.0 License (http://creativecommons.org/licenses/by/4.0/)."
+                 },
+                 {
+                     "file":  "ossuary-air-suspended.mp3",
+                     "shot":  "P48-P50 (shot 18)",
+                     "description":  "Quiet airy suspended drone under the 11:59 low point; mixed deliberately quiet (-19 LUFS) as a bed",
+                     "loop":  false,
+                     "duration_sec":  60.0,
+                     "size_bytes":  961453,
+                     "source":  "https://incompetech.com/music/royalty-free/mp3-royaltyfree/Ossuary%206%20-%20Air.mp3",
+                     "license":  "CC BY 4.0",
+                     "attribution":  "\"Ossuary 6 - Air\" Kevin MacLeod (incompetech.com). Licensed under Creative Commons: By Attribution 4.0 License (http://creativecommons.org/licenses/by/4.0/)."
+                 },
+                 {
+                     "file":  "sneaky-snitch.mp3",
+                     "shot":  "P57-P60 (shot 21)",
+                     "description":  "Sly pizzicato strut for the BITCH hand",
+                     "loop":  false,
+                     "duration_sec":  40.0,
+                     "size_bytes":  641607,
+                     "source":  "https://incompetech.com/music/royalty-free/mp3-royaltyfree/Sneaky%20Snitch.mp3",
+                     "license":  "CC BY 4.0",
+                     "attribution":  "\"Sneaky Snitch\" Kevin MacLeod (incompetech.com). Licensed under Creative Commons: By Attribution 4.0 License (http://creativecommons.org/licenses/by/4.0/)."
+                 },
+                 {
+                     "file":  "dreamy-tarot.mp3",
+                     "shot":  "P42-P44 (shot 16)",
+                     "description":  "Dreamy mystical harp/pad for the tarot reading",
+                     "loop":  false,
+                     "duration_sec":  50.0,
+                     "size_bytes":  922499,
+                     "source":  "https://incompetech.com/music/royalty-free/mp3-royaltyfree/Dreamy%20Flashback.mp3",
+                     "license":  "CC BY 4.0",
+                     "attribution":  "\"Dreamy Flashback\" Kevin MacLeod (incompetech.com). Licensed under Creative Commons: By Attribution 4.0 License (http://creativecommons.org/licenses/by/4.0/)."
+                 },
+                 {
+                     "file":  "carefree-artist.mp3",
+                     "shot":  "P71-P74 (shot 26)",
+                     "description":  "Playful bouncy cue for the ARTIST hand and the painting",
+                     "loop":  false,
+                     "duration_sec":  45.0,
+                     "size_bytes":  721506,
+                     "source":  "https://incompetech.com/music/royalty-free/mp3-royaltyfree/Carefree.mp3",
+                     "license":  "CC BY 4.0",
+                     "attribution":  "\"Carefree\" Kevin MacLeod (incompetech.com). Licensed under Creative Commons: By Attribution 4.0 License (http://creativecommons.org/licenses/by/4.0/)."
+                 },
+                 {
+                     "file":  "merry-go-confetti.mp3",
+                     "shot":  "P82-P83 (shot 29)",
+                     "description":  "Carousel celebration for the bow, banana and confetti",
+                     "loop":  false,
+                     "duration_sec":  45.0,
+                     "size_bytes":  721457,
+                     "source":  "https://incompetech.com/music/royalty-free/mp3-royaltyfree/Merry%20Go.mp3",
+                     "license":  "CC BY 4.0",
+                     "attribution":  "\"Merry Go\" Kevin MacLeod (incompetech.com). Licensed under Creative Commons: By Attribution 4.0 License (http://creativecommons.org/licenses/by/4.0/)."
+                 },
+                 {
+                     "file":  "raga-kaushi-dawn.mp3",
+                     "shot":  "",
+                     "description":  "Raga Kaushi Kanra by Ranjit Makkuni, first 60 s, faded in 0.3 s and out 2 s",
+                     "loop":  false,
+                     "duration_sec":  60,
+                     "license":  "CC BY-SA 3.0 (also GFDL 1.2+ per the Commons page)",
+                     "attribution":  "Music: Raga Kaushi Kanra by Ranjit Makkuni (CC BY-SA 3.0)",
+                     "source":  "https://commons.wikimedia.org/wiki/File:RanjitMakkuniRagaKaushiKanra.ogg"
+                 },
+                 {
+                     "file":  "bombay-summer-court.mp3",
+                     "shot":  "",
+                     "description":  "Bombay Summer by Shane Ivers, first 33 s, faded in 0.3 s and out 1.5 s, loops",
+                     "loop":  true,
+                     "duration_sec":  33,
+                     "license":  "CC BY 4.0",
+                     "attribution":  "Music: Bombay Summer by Shane Ivers, https://www.silvermansound.com (CC BY 4.0)",
+                     "source":  "https://www.silvermansound.com/free-music/bombay-summer"
+                 }
+             ]
+}
