@@ -10,10 +10,10 @@ const STORY = [
   ]},
   { shot: 2, level: 2, grade: "", presses: [
     { p: 3, breath: false, run: (c) => { c.scene("hall"); c.mood("bombay"); c.show("gate", "hallGate", { x: 330, y: 740, s: 0.5, state: "open" }); c.show("neel", "throneNeel", {}); c.show("vis", "visitors", { x: 120, y: 830, s: 1, n: 1 }); c.move("vis", { x: 250 }, 1400); c.sfx("chime"); c.act("I", "Everyone In", "Neel never says no."); c.narr("They called him Jahan Pana. He let everyone in."); c.tally("Guests let in", "1"); } },
-    { p: 4, breath: false, run: (c) => { c.set("neel", { nod: 1 }); c.set("vis", { n: 2 }); c.sfx("nod-thump"); c.show("taker", "takerPoses", { x: 1180, y: 830, s: 0.55, state: "ask" }); c.sfx("jazz-sting"); c.say("Smooth Visitor", "A small favour, Jahan Pana?"); c.tally("Guests let in", "2"); } },
-    { p: 5, breath: false, run: (c) => { c.set("neel", { nod: 2 }); c.set("vis", { n: 3 }); c.sfx("nod-thump"); c.move("taker", { x: 1130 }, 600); c.say("Smooth Visitor", "Just five minutes?"); c.tally("Guests let in", "3"); } },
-    { p: 6, breath: false, run: (c) => { c.set("neel", { nod: 3 }); c.set("vis", { n: 4 }); c.sfx("nod-thump"); c.move("taker", { x: 1085 }, 600); c.say("Smooth Visitor", "A loan, perhaps?"); c.tally("Guests let in", "4"); } },
-    { p: 7, breath: false, run: (c) => { c.set("neel", { nod: 4 }); c.sfx("nod-thump"); c.set("taker", { state: "grab" }); c.move("taker", { x: 1040 }, 500); c.say("Smooth Visitor", "Your watch, if it is no trouble?"); c.tally("Guests let in", "5"); } },
+    { p: 4, breath: false, run: (c) => { c.set("neel", { nod: 1 }); c.set("vis", { n: 2 }); c.sfx("nod-thump"); c.show("taker", "takerPoses", { x: 1380, y: 835, s: 0.78, state: "ask" }); c.sfx("jazz-sting"); c.say("Smooth Visitor", "A small favour, Jahan Pana?"); c.tally("Guests let in", "2"); } },
+    { p: 5, breath: false, run: (c) => { c.set("neel", { nod: 2 }); c.set("vis", { n: 3 }); c.sfx("nod-thump"); c.move("taker", { x: 1330 }, 600); c.say("Smooth Visitor", "Just five minutes?"); c.tally("Guests let in", "3"); } },
+    { p: 6, breath: false, run: (c) => { c.set("neel", { nod: 3 }); c.set("vis", { n: 4 }); c.sfx("nod-thump"); c.move("taker", { x: 1270 }, 600); c.say("Smooth Visitor", "A loan, perhaps?"); c.tally("Guests let in", "4"); } },
+    { p: 7, breath: false, run: (c) => { c.set("neel", { nod: 4 }); c.sfx("nod-thump"); c.set("taker", { state: "grab" }); c.move("taker", { x: 1190 }, 500); c.say("Smooth Visitor", "Your watch, if it is no trouble?"); c.tally("Guests let in", "5"); } },
     { p: 8, breath: true, run: (c) => { c.set("neel", { nod: 0, brow: true }); c.sfx("watch-tick"); } },
   ]},
 ];

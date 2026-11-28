@@ -5,7 +5,7 @@ function moustache(state, hair){
   const D = {
     normal: "M-58 14C-40 6 -20 8 6 24C-18 32 -40 28 -58 14Z",
     droop1: "M-58 34C-52 14 -20 6 6 24C-16 34 -40 44 -58 34Z",
-    droop2: "M-50 90C-62 52 -30 8 6 24C-8 38 -26 52 -34 68C-38 78 -42 86 -50 90Z",
+    droop2: "M-56 24C-36 10 -8 12 10 24C20 30 26 38 24 46C16 44 8 38 -2 36C-14 34 -28 40 -36 48C-44 54 -54 52 -56 44C-58 36 -58 30 -56 24Z",
     /* flat: a heavy walrus moustache, sagging at both ends and resting on the cheek; lowest point stays above the chin */
     flat: "M-52 26C-34 12 -6 12 14 22C30 30 40 44 36 58C30 62 22 56 14 48C4 40 -10 40 -24 46C-34 52 -42 60 -50 58C-58 54 -58 42 -54 34C-54 30 -53 28 -52 26Z",
     /* curl: the tip sweeps forward and up into a clear hook */
@@ -14,7 +14,7 @@ function moustache(state, hair){
   };
   const k = (state===true || state===undefined || state==="drip" || !D[state]) ? (state==="drip"?"drip":"normal") : state;
   let s = `<path d="${D[k]}" fill="${hair}" ${st(3)}/>`;
-  if(k==="drip") s = `<path d="${D.droop2}" fill="${hair}" ${st(3)}/><path d="M-48 92Q-40 104 -48 114Q-56 104 -48 92Z" fill="#8FD3FF" ${st(2.4)}/>`;
+  if(k==="drip") s = `<path d="${D.droop2}" fill="${hair}" ${st(3)}/><path d="M-48 56Q-41 66 -48 75Q-55 66 -48 56Z" fill="#8FD3FF" ${st(2.4)}/>`;
   return s;
 }
 
@@ -168,4 +168,37 @@ KIT.walkingNeel = function (x, y, s, o) {
   }
   return _w(x, y, s, o);
 };
+
+/* F4.js */
+/* F4.js: footTap redrawn. Neel's right foot tapping, side view, toe to the right, heel at (0,0) on the floor. o.state: "up" (heel down, toe lifted 25deg) | "down" (flat, motion ticks, impact lines, a madder note). Cream picture panel behind it keeps it readable. Whole part is x -160..350, y -294..50 (centre about x 95). */
+KIT.footTap = function (x, y, s, o) { o = o || {}; const down = o.state === "down";
+  const ax = down ? 49 : 4, ay = down ? -92 : -101;
+  const foot = `<path d="M0 -18C-4 -44 2 -76 6 -92L92 -92C104 -80 120 -70 150 -64C190 -58 226 -50 258 -42C282 -36 292 -28 292 -17L292 -12L0 -12Z" fill="${INK}" ${st(4)}/>
+    <path d="M6 -92L92 -92L90 -80C60 -72 30 -76 8 -80Z" fill="${HAIR}" ${st(3)}/>
+    <path d="M214 -52C228 -44 230 -28 224 -13" fill="none" stroke="${CREAM}" stroke-width="3" stroke-linecap="round"/>
+    <path d="M112 -76C132 -70 156 -64 200 -56" fill="none" stroke="${CREAM}" stroke-width="5" stroke-linecap="round"/>
+    <path d="M250 -37C266 -33 278 -28 282 -20" fill="none" stroke="${CREAM}" stroke-width="4" stroke-linecap="round"/>
+    <path d="M122 -62L130 -56M138 -58L146 -52M154 -55L162 -49" fill="none" stroke="${CREAM}" stroke-width="3" stroke-linecap="round"/>
+    <path d="M-2 -22L-2 0L58 0L58 -14L292 -14L292 -8Q292 0 280 0L-2 0Z" fill="${HAIR}" ${st(4)}/>
+    <path d="M70 -9H280" stroke="${CREAM}" stroke-width="2.5" stroke-linecap="round" opacity=".8"/>
+    <path d="M-2 -24L58 -24L58 -14" fill="none" ${st(3)}/>`;
+  const sock = `<path d="M${ax - 36} ${ay - 36}L${ax + 36} ${ay - 36}L${ax + 36} ${ay + 6}L${ax - 36} ${ay + 6}Z" fill="${CREAM}" ${st(3.5)}/><path d="M${ax - 34} ${ay - 22}H${ax + 34}M${ax - 34} ${ay - 12}H${ax + 34}" stroke="${SLATE}" stroke-width="2.5"/>`;
+  const trouser = `<path d="M${ax - 38} ${ay - 172}L${ax + 38} ${ay - 172}L${ax + 50} ${ay - 36}L${ax - 50} ${ay - 36}Z" fill="${HAIR}" ${st(4)}/>
+    <path d="M${ax - 49} ${ay - 50}L${ax + 49} ${ay - 50}" stroke="${CREAM}" stroke-width="2.5" opacity=".7"/>
+    <path d="M${ax + 4} ${ay - 164}L${ax + 8} ${ay - 62}" stroke="${CREAM}" stroke-width="3" stroke-linecap="round" opacity=".55"/>`;
+  const chain = `<path d="M${ax - 30} ${ay - 36}Q${ax - 10} ${ay + 4} ${ax + 14} ${ay - 36}" fill="none" stroke="${INK}" stroke-width="7" stroke-linecap="round"/><path d="M${ax - 30} ${ay - 36}Q${ax - 10} ${ay + 4} ${ax + 14} ${ay - 36}" fill="none" stroke="${SLATE}" stroke-width="3.5" stroke-linecap="round" stroke-dasharray="6 4"/>`;
+  return `<g transform="translate(${x} ${y}) scale(${s})">
+  <defs><pattern id="footTapTile" width="60" height="40" patternUnits="userSpaceOnUse"><rect width="60" height="40" fill="${TURM}"/><path d="M0 20L30 0L60 20L30 40Z" fill="${SAFF}" ${st(3)}/><circle cx="30" cy="20" r="5" fill="${CREAM}" ${st(2.5)}/></pattern></defs>
+  <rect x="-160" y="-294" width="510" height="344" rx="26" fill="${CREAM}" ${st(4)}/>
+  <rect x="-148" y="-282" width="486" height="320" rx="18" fill="none" stroke="${OCHRE}" stroke-width="3"/>
+  <rect x="-140" y="0" width="480" height="40" fill="url(#footTapTile)" ${st(4)}/>
+  <ellipse cx="150" cy="3" rx="170" ry="10" fill="${INK}" opacity=".22"/>
+  ${down ? `<path d="M-48 -24H-88M-60 -48H-108M-48 -72H-84" stroke="${INK}" stroke-width="6" stroke-linecap="round"/>` : ""}
+  ${trouser}${sock}${chain}
+  <g${down ? "" : ` transform="rotate(-25)"`}>${foot}</g>
+  ${down ? `<path d="M310 -34L334 -50M314 -14L342 -14" stroke="${INK}" stroke-width="8" stroke-linecap="round"/><path d="M310 -34L334 -50M314 -14L342 -14" stroke="${CREAM}" stroke-width="3.5" stroke-linecap="round"/>
+  <ellipse cx="300" cy="-100" rx="14" ry="11" transform="rotate(-20 300 -100)" fill="${MADDER}" ${st(3)}/>
+  <path d="M312 -102V-170" stroke="${INK}" stroke-width="8" stroke-linecap="round"/><path d="M312 -102V-170" stroke="${MADDER}" stroke-width="4" stroke-linecap="round"/>
+  <path d="M312 -170C328 -162 336 -146 330 -128C326 -140 320 -148 312 -152Z" fill="${MADDER}" ${st(3)}/>` : ""}
+</g>`; };
 

@@ -53,8 +53,9 @@ function makeC(){
     narr(text){ capEl.className = "narr"; capEl.innerHTML = text; },
     /* the corner plate (Guests let in -> Friends). tally() hides it. */
     tally(label, value){
-      if(label === undefined){ tallyEl.classList.add("blank"); return; }
-      const changed = tallyEl.dataset.v !== label + "|" + value; tallyEl.dataset.v = label + "|" + value;
+      if(label === undefined){ tallyEl.classList.add("blank"); delete tallyEl.dataset.l; return; }
+      const changed = tallyEl.dataset.v !== label + "|" + value; const swap = tallyEl.dataset.l !== undefined && tallyEl.dataset.l !== label; tallyEl.dataset.v = label + "|" + value; tallyEl.dataset.l = label;
+      tallyEl.classList.toggle("swap", swap && !SILENT);
       tallyEl.querySelector(".tl").textContent = label; tallyEl.querySelector(".tv").textContent = value; tallyEl.classList.remove("blank");
       if(changed && !SILENT){ tallyEl.classList.remove("pop"); void tallyEl.offsetWidth; tallyEl.classList.add("pop"); }
     },
@@ -73,6 +74,7 @@ function doPress(n, silent){
   SILENT = !!silent; BREATH = !!pr.breath; sfxNow = []; shotNo = pr.shot;
   if(actLeft > 0 && --actLeft === 0) panelEl.classList.add("blank");
   stageEl.style.transition = silent ? "none" : "filter .7s steps(7)"; stageEl.style.filter = GRADES[pr.grade] || "none";
+  tallyEl.classList.remove("swap");
   const c = makeC(); capEl.classList.add("blank");   /* the caption clears on every press unless the press sets its own */
   pr.run(c);
   if(!silent){

@@ -26,7 +26,7 @@ STORY.push(
     { p: 71, breath: false, run: (c) => { c.set("drums", { hit: 2 }); c.sfx("drum-strike"); c.say("Everyone", "Happy birthday to you…"); } },
     { p: 72, breath: false, run: (c) => { c.set("drums", { hit: 3 }); c.sfx("drum-strike"); c.say("Everyone", "Happy birthday, dear Neel…"); } },
     { p: 73, breath: true, run: (c) => { c.silence(); c.set("drums", { hit: [], raised: true }); } },
-    { p: 74, breath: false, run: (c) => { c.show("foot", "footTap", { x: 1250, y: 760, s: 0.8, state: "down" }); c.sfx("nod-thump"); c.narr("Neel had not moved. One foot had."); } },
+    { p: 74, breath: false, run: (c) => { c.show("foot", "footTap", { x: 705, y: 690, s: 1, state: "down" }); c.sfx("nod-thump"); c.narr("Neel had not moved. One foot had."); } },
     { p: 75, breath: false, run: (c) => { c.mood("fanfare"); c.hide("foot"); c.show("fw", "fireworks", { size: 2 }); c.show("gong", "gong", { x: 1180, y: 430, s: 1, ring: true }); c.show("neel", "walkingNeel", { x: 260, y: 830, s: 1.15, state: "strike" }); c.move("neel", { x: 760 }, 900); c.set("drums", { view: "line", hit: [], raised: true }); c.sfx("gong", "fireworks", "crowd-roar"); c.say("Everyone", "…Happy birthday to you!"); } },
     { p: 76, breath: false, run: (c) => { c.hide("inset"); c.sfx("crowd-cheer-small"); c.narr("For once, the king was not nodding. He was playing."); } },
   ]},

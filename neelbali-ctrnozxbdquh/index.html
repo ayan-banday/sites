@@ -36,6 +36,8 @@ body{height:100dvh;background:var(--house);padding:env(safe-area-inset-top,0px) 
 #tally.blank{display:none}
 #tally .tl{display:block;font:700 clamp(8px,.95vw,13px)/1 system-ui,sans-serif;letter-spacing:.16em;text-transform:uppercase;color:var(--madder);margin-bottom:.2em}
 #tally .tv{display:block;font-size:clamp(18px,2.6vw,40px);line-height:1.05}
+#tally{transform-origin:top right}
+#tally.swap{top:22%;transform:scale(1.4);box-shadow:0 0 0 3px var(--madder),0 0 0 6px var(--ink)}
 #tally.pop .tv{animation:tpop .3s steps(3)}
 @keyframes tpop{0%{transform:scale(1)}40%{transform:scale(1.35)}100%{transform:scale(1)}}
 #panel.act{top:5.5%;font-style:normal;font-size:clamp(18px,3.2vw,48px);padding:.3em 1.6em .4em;border-radius:6px;box-shadow:0 0 0 4px var(--turmeric),0 0 0 6px var(--ink)}
