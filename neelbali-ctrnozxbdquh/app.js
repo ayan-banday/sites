@@ -2,7 +2,10 @@
 /* NEELBALI engine: runs the presses in story.js. A press is a function that takes one object `c` (the press API). */
 const $ = s => document.querySelector(s);
 const DEBUG = /[?&]debug/.test(location.search);
+const stageEl = $("#stage"), tallyEl = $("#tally");
 const sceneEl = $("#scene"), partsEl = $("#parts"), fxEl = $("#fx"), capEl = $("#cap"), panelEl = $("#panel"), hintEl = $("#hint");
+/* light carries the mood (story-plan: "when you cannot draw it, change the light"): one CSS grade per shot */
+const GRADES = { dawn: "saturate(1.1) brightness(1.06)", storm: "saturate(.7) brightness(.88) hue-rotate(-8deg)", heavy: "saturate(.6) brightness(.82)", lonely: "saturate(.3) brightness(.78) contrast(1.05)", warm: "saturate(1.12) sepia(.12) brightness(1.04)", bright: "saturate(1.15) brightness(1.05)", hot: "saturate(1.3) contrast(1.06)" };
 const LEVELS = [2,2,3,1,1,2,2,3,2,3,5,3];           /* music level per shot (music-plan.md, "The dynamic curve") */
 let actLeft = 0, SILENT = false, BREATH = false, curMood = "none", curScene = "", shotNo = 0, sfxNow = [];
 window.__log = []; window.__missing = [];
@@ -41,10 +44,20 @@ function makeC(){
       if(typeof state === "string") r.opts.state = state; else Object.assign(r.opts, state);
       r.el.innerHTML = renderInner(r);
     },
-    say(who, text){ capEl.innerHTML = `<span id="who">${who}</span>${text}`; capEl.classList.remove("blank"); },
+    say(who, text){ capEl.className = ""; capEl.innerHTML = `<span id="who">${who}</span>${text}`; capEl.classList.remove("blank"); },
     panel(text){ panelEl.className = ""; panelEl.textContent = text; panelEl.classList.remove("blank"); },
-    /* act title card: an inscription at the top of the miniature, kept for 3 presses */
-    act(no, title, sub){ panelEl.className = "act"; panelEl.innerHTML = `<span class="actno">Act ${no}</span>${title}<small>${sub}</small>`; actLeft = 3; },
+    /* a card at the top of the miniature (acts, movements, days); kept for `ttl` presses */
+    card(label, title, sub = "", ttl = 3, cls = ""){ panelEl.className = ("act " + cls).trim(); panelEl.innerHTML = `<span class="actno">${label}</span>${title}${sub ? `<small>${sub}</small>` : ""}`; actLeft = ttl; },
+    act(no, title, sub){ this.card("Act " + no, title, sub, 3); },
+    /* the narrator (third person, plain): a caption with no speaker */
+    narr(text){ capEl.className = "narr"; capEl.innerHTML = text; },
+    /* the corner plate (Guests let in -> Friends). tally() hides it. */
+    tally(label, value){
+      if(label === undefined){ tallyEl.classList.add("blank"); return; }
+      const changed = tallyEl.dataset.v !== label + "|" + value; tallyEl.dataset.v = label + "|" + value;
+      tallyEl.querySelector(".tl").textContent = label; tallyEl.querySelector(".tv").textContent = value; tallyEl.classList.remove("blank");
+      if(changed && !SILENT){ tallyEl.classList.remove("pop"); void tallyEl.offsetWidth; tallyEl.classList.add("pop"); }
+    },
     clear(){ capEl.classList.add("blank"); panelEl.classList.add("blank"); },
     mood(name){ curMood = name; if(!SILENT) Sound.cue(name); },
     silence(){ curMood = "silence"; if(!SILENT) Sound.cue("silence"); },
@@ -53,17 +66,18 @@ function makeC(){
 }
 
 const PRESSES = [];
-STORY.forEach(sh => sh.presses.forEach(p => { PRESSES[p.p] = { ...p, shot: sh.shot }; }));
+STORY.forEach(sh => sh.presses.forEach(p => { PRESSES[p.p] = { ...p, shot: sh.shot, level: sh.level, grade: sh.grade }; }));
 let idx = 0, last = 0;
 function doPress(n, silent){
   const pr = PRESSES[n]; if(!pr) return;
   SILENT = !!silent; BREATH = !!pr.breath; sfxNow = []; shotNo = pr.shot;
   if(actLeft > 0 && --actLeft === 0) panelEl.classList.add("blank");
+  stageEl.style.transition = silent ? "none" : "filter .7s steps(7)"; stageEl.style.filter = GRADES[pr.grade] || "none";
   const c = makeC(); capEl.classList.add("blank");   /* the caption clears on every press unless the press sets its own */
   pr.run(c);
   if(!silent){
     Sound.duck(BREATH && curMood !== "silence");
-    const level = curMood === "silence" ? 1 : (BREATH ? 1 : LEVELS[pr.shot - 1] || 3);
+    const level = curMood === "silence" ? 1 : (BREATH ? 1 : pr.level || 3);
     window.__log.push(`P${n} mood=${curMood} level=${level} sfx=${sfxNow.join(",") || "-"}`);
   }
   SILENT = false; BREATH = false;

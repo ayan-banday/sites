@@ -28,6 +28,17 @@ body{height:100dvh;background:var(--house);padding:env(safe-area-inset-top,0px) 
 #panel{position:absolute;left:50%;top:7%;transform:translateX(-50%);max-width:64%;text-align:center;background:var(--cream);color:var(--ink);border:3px solid var(--ink);box-shadow:0 0 0 4px var(--madder),0 0 0 6px var(--ink);padding:.4em 1.2em;font-family:var(--display);font-size:clamp(14px,2.1vw,32px);line-height:1.2;font-style:italic;animation:fadein .5s steps(5) both}
 #panel.blank{display:none}
 #panel.act{top:5.5%;font-style:normal;font-size:clamp(18px,3.2vw,48px);padding:.3em 1.6em .4em;border-radius:6px;box-shadow:0 0 0 4px var(--turmeric),0 0 0 6px var(--ink)}
+#panel.act.day{font-size:clamp(14px,2.1vw,32px);padding:.25em 1.2em .35em}
+#panel .actno{display:block;font:700 .34em/1 system-ui,sans-serif;letter-spacing:.3em;text-transform:uppercase;color:var(--madder);margin-bottom:.35em}
+#panel small{display:block;font-size:.42em;font-style:italic;margin-top:.3em;opacity:.85}
+#cap.narr{font-style:italic;background:#EADBB0;max-width:76%}
+#tally{position:absolute;right:3.4%;top:5.2%;z-index:3;min-width:6.5em;text-align:center;background:var(--cream);color:var(--ink);border:3px solid var(--ink);box-shadow:0 0 0 3px var(--turmeric),0 0 0 5px var(--ink);padding:.25em .8em .3em;border-radius:6px;font-family:var(--display)}
+#tally.blank{display:none}
+#tally .tl{display:block;font:700 clamp(8px,.95vw,13px)/1 system-ui,sans-serif;letter-spacing:.16em;text-transform:uppercase;color:var(--madder);margin-bottom:.2em}
+#tally .tv{display:block;font-size:clamp(18px,2.6vw,40px);line-height:1.05}
+#tally.pop .tv{animation:tpop .3s steps(3)}
+@keyframes tpop{0%{transform:scale(1)}40%{transform:scale(1.35)}100%{transform:scale(1)}}
+#panel.act{top:5.5%;font-style:normal;font-size:clamp(18px,3.2vw,48px);padding:.3em 1.6em .4em;border-radius:6px;box-shadow:0 0 0 4px var(--turmeric),0 0 0 6px var(--ink)}
 #panel .actno{display:block;font:700 .34em/1 system-ui,sans-serif;letter-spacing:.3em;text-transform:uppercase;color:var(--madder);margin-bottom:.35em}
 #panel small{display:block;font-size:.42em;font-style:italic;margin-top:.3em;opacity:.85}
 #who{display:block;font:700 .5em/1 system-ui,sans-serif;letter-spacing:.12em;text-transform:uppercase;color:var(--madder);margin-bottom:.25em}
@@ -67,6 +78,7 @@ body{height:100dvh;background:var(--house);padding:env(safe-area-inset-top,0px) 
   </svg>
   <div id="cap" class="blank"></div>
   <div id="panel" class="blank"></div>
+  <div id="tally" class="blank"><span class="tl"></span><span class="tv"></span></div>
   <div id="hint">press space</div>
 </div>
 <div id="turn" role="alert">Turn your phone sideways</div>

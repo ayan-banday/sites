@@ -1,8 +1,8 @@
 "use strict";
 /* After P70: the credits screen (P71). Music credit lines from audio/music/credits-new.md and Khushi's music-additions.md. */
-STORY.push({ shot: 13, presses: [
-  { p: 71, breath: false, run: (c) => {
-    c.scene("credits");
+STORY.push({ shot: 14, level: 3, grade: "", presses: [
+  { p: 83, breath: false, run: (c) => {
+    c.scene("credits"); c.tally();
     c.show("credits", "creditsText", { x: 800, y: 385, size: 0.64, lines: [
       "#The idea",
       "The friends you let in are the ones who play your song.",
