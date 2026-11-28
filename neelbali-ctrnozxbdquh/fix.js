@@ -169,6 +169,74 @@ KIT.walkingNeel = function (x, y, s, o) {
   return _w(x, y, s, o);
 };
 
+/* F3.js */
+/* F3.js: drumLine v3 (F1 + clearer drum strikes, no red cheek dots, faces clear of the drum, view "faces" for the eyebrow gag). Loaded after fix.js. */
+KIT.drumLine = function (x, y, s, o) {
+  o = o || {};
+  /* Drawn in absolute frame coordinates: show it with x:0, y:0, s:1. o.view: line (default) | close | low. */
+  const hits = o.hit === undefined || o.hit === null ? [] : (Array.isArray(o.hit) ? o.hit : [o.hit]);
+  const xs = [300, 610, 920, 1230];   /* shifted left 30 so the drums keep clear of the frame edge */
+  const MX = 280, FX = -195, FS = .84;   /* striker offset from his warrior, Neel face centre and size on the warrior */
+  const burst = (cx, cy, r, n, c1, c2) => {
+    let d = "";
+    for (let k = 0; k < n * 2; k++) { const a = k / (n * 2) * Math.PI * 2, rr = k % 2 ? r * .55 : r; d += `${k ? "L" : "M"}${(cx + rr * Math.cos(a)).toFixed(1)} ${(cy + rr * Math.sin(a)).toFixed(1)}`; }
+    return `<path d="${d}Z" fill="${c1}" ${st(4)}/><circle cx="${cx}" cy="${cy}" r="${r * .3}" fill="${c2}" ${st(3)}/>`;
+  };
+  const star = (cx, cy, k) => `<path d="M${cx} ${cy - 15}L${cx + 5} ${cy - 5}L${cx + 15} ${cy}L${cx + 5} ${cy + 5}L${cx} ${cy + 15}L${cx - 5} ${cy + 5}L${cx - 15} ${cy}L${cx - 5} ${cy - 5}Z" fill="${k % 2 ? TURM : CREAM}" ${st(3)}/>`;
+  const stars = (cx, cy) => [[-44, -6], [40, -14], [-8, -44], [26, 22], [-34, 24]].map(([dx, dy], k) => star(cx + dx, cy + dy, k)).join("");
+  const dreamEyes = `<g transform="translate(0 -318) scale(.62)"><circle cx="-26" cy="-15" r="19.5" fill="${OCHRE}"/><path d="M-42 -10Q-26 -34 -10 -10" fill="none" ${st(4.5)}/><circle cx="-26" cy="-15" r="19" fill="none" ${st(4)}/><path d="M-52 28Q-36 52 -14 32" fill="none" ${st(4)}/></g>`;
+  const stickPath = (len, w) => `<path d="M46 -240V${-240 - len}" stroke="${INK}" stroke-width="${w + 5}" stroke-linecap="round"/><path d="M46 -240V${-240 - len}" stroke="#8A5A3A" stroke-width="${w}" stroke-linecap="round"/><path d="M46 -240V${-240 - len}" stroke="${TURM}" stroke-width="4" stroke-linecap="round"/><circle cx="46" cy="-240" r="19" fill="${OCHRE}" ${st(4)}/>`;
+  let out = "", outM = "", fx = "", bk = "";
+  /* a striker (profile, in profile always) with a bigger gold drum disc on his belly; tr places him */
+  const manG = (tr, stick, dream) => `<g transform="${tr}">
+    <ellipse cx="0" cy="8" rx="80" ry="12" fill="#000" opacity=".22"/>
+    <path d="M-26 0V-150M26 0V-150" stroke="${OCHRE}" stroke-width="34" stroke-linecap="round"/>
+    <path d="M-60 -150H60L50 -260H-50Z" fill="${MADDER}" ${st(5)}/>
+    <path d="M-50 -260C-60 -330 60 -330 50 -260Z" fill="${OCHRE}" ${st(5)}/>
+    ${profile(0, -318, .62, { skin: OCHRE, glasses: true, deadpan: false, hair: "#3a2a1a", turban: true, moustache: false })}
+    <path d="M-52 -176Q0 -156 52 -176" fill="none" stroke="${MADDER}" stroke-width="9"/><ellipse cx="6" cy="-108" rx="62" ry="68" fill="${TURM}" ${st(5)}/><ellipse cx="6" cy="-108" rx="53" ry="59" fill="${CREAM}" ${st(4)}/><path d="M6 -158V-58M-42 -108H54" stroke="${INK}" stroke-width="2.5" opacity=".35"/><circle cx="6" cy="-108" r="12" fill="${TURM}" ${st(3)}/>
+    ${dream}${stick}</g>`;
+  xs.forEach((wx, i) => {
+    const hit = hits.indexOf(i) >= 0, slip = o.slip === i, self = o.selfHit === i, slow = o.slow === i;
+    let face = frontFace(FX, -96, FS, !!o.mortified, !!o.brows);
+    if (slip) face = `<g transform="translate(40 60) rotate(34 ${FX} -96)">${face}</g>`;
+    if (hit) face = `<g class="puff">${face}</g>`;   /* no red cheek dots: the strike is shown on the drum only */
+    let stick;
+    if (self) stick = `<g transform="rotate(-22 46 -240)">${stickPath(150, 16)}</g>${stars(-4, -372)}`;
+    else if (slow) stick = `<g><animateTransform attributeName="transform" type="rotate" values="-30 46 -240;-8 46 -240;-30 46 -240" dur="2.6s" repeatCount="indefinite"/>${stickPath(440, 16)}</g>`;
+    else stick = `<g transform="rotate(${hit ? (o.off ? -150 : -160) : 24} 46 -240)">${stickPath(hit ? 158 : 440, 16)}</g>`;
+    const man = manG(`translate(${wx + MX} 800) scale(.95)`, stick, slow ? dreamEyes : "");
+    const dx = wx + MX + 6, dy = 696;   /* centre of the drum disc */
+    out += warriorBent(wx, 800, .95, face); outM += man;
+    if (hit) {
+      const fxp = dx, fyp = dy;
+      bk += `<g>${burst(fxp, fyp, 96, 9, TURM, CREAM)}</g>`;
+      fx += `<g><circle cx="${fxp}" cy="${fyp}" r="76" fill="none" stroke="${CREAM}" stroke-width="10"/><circle cx="${fxp}" cy="${fyp}" r="76" fill="none" stroke="${TURM}" stroke-width="4"/><circle cx="${fxp}" cy="${fyp}" r="90" fill="none" stroke="${CREAM}" stroke-width="5" opacity=".8"/>
+        <text x="${dx + 70}" y="520" text-anchor="middle" font-size="110" fill="${CREAM}" stroke="${INK}" stroke-width="8" paint-order="stroke">${o.off ? "♫♪" : "♪"}</text></g>`;
+    }
+  });
+  let fest = "";
+  if (o.fest) {
+    for (let k = 0; k < 14; k++) { const fx0 = 90 + k * 108, c = [TURM, MADDER, SAFF, BLUE2][k % 4]; fest += `<path d="M${fx0} 90L${fx0 + 70} 90L${fx0 + 35} 160Z" fill="${c}" ${st(3)}/>`; }
+    fest = `<path d="M60 84Q800 140 1540 84" fill="none" ${st(5)}/>${fest}`;
+    [[200, 300], [800, 260], [1400, 300]].forEach(([hx, hy]) => { fest += `<path d="M${hx} ${hy + 30}C${hx - 50} ${hy - 10} ${hx - 30} ${hy - 50} ${hx} ${hy - 20}C${hx + 30} ${hy - 50} ${hx + 50} ${hy - 10} ${hx} ${hy + 30}Z" fill="${MADDER}" ${st(3)}/>`; });
+  }
+  if (o.view === "faces") {
+    /* the eyebrow gag: five big Neel faces side by side along the lower frame above the caption plate, no striker in front of any; one thick raised brow each */
+    let row = "";
+    [200, 500, 800, 1100, 1400].forEach((fxx) => { row += frontFace(fxx, 624, 1.25, !!o.mortified, true); });
+    let up = "";
+    [350, 650, 950, 1250].forEach((px) => { up += manG(`translate(${px} 430) scale(.5)`, `<g transform="rotate(24 46 -240)">${stickPath(440, 16)}</g>`, ""); });
+    const panel = `<rect x="50" y="470" width="1500" height="282" rx="30" fill="${CREAM}" ${st(5)}/><rect x="68" y="486" width="1464" height="250" rx="20" fill="none" stroke="${OCHRE}" stroke-width="4"/>`;
+    return `<g transform="translate(${x} ${y}) scale(${s})">${up}${panel}${row}</g>`;
+  }
+  const v = o.view || "line";
+  const tf = v === "close" ? "translate(800 800) scale(1.65) translate(-800 -800)" : v === "low" ? "translate(800 860) scale(1.25) translate(-800 -800)" : "";
+  const ground = v === "low" ? `<path d="M0 840Q800 780 1600 840V900H0Z" fill="#4a3f6e" ${st(4)}/>` : "";
+  return `<g transform="translate(${x} ${y}) scale(${s})">${fest}<g transform="${tf}">${bk}${out}${outM}${fx}</g>${ground}</g>`;
+};
+
+
 /* F4.js */
 /* F4.js: footTap redrawn. Neel's right foot tapping, side view, toe to the right, heel at (0,0) on the floor. o.state: "up" (heel down, toe lifted 25deg) | "down" (flat, motion ticks, impact lines, a madder note). Cream picture panel behind it keeps it readable. Whole part is x -160..350, y -294..50 (centre about x 95). */
 KIT.footTap = function (x, y, s, o) { o = o || {}; const down = o.state === "down";
